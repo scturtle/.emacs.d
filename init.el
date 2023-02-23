@@ -113,6 +113,10 @@
         tab-bar-format '(tab-bar-format-tabs)
         tab-bar-tab-name-function 'tab-bar-tab-name-truncated
         tab-bar-tab-name-ellipsis "…")
+
+  ;; display-time-mode
+  (setq display-time-format "%a %H:%M"
+        display-time-default-load-average nil)
   )
 
 ;; packages
@@ -382,7 +386,7 @@
   (doom-modeline-icon nil)
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-project-detection 'projectile)
-  (doom-modeline-buffer-file-name-style 'relative-from-project)
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
   :config
   ;; (display-time-mode)
   (doom-modeline-mode 1))
