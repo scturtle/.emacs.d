@@ -291,6 +291,10 @@
   (evil-symbol-word-search t)
   (evil-want-fine-undo t)
   (evil-undo-system 'undo-fu)
+  (evil-ex-interactive-search-highlight 'selected-window) ;; all-windows
+  (evil-visual-update-x-selection-p nil)
+  :config
+  (evil-select-search-module 'evil-search-module 'evil-search)
   :general
   ;; mimic emacs key bindings
   (:states 'insert
