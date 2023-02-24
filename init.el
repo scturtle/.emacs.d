@@ -488,6 +488,10 @@
   :custom-face
   ;; remove underline in hover
   (lsp-face-highlight-read ((t :underline nil)))
+  :config
+  ;; fix ccls progress report, need `%%%%' here
+  (advice-add #'lsp--progress-status :filter-return
+              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
   )
 
 (with-eval-after-load 'lsp-mode
