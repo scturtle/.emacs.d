@@ -698,6 +698,14 @@
 
 (use-package org
   :straight (:type built-in)
+  :hook (org-mode . org-indent-mode)
+  :hook (org-mode . evil-org-mode)
+  :custom
+  (org-list-allow-alphabetical t)
+  (org-catch-invisible-edits 'show-and-error)
+  (org-cycle-separator-lines 1)
   )
 
-;; TODO: org
+(use-package evil-org
+  :commands evil-org-mode
+  )
