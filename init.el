@@ -390,7 +390,7 @@
   (doom-modeline-icon nil)
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-project-detection 'projectile)
-  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (doom-modeline-buffer-file-name-style 'relative-from-project)
   :config
   ;; (display-time-mode)
   (doom-modeline-mode 1))
@@ -639,11 +639,13 @@
   :custom
   (tramp-default-method "ssh")
   :config
+  ;; do not move these to `custom'
   (setq tramp-verbose 1)
   (setq tramp-persistency-file-name (emacsd "cache/tramp"))
-  ;; FIXME: for magit to use newer git
+  (setq tramp-ssh-controlmaster-options "-o ControlPath=~/.ssh/master-%%h:%%p -o ControlMaster=auto -o ControlPersist=yes")
+  ;; for magit to use newer git
   (add-to-list 'tramp-remote-path "~/.local/bin")
-  )
+)
 
 (use-package projectile
   :hook (after-init . projectile-mode)
@@ -702,10 +704,8 @@
   :hook (org-mode . evil-org-mode)
   :custom
   (org-list-allow-alphabetical t)
-  (org-catch-invisible-edits 'show-and-error)
+  (org-fold-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 1)
   )
 
-(use-package evil-org
-  :commands evil-org-mode
-  )
+(use-package evil-org)
