@@ -19,6 +19,15 @@
    ((eq major-mode 'emacs-lisp-mode) (call-interactively #'elisp-def))
    (t (call-interactively #'evil-goto-definition))))
 
+(defun +search-project-for-symbol-at-point ()
+  (interactive)
+  (let ((symbol (if (evil-visual-state-p)
+                    (prog1 (buffer-substring-no-properties evil-visual-beginning evil-visual-end)
+                      (evil-exit-visual-state))
+                  (or (thing-at-point 'symbol t) "")))
+        (dir (or (projectile-acquire-root) default-directory)))
+    (consult-ripgrep dir symbol)))
+
 ;; steal from doomemacs
 (defun +magit-display-buffer-fn (buffer)
   (let ((buffer-mode (buffer-local-value 'major-mode buffer)))

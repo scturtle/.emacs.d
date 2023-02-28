@@ -152,6 +152,7 @@
     ":" '(pp-eval-expression :wk "eval expr")
     "," 'switch-to-buffer
     "/" #'projectile-find-file
+    "*" #'+search-project-for-symbol-at-point
 
     "b" '(:ignore t :wk "buffer")
     "bb" 'switch-to-buffer
