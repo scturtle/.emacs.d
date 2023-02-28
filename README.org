@@ -1,3 +1,9 @@
-* .emacs.d
+* Personal Emacs Configuration
 
 [[./screenshot.png]]
+
+- terminal only
+- straight.el
+- evil
+- c++, rust
+- aura theme
