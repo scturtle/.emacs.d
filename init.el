@@ -606,7 +606,7 @@
   (transient-levels-file  (emacsd "cache/transient/levels"))
   (transient-values-file  (emacsd "cache/transient/values"))
   (transient-history-file (emacsd "cache/transient/history"))
-  (transient-default-level 5)
+  (transient-default-level 7) ;; for --autostash
   (transient-display-buffer-action '(display-buffer-below-selected))
   (magit-save-repository-buffers nil)
   (magit-revision-insert-related-refs nil)
