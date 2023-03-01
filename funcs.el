@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
+;;; lots of functions are stolen and modified from doomemacs
 
-(defun my/symbol-highlight (beg end)
+(defun +symbol-highlight (beg end)
   "Highlight current symbol. Restrict by evil visual region."
   (interactive
    (if (evil-visual-state-p)
@@ -12,7 +13,7 @@
     (iedit-start regexp beg end)
     (evil-multiedit-mode +1)))
 
-(defun my/goto-definition ()
+(defun +goto-definition ()
   (interactive)
   (cond
    ((bound-and-true-p lsp-ui-mode) (call-interactively #'lsp-ui-peek-find-definitions))
@@ -28,7 +29,6 @@
         (dir (or (projectile-acquire-root) default-directory)))
     (consult-ripgrep dir symbol)))
 
-;; steal from doomemacs
 (defun +magit-display-buffer-fn (buffer)
   (let ((buffer-mode (buffer-local-value 'major-mode buffer)))
     (display-buffer
@@ -54,7 +54,6 @@
               '(display-buffer-same-window))
              ('(+magit--display-buffer-in-direction))))))
 
-;; steal from doomemacs
 (defun +magit--display-buffer-in-direction (buffer alist)
   (let ((direction (or (alist-get 'direction alist) 'right))
         (origin-window (selected-window)))
@@ -98,7 +97,6 @@
                      (cons proc proc)))
         :test? (lambda () (-> local-command lsp-resolve-final-function lsp-server-present?))))
 
-;; steal from doomemacs
 (defun +neotree/find-this-file ()
   (interactive)
   (let ((path buffer-file-name)

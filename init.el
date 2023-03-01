@@ -109,6 +109,7 @@
 
   ;; tab bar
   (setq tab-bar-separator ""
+        tab-bar-tab-hints t
         tab-bar-close-button-show nil
         tab-bar-format '(tab-bar-format-tabs)
         tab-bar-tab-name-function 'tab-bar-tab-name-truncated
@@ -148,11 +149,12 @@
   (define-leader-keys
     "SPC" '(execute-extended-command :wk "execute command")
     [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
+    "u" '(universal-argument :wk "universal")
     ";" '(pp-eval-expression :wk "eval expr")
     ":" '(pp-eval-expression :wk "eval expr")
     "," 'switch-to-buffer
-    "/" #'projectile-find-file
-    "*" #'+search-project-for-symbol-at-point
+    "*" '(+search-project-for-symbol-at-point :wk "search symbol in project")
+    "qq" 'save-buffers-kill-terminal
 
     "b" '(:ignore t :wk "buffer")
     "bb" 'switch-to-buffer
@@ -206,24 +208,20 @@
     "ga" #'projectile-find-other-file
     "op" #'neotree-toggle
     "oP" #'+neotree/find-this-file
-    "p/" #'consult-ripgrep
-
-    "qq" 'save-buffers-kill-terminal
 
     "s" '(:ignore t :wk "search")
-    "sh" #'my/symbol-highlight
-    "sp" #'consult-ripgrep
+    "sh" #'+symbol-highlight
+    "sp" '(consult-ripgrep :wk "search in project")
 
     "t"  '(:ignore t :wk "toggle")
-    "tl" '(display-line-numbers-mode :wk "line numbers")
+    "tl" '(display-line-numbers-mode :wk "toggle line numbers")
     "tn" #'tab-bar-new-tab
+    "tm" #'tab-bar-move-tab
     "1"  '((lambda() (interactive) (tab-bar-select-tab 1)) :wk "switch tab 1")
     "2"  '((lambda() (interactive) (tab-bar-select-tab 2)) :wk "switch tab 2")
     "3"  '((lambda() (interactive) (tab-bar-select-tab 3)) :wk "switch tab 3")
     "4"  '((lambda() (interactive) (tab-bar-select-tab 4)) :wk "switch tab 4")
     "5"  '((lambda() (interactive) (tab-bar-select-tab 5)) :wk "switch tab 5")
-
-    "u" '(universal-argument :wk "universal")
 
     "w" '(:ignore t :wk "window")
     "wd" #'evil-window-delete
@@ -318,7 +316,7 @@
   ;; override "gd" to `evil-goto-definition'
   (general-define-key
    :states '(normal motion)
-   "gd" #'my/goto-definition
+   "gd" #'+goto-definition
    "gD" #'lsp-ui-peek-find-references)
   ;; unbind tab for neotree
   (general-define-key :states '(normal motion) [?\t] nil)
@@ -646,7 +644,7 @@
   (setq tramp-ssh-controlmaster-options "-o ControlPath=~/.ssh/master-%%h:%%p -o ControlMaster=auto -o ControlPersist=yes")
   ;; for magit to use newer git
   (add-to-list 'tramp-remote-path "~/.local/bin")
-)
+  )
 
 (use-package projectile
   :hook (after-init . projectile-mode)
