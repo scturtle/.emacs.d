@@ -431,10 +431,11 @@
                 marginalia-command-categories)))
 
 (use-package orderless
+  :demand
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(orderless partial-completion basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles orderless partial-completion))))
+  (completion-category-overrides nil)
   (orderless-component-separator "[ &]"))
 
 (use-package consult
@@ -484,6 +485,7 @@
   (lsp-signature-render-documentation nil)
   (lsp-client-packages '(ccls lsp-rust))
   (lsp-headerline-breadcrumb-enable nil)
+  (lsp-completion-provider :none) ;; use corfu
   :custom-face
   ;; remove underline in hover
   (lsp-face-highlight-read ((t :underline nil)))
@@ -514,23 +516,24 @@
   (lsp-ui-peek-highlight ((t :forground unspecified :background unspecified :inherit highlight)))
   )
 
-(use-package company
-  :hook (prog-mode . company-mode)
+(use-package corfu
+  :hook (prog-mode . corfu-mode)
   :custom
-  (company-minimum-prefix-length 2)
-  (company-tooltip-limit 14)
-  (company-tooltip-align-annotations t)
-  (company-require-match 'never)
-  (company-backends '(company-capf))
-  (company-dabbrev-other-buffers nil)
-  (company-dabbrev-code-other-buffers nil)
-  (company-dabbrev-ignore-case nil)
-  (company-dabbrev-downcase nil)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.1)
+  :config
+  (defun corfu-move-to-minibuffer ()
+    (interactive)
+    (let ((completion-extra-properties corfu--extra)
+          completion-cycle-threshold completion-cycling)
+      (apply #'consult-completion-in-region completion-in-region--data)))
   :general
-  (:keymaps 'company-active-map
-            "C-i" #'company-show-doc-buffer
-            "C-h" nil)
+  ("M-m" 'corfu-move-to-minibuffer)
   )
+
+(use-package corfu-terminal
+  :hook (corfu-mode . corfu-terminal-mode))
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)
