@@ -493,6 +493,9 @@
   ;; fix ccls progress report, need `%%%%' here
   (advice-add #'lsp--progress-status :filter-return
               (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
+  ;; for corfu, original style is lsp-passthrough
+  (add-hook 'lsp-completion-mode-hook
+            (lambda () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless))))))
   )
 
 (with-eval-after-load 'lsp-mode
@@ -512,8 +515,6 @@
   :custom
   (lsp-ui-doc-enable nil)
   (lsp-ui-sideline-enable nil)
-  :custom-face
-  (lsp-ui-peek-highlight ((t :forground unspecified :background unspecified :inherit highlight)))
   )
 
 (use-package corfu

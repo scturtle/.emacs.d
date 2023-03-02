@@ -77,7 +77,12 @@
    (modeline-fg-alt base5)
 
    (modeline-bg-inactive `(,(doom-darken (car bg) 0.075) ,@(cdr base1)))
-   (modeline-bg-inactive-l (doom-darken bg 0.1)))
+   (modeline-bg-inactive-l (doom-darken bg 0.1))
+
+   ;; my handy ones
+   (code-bg        (doom-darken base1 0.125))
+   (selection-bg   (doom-blend blue bg 0.3))
+   )
 
   ;;;; Base theme face overrides
   (
@@ -88,7 +93,7 @@
    (tree-sitter-hl-face:number :foreground green)
    ;;;; company
    (company-tooltip-common :foreground yellow :bold)
-   (company-tooltip-selection :background (doom-darken blue 0.3))
+   (company-tooltip-selection :background selection-bg)
    ;;;; outline <built-in>
    ((outline-1 &override) :foreground magenta)
    (outline-2 :inherit 'outline-1 :foreground violet)
@@ -99,15 +104,20 @@
    (outline-7 :inherit 'outline-6 :foreground (doom-lighten violet 0.85))
    (outline-8 :inherit 'outline-7 :foreground (doom-lighten magenta 0.85))
    ;;;; org <built-in>
-   ((org-block &override) :background (doom-darken base1 0.125) :foreground base7)
-   ((org-block-begin-line &override) :background (doom-darken base1 0.125) :foreground comments)
+   ((org-block &override) :background code-bg :foreground base7)
+   ((org-block-begin-line &override) :background code-bg :foreground comments)
    ((org-code &override) :foreground yellow)
    (org-todo :foreground orange :bold 'inherit)
    ((org-link &override) :foreground orange)
    ;;; markdown
-   ((markdown-code-face &override) :background (doom-darken base1 0.125))
+   ((markdown-code-face &override) :background code-bg)
    ;;; tabbar
    ((tab-bar-tab-inactive &override) :foreground base4)
+   ;;; lsp-mode
+   (lsp-ui-peek-selection :forground fg :background selection-bg)
+   (lsp-ui-peek-highlight :forground fg-alt :background selection-bg)
+   ;;; corfu
+   ((corfu-current &override) :background selection-bg)
    )
 
   ;;;; Base theme variable overrides-
