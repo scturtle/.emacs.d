@@ -112,6 +112,7 @@
         tab-bar-tab-hints t
         tab-bar-close-button-show nil
         tab-bar-format '(tab-bar-format-tabs)
+        tab-bar-tab-name-truncated-max 16
         tab-bar-tab-name-function 'tab-bar-tab-name-truncated
         tab-bar-tab-name-ellipsis "…")
 
@@ -342,7 +343,7 @@
 
 (use-package undo-fu
   :config
-  (setq undo-limit 400000           ; 400kb (default is 160kb)
+  (setq undo-limit         400000   ; 400kb (default is 160kb)
         undo-strong-limit 3000000   ; 3mb   (default is 240kb)
         undo-outer-limit 48000000)  ; 48mb  (default is 24mb)
   )
@@ -480,7 +481,7 @@
   (lsp-idle-delay 0)
   (eldoc-idle-delay 0)
   (lsp-lens-enable nil)
-  (lsp-enable-snippet nil)
+  (lsp-enable-snippet t) ;; to insert func params
   (lsp-enable-file-watchers nil)
   (lsp-signature-render-documentation nil)
   (lsp-client-packages '(ccls lsp-rust))
@@ -515,6 +516,10 @@
   :custom
   (lsp-ui-doc-enable nil)
   (lsp-ui-sideline-enable nil)
+  )
+
+(use-package yasnippet
+  :hook (lsp-mode . yas-minor-mode) ;; for yas-enable-snippet
   )
 
 (use-package corfu
