@@ -386,13 +386,18 @@
 (use-package doom-modeline
   :demand
   :custom
-  (doom-modeline-lsp t)
-  (doom-modeline-icon nil)
-  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-time-icon nil)
+  (doom-modeline-unicode-fallback t)
   (doom-modeline-project-detection 'projectile)
   (doom-modeline-buffer-file-name-style 'relative-from-project)
   :config
-  ;; (display-time-mode)
+  ;; use less segments
+  (doom-modeline-def-modeline 'main
+    '(modals matches buffer-info remote-host buffer-position)
+    '(checker misc-info lsp major-mode time))
+  ;; change the unicode icon for lsp-mode
+  (advice-add #'doom-modeline-lsp-icon :override
+              (lambda (text face) (doom-modeline-icon 'faicon "LSP" "l" text :face face)))
   (doom-modeline-mode 1))
 
 (use-package doom-themes
@@ -487,6 +492,7 @@
   (lsp-client-packages '(ccls lsp-rust))
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-completion-provider :none) ;; use corfu
+  (lsp-modeline-diagnostics-enable nil) ;; use checker segment
   :custom-face
   ;; remove underline in hover
   (lsp-face-highlight-read ((t :underline nil)))
@@ -618,6 +624,7 @@
   (magit-save-repository-buffers nil)
   (magit-revision-insert-related-refs nil)
   (magit-display-buffer-function '+magit-display-buffer-fn)
+  ;; (magit-auto-revert-mode nil) ;; too slow for tramp
   :config
   (general-define-key
    :keymaps 'magit-mode-map :states 'normal
