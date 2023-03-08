@@ -212,6 +212,7 @@
 
     "s" '(:ignore t :wk "search")
     "sh" #'+symbol-highlight
+    "sb" #'consult-line
     "sp" '(consult-ripgrep :wk "search in project")
 
     "t"  '(:ignore t :wk "toggle")
@@ -450,7 +451,6 @@
   ([remap apropos]                       #'consult-apropos
    [remap bookmark-jump]                 #'consult-bookmark
    [remap evil-show-marks]               #'consult-mark
-   [remap evil-show-jumps]               #'+vertico/jump-list
    [remap evil-show-registers]           #'consult-register
    [remap goto-line]                     #'consult-goto-line
    [remap imenu]                         #'consult-imenu
@@ -462,16 +462,17 @@
    [remap switch-to-buffer-other-window] #'consult-buffer-other-window
    [remap switch-to-buffer-other-frame]  #'consult-buffer-other-frame
    [remap yank-pop]                      #'consult-yank-pop
-   [remap persp-switch-to-buffer]        #'+vertico/switch-workspace-buffer)
-  :config
-  ;; to use consult for completion in `Eval:'
-  (setq completion-in-region-function #'consult-completion-in-region)
-  (setq consult-narrow-key "<"
-        consult-line-numbers-widen t
-        consult-async-min-input 2
-        consult-async-refresh-delay  0.15
-        consult-async-input-throttle 0.2
-        consult-async-input-debounce 0.1))
+   [remap projectile-ripgrep]            #'consult-ripgrep)
+  :custom
+  (consult-project-function #'projectile-project-root)
+  (consult-narrow-key "<")
+  (consult-line-numbers-widen t)
+  (consult-async-min-input 2)
+  (consult-async-refresh-delay  0.15)
+  (consult-async-input-throttle 0.2)
+  (consult-async-input-debounce 0.1)
+  (completion-in-region-function #'consult-completion-in-region) ;; in `Eval:'
+  )
 
 (use-package iedit :commands iedit-start)
 
