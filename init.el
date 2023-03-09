@@ -296,32 +296,38 @@
   (evil-visual-update-x-selection-p nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
-  :general
-  ;; mimic emacs key bindings
-  (:states 'insert
-           "C-a" 'move-beginning-of-line
-           "C-e" 'move-end-of-line
-           "C-p" 'previous-line
-           "C-n" 'next-line
-           "C-d" 'delete-forward-char
-           "C-h" 'delete-backward-char
-           "C-k" 'kill-line
-           "C-g" 'evil-normal-state)
-  (:keymaps 'minibuffer-mode-map
-            "<escape>" 'abort-recursive-edit
-            "C-h"      'delete-backward-char
-            "C-u"      'evil-delete-back-to-indentation)
-  (:keymaps 'evil-ex-completion-map
-            "M-p" 'previous-complete-history-element
-            "M-n" 'next-complete-history-element)
-  :config
   ;; override "gd" to `evil-goto-definition'
   (general-define-key
-   :states '(normal motion)
+   :states 'normal
    "gd" #'+goto-definition
    "gD" #'lsp-ui-peek-find-references)
   ;; unbind tab for neotree
   (general-define-key :states '(normal motion) [?\t] nil)
+  ;; mimic emacs key bindings
+  (general-define-key
+   :states 'insert
+   "C-a" 'move-beginning-of-line
+   "C-e" 'move-end-of-line
+   "C-p" 'previous-line
+   "C-n" 'next-line
+   "C-d" 'delete-forward-char
+   "C-h" 'delete-backward-char
+   "C-k" 'kill-line
+   "C-g" 'evil-normal-state)
+  (general-define-key
+   :keymaps 'minibuffer-mode-map
+   "<escape>" 'abort-recursive-edit
+   "C-h"      'delete-backward-char
+   "C-u"      'evil-delete-back-to-indentation)
+  (general-define-key
+   :keymaps 'evil-ex-completion-map ;; in ":"
+   "C-a" 'move-beginning-of-line
+   "C-f" 'forward-char
+   "C-b" 'backward-char
+   "C-d" 'delete-forward-char
+   "C-h" 'delete-backward-char
+   "C-u" 'evil-delete-back-to-indentation
+   "C-k" 'kill-line)
   )
 
 (use-package evil-collection
