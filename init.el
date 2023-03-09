@@ -440,10 +440,11 @@
 (use-package orderless
   :demand
   :custom
-  (completion-styles '(orderless partial-completion basic))
+  (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides nil)
-  (orderless-component-separator "[ &]"))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (completion-ignore-case t)
+  )
 
 (use-package consult
   :demand
@@ -502,8 +503,11 @@
   (advice-add #'lsp--progress-status :filter-return
               (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
   ;; for corfu, original style is lsp-passthrough
-  (add-hook 'lsp-completion-mode-hook
-            (lambda () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless))))))
+  (defun +lsp-orderless () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless)))))
+  (add-hook 'lsp-completion-mode-hook #'+lsp-orderless)
+  ;; setup the orderless-flex style for its 1st search term
+  (defun +orderless-flex-first (_pat idx _tot) (and (eq idx 0) 'orderless-flex))
+  (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
   )
 
 (with-eval-after-load 'lsp-mode
@@ -603,7 +607,7 @@
   (ccls-args '("--log-file=/tmp/ccls.log"))
   :config
   (setq ccls-initialization-options
-        '(:index (:trackDependency 1 :threads 8)))
+        '(:index (:trackDependency 1 :threads 8) :completion (:caseSensitivity 0 :filterAndSort t :maxNum 300)))
   (when IS-MAC
     (setq ccls-initialization-options
           (append ccls-initialization-options
