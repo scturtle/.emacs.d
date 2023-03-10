@@ -234,6 +234,46 @@
     "wh" #'evil-window-left
     "ww" #'evil-window-next
     )
+
+  ;; override "gd" to `evil-goto-definition'
+  (general-define-key
+   :states 'normal
+   "gd" #'+goto-definition
+   "gD" #'lsp-ui-peek-find-references)
+
+  ;; unbind tab for neotree
+  (general-define-key
+   :states '(normal motion) [?\t] nil)
+
+  ;; mimic emacs key bindings
+  (general-define-key
+   :states 'insert
+   "C-a" 'move-beginning-of-line
+   "C-e" 'move-end-of-line
+   "C-p" 'previous-line
+   "C-n" 'next-line
+   "C-d" 'delete-forward-char
+   "C-h" 'delete-backward-char
+   "C-k" 'kill-line
+   "C-g" 'evil-normal-state)
+
+  (general-define-key
+   :keymaps 'minibuffer-mode-map
+   "<escape>" 'abort-recursive-edit
+   "C-h"      'delete-backward-char
+   "C-u"      'evil-delete-back-to-indentation)
+
+  ;; oevrride evil ex mode (in ":")
+  (with-eval-after-load 'evil
+    (general-define-key
+     :keymaps 'evil-ex-completion-map
+     "C-a" 'move-beginning-of-line
+     "C-f" 'forward-char
+     "C-b" 'backward-char
+     "C-d" 'delete-forward-char
+     "C-h" 'delete-backward-char
+     "C-u" 'evil-delete-back-to-indentation
+     "C-k" 'kill-line))
   )
 
 ;; better `describe-*' functions
@@ -296,38 +336,6 @@
   (evil-visual-update-x-selection-p nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
-  ;; override "gd" to `evil-goto-definition'
-  (general-define-key
-   :states 'normal
-   "gd" #'+goto-definition
-   "gD" #'lsp-ui-peek-find-references)
-  ;; unbind tab for neotree
-  (general-define-key :states '(normal motion) [?\t] nil)
-  ;; mimic emacs key bindings
-  (general-define-key
-   :states 'insert
-   "C-a" 'move-beginning-of-line
-   "C-e" 'move-end-of-line
-   "C-p" 'previous-line
-   "C-n" 'next-line
-   "C-d" 'delete-forward-char
-   "C-h" 'delete-backward-char
-   "C-k" 'kill-line
-   "C-g" 'evil-normal-state)
-  (general-define-key
-   :keymaps 'minibuffer-mode-map
-   "<escape>" 'abort-recursive-edit
-   "C-h"      'delete-backward-char
-   "C-u"      'evil-delete-back-to-indentation)
-  (general-define-key
-   :keymaps 'evil-ex-completion-map ;; in ":"
-   "C-a" 'move-beginning-of-line
-   "C-f" 'forward-char
-   "C-b" 'backward-char
-   "C-d" 'delete-forward-char
-   "C-h" 'delete-backward-char
-   "C-u" 'evil-delete-back-to-indentation
-   "C-k" 'kill-line)
   )
 
 (use-package evil-collection

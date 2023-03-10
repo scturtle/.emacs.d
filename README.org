@@ -2,8 +2,9 @@
 
 [[./screenshot.png]]
 
+- emacs 29
 - terminal only
-- straight.el
-- evil
-- c++, rust
-- aura theme
+- straight.el + general.el + evil
+- vertico + marginalia + orderless + consult
+- lsp-mode + corfu, for c++ and rust
+- handcrafted aura theme
