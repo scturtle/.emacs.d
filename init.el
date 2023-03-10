@@ -55,7 +55,7 @@
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
 
-  ;; hrs/sensible-defaults.el
+  ;; sensible defaults
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
   (setq use-short-answers t) ;; y-or-n-p for >= 28
@@ -71,9 +71,12 @@
   ;; from doom-start
   (set-language-environment "UTF-8")
   (setq default-input-method nil)
+  (setq bidi-inhibit-bpa t)
+  (setq-default bidi-paragraph-direction 'left-to-right)
 
-  ;; for lsp
+  ;; IO-related tunings
   (setq read-process-output-max (* 1024 1024))
+  (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
   ;; custom
   (setq custom-file (emacsd "custom.el"))
