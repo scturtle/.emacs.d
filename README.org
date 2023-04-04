@@ -6,5 +6,5 @@
 - terminal only
 - straight.el + general.el + evil
 - vertico + marginalia + orderless + consult
-- lsp-mode + corfu, for c++ and rust
+- lsp-mode + corfu, for c++ & rust & python
 - handcrafted aura theme

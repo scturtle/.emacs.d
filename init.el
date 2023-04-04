@@ -500,7 +500,7 @@
   (evil-multiedit-follow-matches t))
 
 (use-package lsp-mode
-  :hook ((c-mode c++-mode) . lsp-deferred)
+  :hook ((c-mode c++-mode python-mode) . lsp-deferred)
   :custom
   (lsp-idle-delay 0)
   (eldoc-idle-delay 0)
@@ -508,7 +508,7 @@
   (lsp-enable-snippet t) ;; to insert func params
   (lsp-enable-file-watchers nil)
   (lsp-signature-render-documentation nil)
-  (lsp-client-packages '(ccls lsp-rust))
+  (lsp-client-packages '(ccls lsp-rust lsp-pyright))
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-completion-provider :none) ;; use corfu
   (lsp-modeline-diagnostics-enable nil) ;; use checker segment
@@ -743,6 +743,13 @@
   (org-list-allow-alphabetical t)
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 1)
+  (org-persist-directory (emacsd "cache/org-persist"))
   )
 
 (use-package evil-org)
+
+(use-package lsp-pyright
+  :custom
+  ;; (lsp-pyright-use-library-code-for-types nil)
+  (lsp-pyright-typechecking-mode "off")
+  )
