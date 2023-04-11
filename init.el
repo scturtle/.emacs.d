@@ -735,6 +735,11 @@
 
 (use-package tree-sitter-langs)
 
+(use-package ts-fold
+  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
+  :hook (tree-sitter-mode . ts-fold-mode)
+  )
+
 (use-package org
   :straight (:type built-in)
   :hook (org-mode . org-indent-mode)
