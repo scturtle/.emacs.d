@@ -122,6 +122,8 @@
   ;; display-time-mode
   (setq display-time-format "%a %H:%M"
         display-time-default-load-average nil)
+
+  (setq eshell-directory-name (emacsd "cache/eshell"))
   )
 
 ;; packages
