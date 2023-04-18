@@ -210,6 +210,7 @@
     "p" '(:ignore t :wk "project")
     "pp" #'projectile-switch-project
     "pr" #'projectile-recentf
+    "pi" #'projectile-invalidate-cache
     "pf" #'projectile-find-file
     "ga" #'projectile-find-other-file
     "op" #'neotree-toggle
