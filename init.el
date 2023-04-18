@@ -760,3 +760,20 @@
   ;; (lsp-pyright-use-library-code-for-types nil)
   (lsp-pyright-typechecking-mode "off")
   )
+
+;; setup llvm
+(let* ((dirs '("~/workspace/llvm-utils" "~/code/llvm-project"))
+       (llvm-dir (cl-first (cl-remove-if-not 'file-directory-p dirs)))
+       (lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))
+  (when llvm-dir
+    (add-to-list 'load-path (concat llvm-dir "/llvm/utils/emacs"))
+    (add-to-list 'load-path (concat llvm-dir "/mlir/utils/emacs"))
+    (require 'tablegen-mode)
+    (require 'mlir-mode)
+    (add-hook 'tablegen-mode-hook #'lsp-deferred)
+    (with-eval-after-load 'lsp-mode
+      (add-to-list 'lsp-language-id-configuration '(tablegen-mode . "tablegen"))
+      (lsp-register-client
+       (make-lsp-client :new-connection (lsp-stdio-connection lsp-cmds)
+                        :major-modes '(tablegen-mode)
+                        :server-id 'tblgenls)))))
