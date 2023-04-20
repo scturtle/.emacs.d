@@ -404,22 +404,22 @@
   ;; (which-key-idle-delay 1.5)
   )
 
+(use-package nerd-icons :demand)
+
 (use-package doom-modeline
+  :straight (:branch "feat/nerd-icons") ;; TODO: 4.0.0
   :demand
+  :hook (after-init . doom-modeline-mode)
   :custom
   (doom-modeline-time-icon nil)
   (doom-modeline-unicode-fallback t)
   (doom-modeline-project-detection 'projectile)
   (doom-modeline-buffer-file-name-style 'relative-from-project)
   :config
-  ;; use less segments
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info remote-host buffer-position)
-    '(checker misc-info lsp major-mode time))
-  ;; change the unicode icon for lsp-mode
-  (advice-add #'doom-modeline-lsp-icon :override
-              (lambda (text face) (doom-modeline-icon 'faicon "LSP" "l" text :face face)))
-  (doom-modeline-mode 1))
+    '(checker misc-info lsp time))
+  )
 
 (use-package doom-themes
   :demand
