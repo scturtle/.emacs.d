@@ -104,3 +104,8 @@
     (neotree-dir project-root)
     (neotree-find path project-root)
     (neotree-refresh)))
+
+(defun +neotree/insert-symbol (name &optional node-name)
+  (or (and (equal name 'open)  (insert (nerd-icons-octicon "nf-oct-chevron_down") " "))
+      (and (equal name 'close) (insert (nerd-icons-octicon "nf-oct-chevron_right") " "))
+      (and (equal name 'leaf)  (insert (nerd-icons-icon-for-file node-name) " "))))

@@ -726,6 +726,12 @@
   )
 
 (use-package neotree
+  :custom
+  (neo-show-hidden-files t)
+  (neo-window-width 30)
+  (neo-vc-integration '(face))
+  :config
+  (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
   )
 
 ;; (use-package treesit-auto
