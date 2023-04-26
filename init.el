@@ -352,7 +352,11 @@
   (evil-collection-magit-want-horizontal-movement t)
   (evil-collection-magit-use-z-for-folds t)
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; disable bindings that I don't want
+  (advice-add #'evil-collection-neotree-setup :after
+              (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
+  )
 
 (use-package evil-nerd-commenter
   :general
@@ -426,11 +430,8 @@
   :custom
   (custom-theme-directory (emacsd ""))
   (doom-themes-enable-bold t)
-  ;; (doom-themes-enable-italic t)
   :config
   (load-theme 'doom-aura t)
-  ;; (doom-themes-visual-bell-config)
-  ;; (doom-themes-neotree-config)
   (doom-themes-org-config)
   )
 
