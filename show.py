@@ -35,7 +35,14 @@ def main():
 
     lastest_and_repos.sort(reverse=True)
     for ts, repo in lastest_and_repos:
-        print(f"\033[35m{repo.name}\033[0m")
+        url = (
+            subprocess.check_output("git remote get-url origin", cwd=repo, shell=True)
+            .rstrip()
+            .decode("utf-8")
+        )
+        if url.endswith(".git"):
+            url = url[:-4]
+        print(f"\033[35m{repo.name} \033[33m{url}\033[0m")
         output = subprocess.check_output(
             [
                 "git",
@@ -47,8 +54,8 @@ def main():
                 f"--since={int(since.timestamp())}",
             ],
             cwd=repo,
-        )
-        print(output.decode("utf-8"))
+        ).decode("utf-8")
+        print(output)
 
 
 if __name__ == "__main__":

@@ -566,6 +566,8 @@
     (let ((completion-extra-properties corfu--extra)
           completion-cycle-threshold completion-cycling)
       (apply #'consult-completion-in-region completion-in-region--data)))
+  ;; use nerd-icons
+  (add-to-list 'corfu-margin-formatters #'+corfu-icons-margin-formatter)
   :general
   ("M-m" 'corfu-move-to-minibuffer)
   )
