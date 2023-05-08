@@ -139,7 +139,7 @@
 (defvar +corfu-icons--cache nil)
 
 ;; poor man's kind-icons
-(defun +corfu-icons-margin-formatter (_)
+(defun +corfu/margin-formatter (_)
   (when-let ((kind-func (plist-get completion-extra-properties :company-kind)))
     (lambda (cand)
       (let ((kind (funcall kind-func cand)))

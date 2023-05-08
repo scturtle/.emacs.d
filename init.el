@@ -411,7 +411,6 @@
 (use-package nerd-icons :demand)
 
 (use-package doom-modeline
-  :straight (:branch "feat/nerd-icons") ;; TODO: 4.0.0
   :demand
   :hook (after-init . doom-modeline-mode)
   :custom
@@ -567,7 +566,7 @@
           completion-cycle-threshold completion-cycling)
       (apply #'consult-completion-in-region completion-in-region--data)))
   ;; use nerd-icons
-  (add-to-list 'corfu-margin-formatters #'+corfu-icons-margin-formatter)
+  (add-to-list 'corfu-margin-formatters #'+corfu/margin-formatter)
   :general
   ("M-m" 'corfu-move-to-minibuffer)
   )
@@ -734,11 +733,9 @@
   (neo-window-width 30)
   (neo-vc-integration '(face))
   :config
+  ;; use nerd-icons
   (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
   )
-
-;; (use-package treesit-auto
-;;   :hook (after-init . global-treesit-auto-mode))
 
 (use-package tree-sitter
   :hook (after-init . global-tree-sitter-mode)
