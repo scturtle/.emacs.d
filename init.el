@@ -124,6 +124,9 @@
         display-time-default-load-average nil)
 
   (setq eshell-directory-name (emacsd "cache/eshell"))
+
+  ;; do not show line number in modeline
+  (setq line-number-mode nil)
   )
 
 ;; packages
@@ -420,8 +423,8 @@
   (doom-modeline-buffer-file-name-style 'relative-from-project)
   :config
   (doom-modeline-def-modeline 'main
-    '(modals matches buffer-info remote-host buffer-position)
-    '(checker misc-info lsp time))
+    '(modals matches buffer-info remote-host)
+    '(checker misc-info lsp buffer-position time))
   )
 
 (use-package doom-themes
