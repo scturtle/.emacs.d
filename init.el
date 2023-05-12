@@ -720,7 +720,7 @@
 (use-package deft
   :commands (deft)
   :custom
-  (deft-default-extensions "org")
+  (deft-extensions '("org"))
   (deft-use-filename-as-title nil)
   (deft-use-filter-string-for-filename t)
   (deft-auto-save-interval 0)
