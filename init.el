@@ -768,6 +768,7 @@
 (use-package lsp-pyright
   :custom
   ;; (lsp-pyright-use-library-code-for-types nil)
+  (lsp-pyright-python-executable-cmd "python3")
   (lsp-pyright-typechecking-mode "off")
   )
 
