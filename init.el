@@ -785,3 +785,5 @@
        (make-lsp-client :new-connection (lsp-stdio-connection lsp-cmds)
                         :major-modes '(tablegen-mode)
                         :server-id 'tblgenls)))))
+
+(use-package rainbow-mode :commands rainbow-mode)

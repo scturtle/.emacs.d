@@ -118,6 +118,8 @@
    (lsp-ui-peek-highlight :forground fg-alt :background selection-bg)
    ;;; corfu
    ((corfu-current &override) :background selection-bg)
+   ;;; neotree
+   (neo-vc-up-to-date-face :foreground base6)
    )
 
   ;;;; Base theme variable overrides-
