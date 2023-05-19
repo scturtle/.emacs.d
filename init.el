@@ -639,6 +639,8 @@
                                   :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   )
 
+(use-package cmake-mode)
+
 (use-package elisp-def)
 
 (use-package magit
