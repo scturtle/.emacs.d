@@ -283,6 +283,13 @@
      "C-h" 'delete-backward-char
      "C-u" 'evil-delete-back-to-indentation
      "C-k" 'kill-line))
+
+  ;; don't leave visual mode after shifting
+  (with-eval-after-load 'evil
+    (general-define-key
+     :states 'visual
+     "<" #'+evil/shift-left
+     ">" #'+evil/shift-right))
   )
 
 ;; better `describe-*' functions

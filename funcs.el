@@ -29,6 +29,18 @@
         (dir (or (projectile-acquire-root) default-directory)))
     (consult-ripgrep dir symbol)))
 
+(defun +evil/shift-right ()
+  (interactive)
+  (call-interactively #'evil-shift-right)
+  (evil-normal-state)
+  (evil-visual-restore))
+
+(defun +evil/shift-left ()
+  (interactive)
+  (call-interactively #'evil-shift-left)
+  (evil-normal-state)
+  (evil-visual-restore))
+
 (defun +magit-display-buffer-fn (buffer)
   (let ((buffer-mode (buffer-local-value 'major-mode buffer)))
     (display-buffer
