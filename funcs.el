@@ -122,6 +122,11 @@
       (and (equal name 'close) (insert (nerd-icons-octicon "nf-oct-chevron_right") " "))
       (and (equal name 'leaf)  (insert (nerd-icons-icon-for-file node-name) " "))))
 
+(defun +neotree/set-width ()
+  (interactive)
+  (let ((width (read-number "width: ")))
+    (neo-global--set-window-width width)))
+
 ;; ref to lsp-completion--item-kind
 (defvar +corfu-icons--icons
   `((text . ,"nf-cod-text_size")

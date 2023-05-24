@@ -744,6 +744,10 @@
   :config
   ;; use nerd-icons
   (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
+  (general-define-key
+   :keymaps 'neotree-mode-map :states 'normal
+   "w" #'+neotree/set-width
+   )
   )
 
 (use-package tree-sitter
@@ -779,7 +783,7 @@
   )
 
 ;; setup llvm
-(let* ((dirs '("~/workspace/llvm-utils" "~/code/llvm-project"))
+(let* ((dirs '("~/workspace/llvm-utils" "~/code/llvm-utils"))
        (llvm-dir (cl-first (cl-remove-if-not 'file-directory-p dirs)))
        (lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))
   (when llvm-dir
