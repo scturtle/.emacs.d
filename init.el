@@ -112,7 +112,7 @@
 
   ;; tab bar
   (setq tab-bar-separator ""
-        tab-bar-tab-hints t
+        tab-bar-tab-hints t  ;; show index number
         tab-bar-close-button-show nil
         tab-bar-format '(tab-bar-format-tabs)
         tab-bar-tab-name-truncated-max 16
@@ -771,6 +771,12 @@
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 1)
   (org-persist-directory (emacsd "cache/org-persist"))
+  (org-src-preserve-indentation t)
+  :config
+  (general-define-key
+   :keymaps 'org-mode-map
+   "C-c s" #'org-insert-structure-template
+   )
   )
 
 (use-package evil-org)

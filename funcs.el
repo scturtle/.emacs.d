@@ -125,6 +125,7 @@
 (defun +neotree/set-width ()
   (interactive)
   (let ((width (read-number "width: ")))
+    (setq neo-window-width width)
     (neo-global--set-window-width width)))
 
 ;; ref to lsp-completion--item-kind
