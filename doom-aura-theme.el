@@ -120,6 +120,9 @@
    ((corfu-current &override) :background selection-bg)
    ;;; neotree
    (neo-vc-up-to-date-face :foreground base6)
+   ;;; diff-mode
+   ((diff-removed &override) :background code-bg)
+   ((diff-added &override) :background code-bg)
    )
 
   ;;;; Base theme variable overrides-

@@ -127,6 +127,9 @@
 
   ;; do not show line number in modeline
   (setq line-number-mode nil)
+
+  ;; diff-mode
+  (setq diff-refine nil)  ;; no hunk refinement
   )
 
 ;; packages
@@ -781,6 +784,8 @@
    "C-c s" #'org-insert-structure-template
    )
   )
+
+(use-package htmlize)
 
 (use-package evil-org)
 
