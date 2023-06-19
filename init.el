@@ -104,8 +104,9 @@
         auto-save-list-file-prefix (emacsd "cache/autosave/")
         auto-save-default nil)
 
-  ;; TODO: smartparens?
-  (add-hook 'prog-mode-hook 'electric-pair-mode)
+  ;; for prog mode
+  (add-hook 'prog-mode-hook 'electric-pair-mode) ;; TODO: smartparens?
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
   ;; TODO: treesitter
   ;; (setq treesit-extra-load-path '("~/code/repos/tree-sitter-module/dist"))
