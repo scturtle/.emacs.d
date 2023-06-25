@@ -449,8 +449,7 @@
   )
 
 (use-package vertico
-  :straight
-  (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
+  :straight (:repo "minad/vertico" :files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
   :custom
   (vertico-resize nil)
@@ -568,6 +567,7 @@
   )
 
 (use-package corfu
+  :straight (:repo "minad/corfu")
   :hook (prog-mode . corfu-mode)
   :custom
   (corfu-auto t)
@@ -765,7 +765,7 @@
 (use-package tree-sitter-langs)
 
 (use-package ts-fold
-  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
+  :straight (:repo "emacs-tree-sitter/ts-fold")
   :hook (tree-sitter-mode . ts-fold-mode)
   )
 
@@ -779,6 +779,7 @@
   (org-cycle-separator-lines 1)
   (org-persist-directory (emacsd "cache/org-persist"))
   (org-src-preserve-indentation t)
+  (org-html-head-include-default-style nil) ;; org-html-style-default
   :config
   (general-define-key
    :keymaps 'org-mode-map
