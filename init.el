@@ -449,7 +449,7 @@
   )
 
 (use-package vertico
-  :straight (:repo "minad/vertico" :files (:defaults "extensions/*"))
+  :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
   :custom
   (vertico-resize nil)
@@ -567,7 +567,7 @@
   )
 
 (use-package corfu
-  :straight (:repo "minad/corfu")
+  :straight (:host github :repo "minad/corfu")
   :hook (prog-mode . corfu-mode)
   :custom
   (corfu-auto t)
@@ -765,7 +765,7 @@
 (use-package tree-sitter-langs)
 
 (use-package ts-fold
-  :straight (:repo "emacs-tree-sitter/ts-fold")
+  :straight (:host github :repo "emacs-tree-sitter/ts-fold")
   :hook (tree-sitter-mode . ts-fold-mode)
   )
 
