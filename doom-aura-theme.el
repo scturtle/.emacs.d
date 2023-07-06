@@ -123,6 +123,8 @@
    ;;; diff-mode
    ((diff-removed &override) :background code-bg)
    ((diff-added &override) :background code-bg)
+   ;;; table.el
+   (table-cell :foreground fg :background code-bg)
    )
 
   ;;;; Base theme variable overrides-

@@ -567,7 +567,7 @@
   )
 
 (use-package corfu
-  :straight (:host github :repo "minad/corfu")
+  :straight (:host github :repo "minad/corfu" :files (:defaults "extensions/*.el"))
   :hook (prog-mode . corfu-mode)
   :custom
   (corfu-auto t)
@@ -586,6 +586,7 @@
   )
 
 (use-package corfu-terminal
+  :straight (:host codeberg :repo "scturtle/emacs-corfu-terminal" :branch "test")
   :hook (corfu-mode . corfu-terminal-mode))
 
 (use-package flycheck
