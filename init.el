@@ -732,14 +732,11 @@
   )
 
 (use-package deft
+  :straight (:host github :repo "scturtle/deft") ;; personalized
   :commands (deft)
   :custom
   (deft-extensions '("org"))
-  (deft-use-filename-as-title nil)
-  (deft-use-filter-string-for-filename t)
-  (deft-auto-save-interval 0)
   (deft-directory "~/code/notes")
-  (deft-file-naming-rules '((noslash . "_") (nospace . "_") (case-fn . downcase)))
   :config
   (evil-set-initial-state 'deft-mode 'insert)
   )
