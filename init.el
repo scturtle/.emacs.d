@@ -68,6 +68,9 @@
   ;; enable mouse in terminal
   (add-hook 'tty-setup-hook #'xterm-mouse-mode)
 
+  ;; override the env SHELL for fish is slow to start
+  (setq-default shell-file-name "/bin/bash")
+
   ;; from doom-start
   (set-language-environment "UTF-8")
   (setq default-input-method nil)
