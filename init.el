@@ -255,7 +255,10 @@
   (general-define-key
    :states 'normal
    "gd" #'+goto-definition
-   "gD" #'lsp-ui-peek-find-references)
+   "gD" #'lsp-ui-peek-find-references
+   "gb" #'xref-go-back
+   "gf" #'xref-go-forward
+   )
 
   ;; unbind tab for neotree
   (general-define-key
