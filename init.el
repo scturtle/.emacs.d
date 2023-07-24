@@ -579,6 +579,7 @@
   (corfu-auto t)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.1)
+  (corfu-preview-current nil)
   :config
   (defun corfu-move-to-minibuffer ()
     (interactive)
@@ -738,7 +739,7 @@
   )
 
 (use-package deft
-  :straight (:host github :repo "scturtle/deft") ;; personalized
+  :straight (:host github :repo "scturtle/deft")
   :commands (deft)
   :custom
   (deft-extensions '("org"))
