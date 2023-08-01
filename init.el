@@ -466,15 +466,7 @@
   :hook (after-init . marginalia-mode)
   :general
   (:keymaps 'minibuffer-local-map
-            "M-A" #'marginalia-cycle)
-  :config
-  (setq marginalia-command-categories
-        (append '((projectile-find-file . project-file)
-                  (projectile-recentf . project-file)
-                  (projectile-find-dir . file)
-                  (projectile-switch-to-buffer . buffer)
-                  (projectile-switch-project . project-file))
-                marginalia-command-categories)))
+            "M-A" #'marginalia-cycle))
 
 (use-package orderless
   :demand
@@ -749,6 +741,7 @@
   )
 
 (use-package neotree
+  :hook (neotree-mode . hl-line-mode)
   :custom
   (neo-show-hidden-files t)
   (neo-window-width 30)
