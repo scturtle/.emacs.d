@@ -437,15 +437,11 @@
   (doom-modeline-time-icon nil)
   (doom-modeline-unicode-fallback t)
   (doom-modeline-buffer-file-name-style 'relative-from-project)
+  (doom-modeline-buffer-file-true-name t)
   :config
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info remote-host)
-    '(checker misc-info lsp buffer-position time))
-  ;; HACK: use true buffer file name, as projectile use true project name
-  (advice-add #'doom-modeline--buffer-file-name :around
-              (lambda (orig-func _ truename &rest other)
-                (apply orig-func `(,truename ,truename ,@other))))
-  )
+    '(checker misc-info lsp buffer-position time)))
 
 (use-package doom-themes
   :demand
