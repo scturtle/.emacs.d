@@ -53,7 +53,7 @@
    (highlight      blue)
    (vertical-bar   bg-alt)
    (selection      blue)
-   (builtin        orange)
+   (builtin        blue)
    (comments       base5)
    (doc-comments   (doom-lighten base5 0.25))
    (constants      "#82e2ff") ;; light blue
@@ -84,9 +84,12 @@
    (mode-line :background bg-alt :foreground fg-alt)
    (mode-line-inactive :background bg :foreground base4)
    ;;;; tree-sitter
-   (tree-sitter-hl-face:property :inhert nil)
-   (tree-sitter-hl-face:function.call :foreground "#82e2ff")
-   (tree-sitter-hl-face:operator :foreground nil)
+   (tree-sitter-hl-face:property :inhert nil :foreground "#7e7edd")
+   (tree-sitter-hl-face:punctuation :foreground "#B4B4B4")
+   (tree-sitter-hl-face:operator :foreground "#B4B4B4")
+   (tree-sitter-hl-face:function.call :foreground "#7e7edd") ;; ariake
+   (tree-sitter-hl-face:variable.parameter :foreground functions)
+   (tree-sitter-hl-face:variable.special :foreground constants)
    (tree-sitter-hl-face:number :foreground green)
    ;;;; outline <built-in>
    ((outline-1 &override) :foreground magenta)
