@@ -38,10 +38,10 @@
 
    (grey       base4)
    (red        '("#ff6767"))
+   (yellow     '("#ffca85"))
    (orange     '("#ffca85"))
    (green      '("#61ffca"))
    (teal       '("#61ffca"))
-   (yellow     '("#ffca85"))
    (blue       '("#a277ff"))
    (dark-blue  '("#a277ff"))
    (magenta    '("#a277ff"))
@@ -56,7 +56,7 @@
    (builtin        orange)
    (comments       base5)
    (doc-comments   (doom-lighten base5 0.25))
-   (constants      "#82e2ff")
+   (constants      "#82e2ff") ;; light blue
    (functions      orange)
    (keywords       blue)
    (methods        orange)
@@ -73,27 +73,21 @@
    (vc-added       green)
    (vc-deleted     red)
 
-   (modeline-fg 'unspecified)
-   (modeline-fg-alt base5)
-
-   (modeline-bg-inactive `(,(doom-darken (car bg) 0.075) ,@(cdr base1)))
-   (modeline-bg-inactive-l (doom-darken bg 0.1))
-
-   ;; my handy ones
+   ;; my handy variables
    (code-bg        (doom-darken base1 0.125))
-   (selection-bg   (doom-blend blue bg 0.3))
+   (selection-bg   (doom-blend dark-blue bg 0.3))
    )
 
   ;;;; Base theme face overrides
   (
+   ;;;; modeline
+   (mode-line :background bg-alt :foreground fg-alt)
+   (mode-line-inactive :background bg :foreground base4)
    ;;;; tree-sitter
    (tree-sitter-hl-face:property :inhert nil)
-   (tree-sitter-hl-face:function.call :foreground blue)
-   (tree-sitter-hl-face:operator :foreground fg) ;; or "#82e2ff"
+   (tree-sitter-hl-face:function.call :foreground "#82e2ff")
+   (tree-sitter-hl-face:operator :foreground nil)
    (tree-sitter-hl-face:number :foreground green)
-   ;;;; company
-   (company-tooltip-common :foreground yellow :bold)
-   (company-tooltip-selection :background selection-bg)
    ;;;; outline <built-in>
    ((outline-1 &override) :foreground magenta)
    (outline-2 :inherit 'outline-1 :foreground violet)
