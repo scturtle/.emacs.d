@@ -777,11 +777,14 @@
   (org-persist-directory (emacsd "cache/org-persist"))
   (org-src-preserve-indentation t)
   (org-html-head-include-default-style nil) ;; org-html-style-default
+  (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
   :config
   (general-define-key
    :keymaps 'org-mode-map
    "C-c s" #'org-insert-structure-template
    )
+  ;; open file links in current window, rather than split window
+  (setf (alist-get 'file org-link-frame-setup) #'find-file)
   )
 
 (use-package htmlize)
