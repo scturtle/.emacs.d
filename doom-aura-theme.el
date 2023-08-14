@@ -118,8 +118,8 @@
    ;;; neotree
    (neo-vc-up-to-date-face :foreground base6)
    ;;; diff-mode
-   ((diff-removed &override) :background code-bg)
-   ((diff-added &override) :background code-bg)
+   ((diff-removed &override) :background code-bg :inherit nil)
+   ((diff-added &override) :background code-bg :inherit nil)
    ;;; table.el
    (table-cell :foreground fg :background code-bg)
    )
