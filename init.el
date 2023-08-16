@@ -605,14 +605,6 @@
             ,(read (default-toplevel-value 'flycheck-emacs-lisp-check-form)))))
   )
 
-(use-package flycheck-popup-tip
-  :hook (flycheck-mode . flycheck-popup-tip-mode)
-  :config
-  (setq flycheck-popup-tip-error-prefix "⚠ ")
-  ;; don't display popups while in insert mode
-  (add-hook 'evil-insert-state-entry-hook #'flycheck-popup-tip-delete-popup)
-  (advice-add #'flycheck-popup-tip-show-popup :before-while (lambda (&rest _) (eq evil-state 'normal))))
-
 (use-package rust-mode
   :custom
   (rust-match-angle-brackets nil)
