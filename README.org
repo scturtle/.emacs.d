@@ -1,10 +1,11 @@
 * Personal Emacs Configuration
 
-[[./screenshot.png]]
+[[https://v.scturtle.me/img/emacs.png]]
 
 - emacs 29
-- terminal only
-- straight.el + general.el + evil
-- vertico + marginalia + orderless + consult
-- lsp-mode + corfu, for c++ & rust & python
+- **terminal only**
+- be evil
+- straight.el, general.el
+- vertico, marginalia, orderless, consult
+- lsp-mode, corfu, for C++ & Rust & Python
 - handcrafted aura theme
