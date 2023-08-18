@@ -557,7 +557,12 @@
   :custom
   (lsp-ui-doc-enable nil)
   (lsp-ui-sideline-enable nil)
-  )
+  :config
+  (general-define-key
+   :keymaps 'lsp-ui-peek-mode-map
+   "k" #'lsp-ui-peek--select-prev
+   "j" #'lsp-ui-peek--select-next
+   ))
 
 (use-package yasnippet
   :hook (lsp-mode . yas-minor-mode) ;; for yas-enable-snippet
