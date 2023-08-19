@@ -55,6 +55,8 @@
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
 
+  (load-theme 'aura 'no-confirm)
+
   ;; sensible defaults
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
@@ -442,16 +444,6 @@
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info remote-host)
     '(checker misc-info lsp buffer-position time)))
-
-(use-package doom-themes
-  :demand
-  :custom
-  (custom-theme-directory (emacsd ""))
-  (doom-themes-enable-bold t)
-  :config
-  (load-theme 'doom-aura t)
-  (doom-themes-org-config)
-  )
 
 (use-package vertico
   :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
