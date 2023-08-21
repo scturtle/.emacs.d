@@ -10,6 +10,8 @@
 
 (deftheme aura)
 
+(require 'cl-lib)
+
 ;;;###autoload
 (defun blend (color1 color2 alpha)
   (apply (lambda (r g b) (format "#%02x%02x%02x" (* r 255) (* g 255) (* b 255)))
@@ -198,7 +200,9 @@
    `(show-paren-mismatch ((t (:background ,red   :foreground ,fg))))
 
    ;;;; vertico
-   `(vertico-current ((t (:background ,region :extend t))))
+   `(vertico-current         ((t (:background ,region :extend t))))
+   `(vertico-group-title     ((t (:foreground ,comments))))
+   `(vertico-group-separator ((t (:foreground ,comments))))
 
    ;;;; orderless
    `(orderless-match-face-0 ((t (:foreground ,(blend blue3  fg 0.6) :background ,(blend blue3  bg 0.1)))))

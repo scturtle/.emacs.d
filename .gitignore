@@ -4,3 +4,4 @@
 /custom.el
 /.lsp-session-v1
 /flycheck_funcs.el
+*.elc
