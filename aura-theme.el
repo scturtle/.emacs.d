@@ -29,17 +29,8 @@
        (bg-alt  "#1c1b27")
        (fg      "#edecee")
        (fg-alt  "#e1e0e2")
-       (base0   bg-alt)
-       (base1   bg)
-       (base2   "#2c2c38")
-       (base3   "#44475a")
-       (base4   "#565761")
-       (base5   "#6272a4")
-       (base6   "#b6b6b2")
-       (base7   "#ccccc7")
-       (base8   fg)
 
-       (grey    "#b4b4b4")
+       (grey    "#b6b6b2")
        (red     "#ff6767")
        (yellow  "#ffca85")
        (orange  "#ffca85")
@@ -53,18 +44,18 @@
        (blue2   "#7e7edd")
        (blue3   "RoyalBlue3")
 
+       (region       "#353441")
+       (inactive-fg  "#494854")
+       (comments     "#6272a4")
        (highlight    blue)
-       (selection    blue)
-       (code-bg      (darken base1 0.125))
+       (code-bg      (darken bg 0.125))
        (selection-bg (blend blue bg 0.3))
 
        (builtin      blue)
-       (comments     base5)
-       (doc-comments (lighten base5 0.25))
+       (doc-comments (lighten comments 0.25))
        (constants    blue1)
        (functions    orange)
        (keywords     blue)
-       (methods      orange)
        (operators    blue)
        (type         blue)
        (strings      green)
@@ -85,19 +76,19 @@
    ;;;; basics
    `(default   ((t (:background ,bg :foreground ,fg))))
    `(cursor    ((t (:background ,fg))))
-   `(region    ((t (:background ,base3))))
+   `(region    ((t (:background ,region))))
    `(highlight ((t (:foreground ,highlight :background ,bg-alt))))
    `(hl-line   ((t (:background ,bg-alt))))
    `(link      ((t (:foreground ,highlight :underline t :weight bold))))
-   `(fringe    ((t (:foreground ,base4 :background ,bg))))
-   `(tooltip   ((t (:background ,bg-alt :foreground ,fg))))
+   `(fringe    ((t (:foreground ,inactive-fg :background ,bg))))
+   `(tooltip   ((t (:foreground ,fg :background ,bg-alt))))
    `(match     ((t (:foreground ,fg :background ,selection-bg))))
    `(shadow    ((t (:foreground ,grey))))
    `(error     ((t (:foreground ,error))))
    `(warning   ((t (:foreground ,warning))))
    `(success   ((t (:foreground ,success))))
    `(mode-line           ((t (:background ,bg-alt :foreground ,fg-alt))))
-   `(mode-line-inactive  ((t (:background ,bg :foreground ,base4))))
+   `(mode-line-inactive  ((t (:background ,bg :foreground ,inactive-fg))))
    `(escape-glyph        ((t (:foreground ,cyan))))
    `(vertical-border     ((t (:background ,bg-alt :foreground ,bg-alt))))
    `(minibuffer-prompt   ((t (:foreground ,highlight))))
@@ -122,13 +113,13 @@
    `(font-lock-regexp-grouping-construct ((t (:weight bold :foreground ,operators))))
 
    ;;;; line-number
-   `(line-number ((t (:foreground ,base5 :background ,bg :italic t))))
+   `(line-number ((t (:foreground ,comments :background ,bg :italic t))))
    `(line-number-current-line ((t (:inherit 'line-number :foreground ,fg-alt))))
 
    ;;;; tab-bar
    `(tab-bar              ((t (:background ,bg-alt :foreground ,bg-alt))))
    `(tab-bar-tab          ((t (:background ,bg :foreground ,fg))))
-   `(tab-bar-tab-inactive ((t (:background ,bg-alt :foreground ,base4))))
+   `(tab-bar-tab-inactive ((t (:background ,bg-alt :foreground ,inactive-fg))))
 
    ;;;; ansi-color
    `(ansi-color-black          ((t (:foreground ,bg      :background ,bg))))
@@ -152,7 +143,7 @@
    `(custom-variable-tag ((t (:foreground ,violet))))
    `(custom-group-tag    ((t (:foreground ,violet))))
    `(custom-state        ((t (:foreground ,green))))
-   `(widget-field ((t (:background ,base2 :extend t))))
+   `(widget-field ((t (:background ,region :extend t))))
 
    ;;;; dired
    `(dired-directory ((t (:foreground ,blue))))
@@ -170,7 +161,7 @@
    `(eshell-ls-readonly   ((t (:foreground ,orange))))
    `(eshell-ls-special    ((t (:foreground ,violet))))
    `(eshell-ls-symlink    ((t (:foreground ,cyan))))
-   `(eshell-ls-unreadable ((t (:foreground ,base5))))
+   `(eshell-ls-unreadable ((t (:foreground ,comments))))
 
    ;;;; search
    `(lazy-highlight   ((t (:background ,(darken highlight 0.4) :foreground ,fg :weight bold))))
@@ -182,8 +173,8 @@
    `(evil-ex-info                   ((t (:foreground ,error :slant italic))))
    `(evil-ex-search                 ((t (:background ,highlight :foreground ,fg :weight bold))))
    `(evil-ex-lazy-highlight         ((t (:inherit 'lazy-highlight))))
-   `(evil-ex-substitute-matches     ((t (:background ,base0 :foreground ,red   :weight bold :strike-through t))))
-   `(evil-ex-substitute-replacement ((t (:background ,base0 :foreground ,green :weight bold))))
+   `(evil-ex-substitute-matches     ((t (:background ,bg-alt :foreground ,red   :weight bold :strike-through t))))
+   `(evil-ex-substitute-replacement ((t (:background ,bg-alt :foreground ,green :weight bold))))
 
    ;;;; flycheck
    `(flycheck-error   ((t (:foreground ,red :underline t))))
@@ -207,7 +198,7 @@
    `(show-paren-mismatch ((t (:background ,red   :foreground ,fg))))
 
    ;;;; vertico
-   `(vertico-current ((t (:background ,base2 :extend t))))
+   `(vertico-current ((t (:background ,region :extend t))))
 
    ;;;; orderless
    `(orderless-match-face-0 ((t (:foreground ,(blend blue3  fg 0.6) :background ,(blend blue3  bg 0.1)))))
@@ -235,8 +226,8 @@
    ;;;; magit diff
    `(magit-diff-added             ((t (:foreground ,(darken vc-added 0.2) :background ,(blend vc-added bg 0.1) :extend t))))
    `(magit-diff-added-highlight   ((t (:foreground ,vc-added :background ,(blend vc-added bg 0.2) :weight bold :extend t))))
-   `(magit-diff-removed           ((t (:foreground ,(darken vc-deleted 0.2) :background ,(blend vc-deleted base2 0.1) :extend t))))
-   `(magit-diff-removed-highlight ((t (:foreground ,vc-deleted :background ,(blend vc-deleted base2 0.2) :weight bold :extend t))))
+   `(magit-diff-removed           ((t (:foreground ,(darken vc-deleted 0.2) :background ,(blend vc-deleted bg 0.1) :extend t))))
+   `(magit-diff-removed-highlight ((t (:foreground ,vc-deleted :background ,(blend vc-deleted bg 0.2) :weight bold :extend t))))
    `(magit-diff-base              ((t (:foreground ,(darken orange 0.2) :background ,(blend orange bg 0.1) :extend t))))
    `(magit-diff-base-highlight    ((t (:foreground ,orange :background ,(blend orange bg 0.2) :weight bold :extend t))))
    `(magit-diff-context           ((t (:foreground ,(darken fg 0.4) :background ,bg :extend t))))
@@ -252,9 +243,9 @@
    `(magit-bisect-bad     ((t (:foreground ,red))))
    `(magit-bisect-good    ((t (:foreground ,green))))
    `(magit-bisect-skip    ((t (:foreground ,orange))))
-   `(magit-blame-hash     ((t (:foreground ,cyan))))
-   `(magit-blame-date     ((t (:foreground ,blue2))))
-   `(magit-blame-heading  ((t (:foreground ,blue2 :background ,bg-alt :extend t))))
+   `(magit-blame-hash     ((t (:foreground ,comments))))
+   `(magit-blame-date     ((t (:foreground ,yellow))))
+   `(magit-blame-heading  ((t (:foreground ,yellow :background ,region :extend t))))
    `(magit-branch-current ((t (:foreground ,blue))))
    `(magit-branch-local   ((t (:foreground ,cyan))))
    `(magit-branch-remote  ((t (:foreground ,green))))
@@ -280,7 +271,7 @@
    `(neo-vc-removed-face    ((t (:foreground ,red :strike-through t))))
    `(neo-vc-conflict-face   ((t (:foreground ,magenta :weight bold))))
    `(neo-vc-ignored-face    ((t (:foreground ,comments))))
-   `(neo-vc-up-to-date-face ((t (:foreground ,base6))))
+   `(neo-vc-up-to-date-face ((t (:foreground ,grey))))
 
    ;;;; lsp-mode
    `(lsp-face-highlight-textual ((t (:background ,selection-bg :foreground ,fg))))
@@ -306,14 +297,14 @@
    `(tree-sitter-hl-face:function.call      ((t (:foreground ,blue2))))
    `(tree-sitter-hl-face:variable.parameter ((t (:foreground ,functions))))
    `(tree-sitter-hl-face:variable.special   ((t (:foreground ,constants))))
-   `(tree-sitter-hl-face:number             ((t (:foreground ,green))))
+   `(tree-sitter-hl-face:number             ((t (:foreground ,numbers))))
 
    ;;;; org mode
    `(org-archived                 ((t (:foreground ,doc-comments))))
    `(org-block                    ((t (:background ,code-bg :foreground ,fg-alt))))
    `(org-block-begin-line         ((t (:inherit 'org-block  :foreground ,comments))))
    `(org-block-end-line           ((t (:inherit 'org-block-begin-line))))
-   `(org-done                     ((t (:foreground ,base5))))
+   `(org-done                     ((t (:foreground ,comments))))
    `(org-todo                     ((t (:foreground ,yellow))))
    `(org-headline-done            ((t (:inherit 'org-done))))
    `(org-checkbox                 ((t (:inherit 'org-todo))))
