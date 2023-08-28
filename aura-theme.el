@@ -193,7 +193,7 @@
    `(which-key-group-description-face     ((t (:foreground ,blue))))
    `(which-key-command-description-face   ((t (:foreground ,violet))))
    `(which-key-local-map-description-face ((t (:foreground ,orange))))
-   `(help-key-binding  ((t (:foreground ,blue1 :background nil))))
+   `(help-key-binding  ((t (:foreground ,blue1 :background unspecified))))
 
    ;;;; show-paren
    `(show-paren-match    ((t (:background ,blue2 :foreground ,fg))))
