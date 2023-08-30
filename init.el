@@ -517,7 +517,7 @@
   (defun +lsp-orderless () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless)))))
   (add-hook 'lsp-completion-mode-hook #'+lsp-orderless)
   ;; setup the orderless-flex style for its 1st search term
-  (defun +orderless-flex-first (_pat idx _tot) (and (eq idx 0) 'orderless-flex))
+  (defun +orderless-flex-first (_pat idx _tot) (if (eq idx 0) 'orderless-flex 'orderless-literal))
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
   )
 
@@ -567,7 +567,8 @@
   (add-to-list 'corfu-margin-formatters #'+corfu/margin-formatter)
   :general
   (:keymaps 'corfu-map
-            "M-m" 'corfu-move-to-minibuffer)
+            "M-SPC" 'corfu-insert-separator
+            "M-m"   'corfu-move-to-minibuffer)
   )
 
 (use-package corfu-terminal
