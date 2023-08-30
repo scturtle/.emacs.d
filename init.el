@@ -566,7 +566,8 @@
   ;; use nerd-icons
   (add-to-list 'corfu-margin-formatters #'+corfu/margin-formatter)
   :general
-  ("M-m" 'corfu-move-to-minibuffer)
+  (:keymaps 'corfu-map
+            "M-m" 'corfu-move-to-minibuffer)
   )
 
 (use-package corfu-terminal
