@@ -147,24 +147,51 @@
   (gcmh-high-cons-threshold (* 16 1024 1024)) ; 16mb
   )
 
+(use-package evil
+  :demand
+  :hook (after-init . evil-mode)
+  :custom
+  (evil-want-keybinding nil) ; for evil-collection
+  (evil-want-C-g-bindings t)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-u-delete t)
+  (evil-want-C-w-delete t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-want-abbrev-expand-on-insert-exit nil)
+  (evil-respect-visual-line-mode nil)
+  (evil-symbol-word-search t)
+  (evil-want-fine-undo t)
+  (evil-undo-system 'undo-fu)
+  (evil-ex-interactive-search-highlight 'selected-window) ;; all-windows
+  (evil-visual-update-x-selection-p nil)
+  :config
+  (evil-select-search-module 'evil-search-module 'evil-search)
+  )
+
+(use-package evil-collection
+  :demand
+  :custom
+  ;; TODO (evil-collection-mode-list '())
+  (evil-collection-magit-want-horizontal-movement t)
+  (evil-collection-magit-use-z-for-folds t)
+  :config
+  (evil-collection-init)
+  ;; disable bindings that I don't want
+  (advice-add #'evil-collection-neotree-setup :after
+              (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
+  )
+
+;; put after evil for perf issue https://github.com/noctuid/general.el/issues/180
 (use-package general
   :demand
   :config
   (general-evil-setup)
 
-  (general-create-definer define-leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
+  (general-define-key
     :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (general-create-definer define-localleader-keys
-    :states '(normal visual)
+    :states '(normal visual emacs)
     :keymaps 'override
-    :prefix ","
-    :global-prefix "SPC m")
 
-  (define-leader-keys
     "SPC" '(execute-extended-command :wk "execute command")
     [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
     "u" '(universal-argument :wk "universal")
@@ -285,23 +312,21 @@
    "C-u"      'evil-delete-back-to-indentation)
 
   ;; oevrride evil ex mode (in ":")
-  (with-eval-after-load 'evil
-    (general-define-key
-     :keymaps 'evil-ex-completion-map
-     "C-a" 'move-beginning-of-line
-     "C-f" 'forward-char
-     "C-b" 'backward-char
-     "C-d" 'delete-forward-char
-     "C-h" 'delete-backward-char
-     "C-u" 'evil-delete-back-to-indentation
-     "C-k" 'kill-line))
+  (general-define-key
+   :keymaps 'evil-ex-completion-map
+   "C-a" 'move-beginning-of-line
+   "C-f" 'forward-char
+   "C-b" 'backward-char
+   "C-d" 'delete-forward-char
+   "C-h" 'delete-backward-char
+   "C-u" 'evil-delete-back-to-indentation
+   "C-k" 'kill-line)
 
   ;; don't leave visual mode after shifting
-  (with-eval-after-load 'evil
-    (general-define-key
-     :states 'visual
-     "<" #'+evil/shift-left
-     ">" #'+evil/shift-right))
+  (general-define-key
+   :states 'visual
+   "<" #'+evil/shift-left
+   ">" #'+evil/shift-right)
   )
 
 ;; better `describe-*' functions
@@ -345,40 +370,6 @@
   :custom
   (golden-ratio-extra-commands '(evil-window-left evil-window-right evil-window-up
                                                   evil-window-down evil-window-next evil-window-prev)))
-
-(use-package evil
-  :hook (after-init . evil-mode)
-  :custom
-  (evil-want-keybinding nil) ; for evil-collection
-  (evil-want-C-g-bindings t)
-  (evil-want-C-u-scroll t)
-  (evil-want-C-u-delete t)
-  (evil-want-C-w-delete t)
-  (evil-want-Y-yank-to-eol t)
-  (evil-want-abbrev-expand-on-insert-exit nil)
-  (evil-respect-visual-line-mode nil)
-  (evil-symbol-word-search t)
-  (evil-want-fine-undo t)
-  (evil-undo-system 'undo-fu)
-  (evil-ex-interactive-search-highlight 'selected-window) ;; all-windows
-  (evil-visual-update-x-selection-p nil)
-  :config
-  (evil-select-search-module 'evil-search-module 'evil-search)
-  )
-
-(use-package evil-collection
-  :demand
-  :after evil
-  :custom
-  ;; (evil-collection-mode-list '())
-  (evil-collection-magit-want-horizontal-movement t)
-  (evil-collection-magit-use-z-for-folds t)
-  :config
-  (evil-collection-init)
-  ;; disable bindings that I don't want
-  (advice-add #'evil-collection-neotree-setup :after
-              (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
-  )
 
 (use-package evil-nerd-commenter
   :general
@@ -430,7 +421,7 @@
   ;; (which-key-idle-delay 1.5)
   )
 
-(use-package nerd-icons :demand)
+(use-package nerd-icons)
 
 (use-package doom-modeline
   :demand
@@ -460,7 +451,6 @@
             "M-A" #'marginalia-cycle))
 
 (use-package orderless
-  :demand
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
@@ -469,7 +459,6 @@
   )
 
 (use-package consult
-  :demand
   :general
   ([remap apropos]                       #'consult-apropos
    [remap bookmark-jump]                 #'consult-bookmark
