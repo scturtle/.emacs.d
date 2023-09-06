@@ -164,6 +164,6 @@
         (or (alist-get kind +corfu-icons--cache)
             (let* ((name (alist-get kind +corfu-icons--icons "nf-cod-code"))
                    (icon (nerd-icons-codicon name))
-                   (disp (propertize (concat icon " ") 'face 'shadow)))
+                   (disp (propertize (concat icon " ") 'face 'region)))
               (setf (alist-get kind +corfu-icons--cache) disp)
               disp))))))

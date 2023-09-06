@@ -149,7 +149,7 @@
 
 (use-package evil
   :demand
-  :hook (after-init . evil-mode)
+  :config (evil-mode)
   :custom
   (evil-want-keybinding nil) ; for evil-collection
   (evil-want-C-g-bindings t)
@@ -171,7 +171,7 @@
 (use-package evil-collection
   :demand
   :custom
-  ;; TODO (evil-collection-mode-list '())
+  ;; (evil-collection-mode-list '(custom consult dired ediff flycheck ibuffer info magit minibuffer neotree))
   (evil-collection-magit-want-horizontal-movement t)
   (evil-collection-magit-use-z-for-folds t)
   :config
@@ -343,11 +343,13 @@
 
 ;; OSC52 FTW
 (use-package clipetty
-  :hook (after-init . global-clipetty-mode))
+  :demand
+  :config (global-clipetty-mode))
 
 ;; display cursor as bar instread of box in terminal
 (use-package evil-terminal-cursor-changer
-  :hook (after-init . evil-terminal-cursor-changer-activate)
+  :demand
+  :config (evil-terminal-cursor-changer-activate)
   :custom
   (evil-insert-state-cursor 'bar)
   (evil-visual-state-cursor 'hollow))
@@ -387,22 +389,26 @@
   )
 
 (use-package undo-fu-session
-  :hook (after-init . undo-fu-session-global-mode)
+  :demand
+  :config (undo-fu-session-global-mode)
   :custom (undo-fu-session-directory (emacsd "cache/undo-fu-session"))
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package saveplace
-  :hook (after-init . save-place-mode)
+  :demand
+  :config (save-place-mode)
   :custom (save-place-file (emacsd "cache/saveplace"))
   ;; :config (add-hook 'save-place-after-find-file-hook (lambda (&rest _) (if buffer-file-name (ignore-errors (recenter)))))
   )
 
 (use-package savehist
-  :hook (after-init . savehist-mode)
+  :demand
+  :config (savehist-mode)
   :custom (savehist-file (emacsd "cache/savehist")))
 
 (use-package recentf
-  :hook (after-init . recentf-mode)
+  :demand
+  :config (recentf-mode)
   :custom
   (recentf-save-file (emacsd "cache/recentf"))
   (recentf-auto-cleanup nil)
@@ -685,9 +691,10 @@
   )
 
 (use-package projectile
-  :hook (after-init . projectile-mode)
+  :demand
+  :config (projectile-mode)
   :custom
-  (projectile-cache-file (emacsd "cache/projectile.cache"))
+  (projectile-cache-file nil) ;; large and slow
   (projectile-known-projects-file (emacsd "cache/projectile.projects"))
   (projectile-auto-discover nil)
   (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
@@ -711,7 +718,6 @@
 
 (use-package deft
   :straight (:host github :repo "scturtle/deft")
-  :commands (deft)
   :custom
   (deft-extensions '("org"))
   (deft-directory "~/code/notes")
@@ -735,7 +741,7 @@
   )
 
 (use-package tree-sitter
-  :hook (after-init . global-tree-sitter-mode)
+  :hook (prog-mode . global-tree-sitter-mode)
   :hook (tree-sitter-mode . tree-sitter-hl-mode)
   )
 
@@ -795,4 +801,4 @@
                         :major-modes '(tablegen-mode)
                         :server-id 'tblgenls)))))
 
-(use-package rainbow-mode :commands rainbow-mode)
+(use-package rainbow-mode)
