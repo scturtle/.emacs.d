@@ -60,12 +60,24 @@
   ;; sensible defaults
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
+  (setq initial-major-mode 'fundamental-mode) ; for *scratch*
   (setq use-short-answers t) ;; y-or-n-p for >= 28
   (delete-selection-mode +1)
   (setq vc-follow-symlinks t)
   (setq require-final-newline t)
   (show-paren-mode t)
   (setq show-paren-delay 0.0)
+
+  ;; save history of minibuffer, recent files, last place
+  (setq savehist-file (emacsd "cache/savehist")
+        save-place-file (emacsd "cache/saveplace")
+        recentf-save-file (emacsd "cache/recentf")
+        recentf-auto-cleanup nil
+        recentf-max-saved-items 400)
+  (savehist-mode)
+  (recentf-mode)
+  (save-place-mode)
+  (add-hook 'kill-emacs-hook #'recentf-cleanup)
 
   ;; enable mouse in terminal
   (add-hook 'tty-setup-hook #'xterm-mouse-mode)
@@ -394,28 +406,6 @@
   :custom (undo-fu-session-directory (emacsd "cache/undo-fu-session"))
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
-(use-package saveplace
-  :demand
-  :config (save-place-mode)
-  :custom (save-place-file (emacsd "cache/saveplace"))
-  ;; :config (add-hook 'save-place-after-find-file-hook (lambda (&rest _) (if buffer-file-name (ignore-errors (recenter)))))
-  )
-
-(use-package savehist
-  :demand
-  :config (savehist-mode)
-  :custom (savehist-file (emacsd "cache/savehist")))
-
-(use-package recentf
-  :demand
-  :config (recentf-mode)
-  :custom
-  (recentf-save-file (emacsd "cache/recentf"))
-  (recentf-auto-cleanup nil)
-  (recentf-max-saved-items 200)
-  :config
-  (add-hook 'kill-emacs-hook #'recentf-cleanup))
-
 (use-package which-key
   :hook (after-init . which-key-mode)
   :custom
@@ -483,7 +473,7 @@
    [remap projectile-ripgrep]            #'consult-ripgrep)
   :custom
   (consult-project-function #'projectile-project-root)
-  (consult-narrow-key "<")
+  (consult-narrow-key "<") ;; restrict results to certain groups
   (consult-line-numbers-widen t)
   (consult-async-min-input 2)
   (consult-async-refresh-delay  0.15)
