@@ -684,7 +684,7 @@
   :demand
   :config (projectile-mode)
   :custom
-  (projectile-cache-file nil) ;; large and slow
+  (projectile-cache-file "/dev/null")
   (projectile-known-projects-file (emacsd "cache/projectile.projects"))
   (projectile-auto-discover nil)
   (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
@@ -696,6 +696,8 @@
   :preface
   ;; disable checking and cleaning especially for remote projects
   (advice-add #'projectile--cleanup-known-projects :override (lambda (&rest _)))
+  ;; disable serialize to `projectile-cache-file', may be large to load
+  (advice-add #'projectile-serialize-cache :override (lambda (&rest _)))
   :config
   (add-to-list 'projectile-globally-ignored-directories "^build$")
   (add-to-list 'projectile-globally-ignored-directories "^\\.ccls-cache$")
