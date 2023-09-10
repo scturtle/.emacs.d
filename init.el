@@ -420,6 +420,7 @@
 (use-package nerd-icons)
 
 (use-package doom-modeline
+  ;; :disabled
   :demand
   :hook (after-init . doom-modeline-mode)
   :custom
@@ -431,6 +432,9 @@
   (doom-modeline-def-modeline 'main
     '(modals matches buffer-info remote-host)
     '(checker misc-info lsp buffer-position time)))
+
+;; (load-file (emacsd "mudline.el"))
+;; (mudline-mode)
 
 (use-package vertico
   :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
