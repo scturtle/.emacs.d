@@ -57,6 +57,9 @@
 
   (load-theme 'aura 'no-confirm)
 
+  (load-file (emacsd "mudline.el"))
+  (mudline-mode)
+
   ;; sensible defaults
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
@@ -419,23 +422,6 @@
 
 (use-package nerd-icons)
 
-(use-package doom-modeline
-  ;; :disabled
-  :demand
-  :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-time-icon nil)
-  (doom-modeline-unicode-fallback t)
-  (doom-modeline-buffer-file-name-style 'relative-from-project)
-  (doom-modeline-buffer-file-true-name t)
-  :config
-  (doom-modeline-def-modeline 'main
-    '(modals matches buffer-info remote-host)
-    '(checker misc-info lsp buffer-position time)))
-
-;; (load-file (emacsd "mudline.el"))
-;; (mudline-mode)
-
 (use-package vertico
   :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
@@ -700,6 +686,7 @@
   ;; only load projectile when it is needed
   (autoload 'projectile-project-p "projectile")
   (autoload 'projectile-project-root "projectile")
+  (autoload 'projectile-acquire-root "projectile")
   ;; disable checking and cleaning especially for remote projects
   (advice-add #'projectile--cleanup-known-projects :override (lambda (&rest _)))
   ;; disable serialize to `projectile-cache-file', may be large to load

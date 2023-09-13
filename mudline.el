@@ -11,30 +11,9 @@
 
 (defvar flycheck-current-errors)
 
-(declare-function flycheck-count-errors "flycheck" (errors))
-
 (defgroup mudline nil
   ""
   :group 'mode-line)
-
-(defface mudline-buffer-name
-  '((t (:inherit (mode-line-buffer-id))))
-  "Face used for major mode indicator in the mode-line."
-  :group 'mudline)
-
-(defface mudline-unimportant
-  '((t (:inherit (shadow))))
-  "Face used for less important mode-line elements."
-  :group 'mudline)
-
-(defface mudline-modified
-  '((t (:inherit (error))))
-  "Face used for the `modified' indicator symbol in the mode-line."
-  :group 'mudline)
-
-;;
-;; Helper functions
-;;
 
 (defun mudline--format (left right)
   "Return a string of `window-width' length containing LEFT and RIGHT,
@@ -46,46 +25,9 @@ aligned respectively."
                         'display `((space :align-to (- right ,reserve))))
             right)))
 
-(defvar mudline--current-window (frame-selected-window)
-  "Current window.")
-
-(defun mudline--active ()
-  (eq (frame-selected-window) mudline--current-window))
-
-(defun mudline--set-selected-window (&rest _)
-  (let ((win (frame-selected-window)))
-    (setq mudline--current-window
-          (if (minibuffer-window-active-p win)
-              (minibuffer-selected-window)
-            win))))
-
-;;
-;; Update functions
-;;
-
-(defvar-local mudline--flycheck-text nil)
-(defun mudline--update-flycheck-segment (&optional status)
-  "Update `mudline--flycheck-text' against the reported flycheck STATUS."
-  (setq mudline--flycheck-text
-        (pcase status
-          ('finished (if flycheck-current-errors
-                         (let-alist (flycheck-count-errors flycheck-current-errors)
-                           (let ((sum (+ (or .error 0) (or .warning 0))))
-                             (propertize (concat "⚑ Issues: " (number-to-string sum) "  ")
-                                         'face (if .error 'error 'warning))))
-                       (propertize "✔ Good  " 'face 'success)))
-          ('running (propertize "Δ Checking  " 'face 'font-lock-keyword-face))
-          ('errored (propertize "✖ Error  " 'face 'error))
-          ('interrupted (propertize "⏸ Paused  " 'face 'shadow))
-          ('no-checker ""))))
-
 (defun mudline--icon (icon-set icon-name face)
   (let ((func (nerd-icons--function-name icon-set)))
     (concat (propertize (funcall func icon-name) 'face face) " ")))
-
-;;
-;; Segments
-;;
 
 (defun mudline-segment-evil-state ()
   "Segment to show Evil-mode state."
@@ -108,10 +50,12 @@ aligned respectively."
    ))
 
 (defun mudline-segment-recording ()
+  "Segment to show macro recording status."
   (when (or defining-kbd-macro executing-kbd-macro)
     (mudline--icon 'mdicon "nf-md-record_circle" 'font-lock-keyword-face)))
 
 (defun mudline-segment-iedit-count ()
+  "Segment to show curent and total count of iedit selection."
   (when (and (bound-and-true-p iedit-mode)
              (bound-and-true-p iedit-occurrences-overlays))
     (let* ((this-oc (or (let ((inhibit-message t))
@@ -125,36 +69,22 @@ aligned respectively."
            (text (format "%s/%d " (if this-oc (- total index -1) "-") total)))
       (propertize text 'face 'font-lock-keyword-face))))
 
-;; (defun mudline-segment-modified ()
-;;   "Displays a color-coded buffer modification/read-only indicator in the mode-line."
-;;   (if (not (string-match-p "\\*.*\\*" (buffer-name)))
-;;       (if (buffer-modified-p)
-;;           (propertize "● " 'face 'mudline-modified)
-;;         (if (and buffer-read-only (buffer-file-name))
-;;             (propertize "■ " 'face 'mudline-unimportant)
-;;           "  "))
-;;     "  "))
-
-;; (defun mudline-segment-buffer-name ()
-;;   "Displays the name of the current buffer in the mode-line."
-;;   (propertize "%b  " 'face 'mudline-buffer-name))
-
 (defvar-local mudline--buffer-file-icon nil)
-
 (defun mudline-update-buffer-file-icon (&rest _)
   (setq mudline--buffer-file-icon
         (let ((icon (nerd-icons-icon-for-buffer)))
           (propertize icon 'help-echo (concat "Major-mode: " (format-mode-line mode-name))))))
-
 (add-hook 'find-file-hook               #'mudline-update-buffer-file-icon)
 (add-hook 'after-change-major-mode-hook #'mudline-update-buffer-file-icon)
 
 (defun mudline-segment-major-mode-icon ()
+  "Segment to show major mode as icon."
   (when-let ((icon (or mudline--buffer-file-icon
                        (mudline-update-buffer-file-icon))))
     (unless (string-empty-p icon) (concat icon " "))))
 
 (defun mudline-segment-buffer-state-icon ()
+  "Segment to show buffer status (read-only or modified) as icon."
   (ignore-errors
     (concat
      (cond (buffer-read-only
@@ -166,16 +96,65 @@ aligned respectively."
        (mudline--icon 'mdicon "nf-md-unfold_less_horizontal" 'warning))
      )))
 
+(defvar-local mudline--buffer-file-name nil)
+(defun mudline-update-buffer-file-name (&rest _)
+  (setq mudline--buffer-file-name
+        (if buffer-file-name
+            (let* ((buffer-file-name (file-local-name buffer-file-name))
+                   (file-truename (file-local-name (file-truename buffer-file-name)))
+                   (project-root (file-local-name (or (projectile-project-root) "")))
+                   (relative-path (file-relative-name file-truename project-root)))
+              (concat
+               ;; project directory
+               (propertize
+                (concat (file-name-nondirectory (directory-file-name project-root))
+                        (if (string-empty-p project-root) "" "/"))
+                'face 'font-lock-string-face)
+               ;; relative path
+               (propertize relative-path 'face 'mode-line-buffer-id)))
+          (propertize "%b" 'face 'mode-line-buffer-id))))
+(add-hook 'find-file-hook                  #'mudline-update-buffer-file-name)
+(add-hook 'after-save-hook                 #'mudline-update-buffer-file-name)
+(advice-add #'rename-buffer         :after #'mudline-update-buffer-file-name)
+(advice-add #'set-visited-file-name :after #'mudline-update-buffer-file-name)
+(advice-add #'pop-to-buffer         :after #'mudline-update-buffer-file-name)
+
+(defun mudline-segment-buffer-name ()
+  "Segment to show current project and buffer name."
+  (unless mudline--buffer-file-name
+    (mudline-update-buffer-file-name))
+  (if (buffer-modified-p)
+      (propertize mudline--buffer-file-name 'face 'font-lock-warning-face)
+    mudline--buffer-file-name))
+
 (defun mudline-segment-position ()
   "Displays the current cursor position in the mode-line."
-  (propertize "%l:%c %p%% " 'face 'shadow))
+  (propertize "%02c %p%%" 'face 'shadow))
+
+(declare-function flycheck-count-errors "flycheck" (errors))
+
+(defvar-local mudline--flycheck-text nil)
+(defun mudline--update-flycheck (&optional status)
+  (setq mudline--flycheck-text
+        (pcase status
+          ('finished (if flycheck-current-errors
+                         (let-alist (flycheck-count-errors flycheck-current-errors)
+                           (let ((sum (+ (or .error 0) (or .warning 0)))
+                                 (face (cond ((> .error 0) 'error)
+                                             ((> .warning 0) 'warning)
+                                             (t 'success))))
+                             (concat 
+                              (mudline--icon 'mdicon "nf-md-alert_circle_outline" face)
+                              (propertize (number-to-string sum) 'face face))))
+                        (mudline--icon 'mdicon "nf-md-check_circle_outline" 'success)))
+          ('running     (mudline--icon 'mdicon "nf-md-timer_sand" 'success))
+          ('errored     (mudline--icon 'mdicon "nf-md-alert_circle_outline" 'error))
+          ('interrupted (mudline--icon 'mdicon "nf-md-pause_circle_outline" 'error))
+          (_ ""))))
 
 (defun mudline-segment-flycheck ()
-  "Displays color-coded flycheck information in the mode-line (if available)."
+  "Segment to show flycheck status."
   mudline--flycheck-text)
-
-;; Store the default mode-line format
-(defvar mudline--default-mode-line mode-line-format)
 
 ;;;###autoload
 (define-minor-mode mudline-mode
@@ -185,12 +164,9 @@ aligned respectively."
   :lighter nil
   (if mudline-mode
       (progn
-
-        (add-hook 'pre-redisplay-functions #'mudline--set-selected-window)
-
         ;; Setup flycheck hooks
-        (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck-segment)
-        (add-hook 'flycheck-mode-hook #'mudline--update-flycheck-segment)
+        (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+        (add-hook 'flycheck-mode-hook #'mudline--update-flycheck)
 
         ;; Set the new mode-line-format
         (setq-default mode-line-format
@@ -204,8 +180,8 @@ aligned respectively."
                              (:eval (mudline-segment-iedit-count))
                              (:eval (mudline-segment-major-mode-icon))
                              (:eval (mudline-segment-buffer-state-icon))
+                             (:eval (mudline-segment-buffer-name))
                              ))
-
                           ;; Right
                           (format-mode-line
                            '(
@@ -214,13 +190,10 @@ aligned respectively."
                              ))
                           )))))
     (progn
-
       ;; Remove flycheck hooks
-      (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck-segment)
-      (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck-segment)
-
-      ;; Restore the original mode-line format
-      (setq-default mode-line-format mudline--default-mode-line))))
+      (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+      (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+      )))
 
 (provide 'mudline)
 ;;; mudline.el ends here
