@@ -200,13 +200,21 @@
 (use-package general
   :demand
   :config
-  (general-evil-setup)
 
-  (general-define-key
+  ;; https://github.com/noctuid/general.el/issues/493
+  (add-hook 'after-init-hook
+            (lambda (&rest _)
+              (when-let ((messages-buffer (get-buffer "*Messages*")))
+                (with-current-buffer messages-buffer
+                  (evil-normalize-keymaps)))))
+
+  (general-create-definer global-leader
+    :states '(normal visual insert emacs)
     :prefix "SPC"
-    :states '(normal visual emacs)
-    :keymaps 'override
+    :non-normal-prefix "M-SPC"
+    :keymaps 'override)
 
+  (global-leader
     "SPC" '(execute-extended-command :wk "execute command")
     [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
     "u" '(universal-argument :wk "universal")
