@@ -133,19 +133,19 @@ aligned respectively."
 
 (declare-function flycheck-count-errors "flycheck" (errors))
 
-(defvar-local mudline--flycheck-text nil)
+(defvar-local mudline--flycheck-text "")
 (defun mudline--update-flycheck (&optional status)
   (setq mudline--flycheck-text
         (pcase status
-          ('finished (if flycheck-current-errors
-                         (let-alist (flycheck-count-errors flycheck-current-errors)
-                           (let ((sum (+ (or .error 0) (or .warning 0)))
-                                 (face (cond ((> .error 0) 'error)
-                                             ((> .warning 0) 'warning)
-                                             (t 'success))))
-                             (concat 
-                              (mudline--icon 'mdicon "nf-md-alert_circle_outline" face)
-                              (propertize (number-to-string sum) 'face face))))
+          ('finished  (if flycheck-current-errors
+                          (let-alist (flycheck-count-errors flycheck-current-errors)
+                            (let ((sum (+ (or .error 0) (or .warning 0)))
+                                  (face (cond ((> .error 0) 'error)
+                                              ((> .warning 0) 'warning)
+                                              (t 'success))))
+                              (concat
+                               (mudline--icon 'mdicon "nf-md-alert_circle_outline" face)
+                               (propertize (number-to-string sum) 'face face))))
                         (mudline--icon 'mdicon "nf-md-check_circle_outline" 'success)))
           ('running     (mudline--icon 'mdicon "nf-md-timer_sand" 'success))
           ('errored     (mudline--icon 'mdicon "nf-md-alert_circle_outline" 'error))
@@ -156,17 +156,17 @@ aligned respectively."
   "Segment to show flycheck status."
   (propertize mudline--flycheck-text 'help-echo "flycheck-mode"))
 
-(defvar-local mudline--lsp-text nil)
+(defvar-local mudline--lsp-text "")
 (defun mudline--update-lsp (&optional _)
   (setq mudline--lsp-text
         (let ((workspaces (lsp-workspaces)))
           (mudline--icon 'octicon "nf-oct-rocket"
-                                     (if workspaces 'success 'warning)))))
-(add-hook 'lsp-before-initialize-hook #'mudline--update-lsp)
-(add-hook 'lsp-after-initialize-hook #'mudline--update-lsp)
+                         (if workspaces 'success 'warning)))))
+(add-hook 'lsp-before-initialize-hook        #'mudline--update-lsp)
+(add-hook 'lsp-after-initialize-hook         #'mudline--update-lsp)
 (add-hook 'lsp-after-uninitialized-functions #'mudline--update-lsp)
-(add-hook 'lsp-before-open-hook #'mudline--update-lsp)
-(add-hook 'lsp-after-open-hook #'mudline--update-lsp)
+(add-hook 'lsp-before-open-hook              #'mudline--update-lsp)
+(add-hook 'lsp-after-open-hook               #'mudline--update-lsp)
 
 (defun mudline-segment-lsp ()
   "Segment to show lsp-mode status."

@@ -326,8 +326,7 @@
    "gd" #'+goto-definition
    "gD" #'lsp-ui-peek-find-references
    "gb" #'xref-go-back
-   "gf" #'xref-go-forward
-   )
+   "gf" #'xref-go-forward)
 
   ;; unbind tab for neotree
   (general-define-key
@@ -622,8 +621,7 @@
       (lsp--render-element (concat "```rust\n" sig "\n```"))))
   )
 
-(use-package rustic
-  )
+(use-package rustic)
 
 (use-package ccls
   :custom
@@ -788,8 +786,7 @@
   :custom
   ;; (lsp-pyright-use-library-code-for-types nil)
   (lsp-pyright-python-executable-cmd "python3")
-  (lsp-pyright-typechecking-mode "off")
-  )
+  (lsp-pyright-typechecking-mode "off"))
 
 ;; setup llvm
 (defvar +llvm-dir nil)
