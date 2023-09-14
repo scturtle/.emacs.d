@@ -521,9 +521,9 @@
   ;; remove underline in hover
   (lsp-face-highlight-read ((t :underline nil)))
   :config
-  ;; fix ccls progress report, need `%%%%' here
+  ;; fix modeline progress report, see `mudline-segment-misc-info'
   (advice-add #'lsp--progress-status :filter-return
-              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
+              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%%%" s))))
   ;; for corfu, original style is lsp-passthrough
   (defun +lsp-orderless () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless)))))
   (add-hook 'lsp-completion-mode-hook #'+lsp-orderless)
