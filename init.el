@@ -18,9 +18,9 @@
                               (* 1000.0 (float-time (time-since before-init-time))))))
 
 ;; disable startup messages
-(setq-default inhibit-redisplay t inhibit-message t)
-(add-hook 'window-setup-hook
-          (lambda () (setq-default inhibit-redisplay nil inhibit-message nil) (redisplay)))
+;; (setq-default inhibit-redisplay t inhibit-message t)
+;; (add-hook 'window-setup-hook
+;;           (lambda () (setq-default inhibit-redisplay nil inhibit-message nil) (redisplay)))
 
 ;; say no to `package.el'
 (setq package-enable-at-startup nil)
@@ -530,9 +530,6 @@
   ;; setup the orderless-flex style for its 1st search term
   (defun +orderless-flex-first (_pat idx _tot) (if (eq idx 0) 'orderless-flex 'orderless-literal))
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
-  )
-
-(with-eval-after-load 'lsp-mode
   ;; override `lsp-tramp-connection'
   (advice-add 'lsp-tramp-connection :override #'lsp-tramp-connection@override)
   ;; register remote ccls client
@@ -795,20 +792,30 @@
   )
 
 ;; setup llvm
-(let* ((dirs '("~/workspace/llvm-utils" "~/code/llvm-utils"))
-       (llvm-dir (cl-first (cl-remove-if-not 'file-directory-p dirs)))
-       (lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))
-  (when llvm-dir
-    (add-to-list 'load-path (concat llvm-dir "/llvm/utils/emacs"))
-    (add-to-list 'load-path (concat llvm-dir "/mlir/utils/emacs"))
-    (require 'tablegen-mode)
-    (require 'mlir-mode)
-    (add-hook 'tablegen-mode-hook #'lsp-deferred)
-    (with-eval-after-load 'lsp-mode
+(defvar +llvm-dir nil)
+(cl-loop for dir in '("~/workspace/llvm-utils" "~/code/llvm-utils")
+         when (file-directory-p dir)
+         do (setq +llvm-dir dir))
+
+(use-package tablegen-mode
+  :if +llvm-dir
+  :straight (:type built-in)
+  :load-path (lambda () (concat +llvm-dir "/llvm/utils/emacs"))
+  :mode ("\\.td\\'")
+  :hook (tablegen-mode . lsp-deferred)
+  :config
+  (with-eval-after-load 'lsp-mode
+    (let ((lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))
       (add-to-list 'lsp-language-id-configuration '(tablegen-mode . "tablegen"))
       (lsp-register-client
        (make-lsp-client :new-connection (lsp-stdio-connection lsp-cmds)
                         :major-modes '(tablegen-mode)
                         :server-id 'tblgenls)))))
+
+(use-package mlir-mode
+  :if +llvm-dir
+  :straight (:type built-in)
+  :load-path (lambda () (concat +llvm-dir "/mlir/utils/emacs"))
+  :mode ("\\.mlir\\'"))
 
 (use-package rainbow-mode)

@@ -129,7 +129,7 @@ aligned respectively."
 
 (defun mudline-segment-position ()
   "Displays the current cursor position in the mode-line."
-  (propertize "%02c %p%%" 'face 'shadow))
+  (propertize "%03c %p%%" 'face 'shadow))
 
 (declare-function flycheck-count-errors "flycheck" (errors))
 
