@@ -1,26 +1,42 @@
 ;;; -*- lexical-binding: t; -*-
 
-;; GC is disabled during startup, reset it back
+;; disable UI components
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(setq mode-line-format nil)
+
+;; disable GC during startup
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold (* 16 1024 1024)
                            gc-cons-percentage 0.1)))
 
 ;; show startup time
-(add-hook 'emacs-startup-hook
+(add-hook 'window-setup-hook
           (lambda () (message "startup in %.2f ms"
-                              (* 1000.0 (float-time (time-subtract after-init-time before-init-time))))))
+                              (* 1000.0 (float-time (time-since before-init-time))))))
+
+;; disable startup messages
+(setq-default inhibit-redisplay t inhibit-message t)
+(add-hook 'window-setup-hook
+          (lambda () (setq-default inhibit-redisplay nil inhibit-message nil) (redisplay)))
+
+;; say no to `package.el'
+(setq package-enable-at-startup nil)
+(setq load-prefer-newer t)
 
 ;; disable `file-name-handler-alist' during startup
-(defvar doom--initial-file-name-handler-alist file-name-handler-alist)
+(defvar file-name-handler-alist-backup file-name-handler-alist)
 (setq file-name-handler-alist nil)
-(defun doom-reset-file-handler-alist-h ()
+(defun reset-file-handler-alist-h ()
   (dolist (handler file-name-handler-alist)
-    (add-to-list 'doom--initial-file-name-handler-alist handler))
-  (setq file-name-handler-alist doom--initial-file-name-handler-alist))
-(add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
+    (add-to-list 'file-name-handler-alist-backup handler))
+  (setq file-name-handler-alist file-name-handler-alist-backup))
+(add-hook 'emacs-startup-hook #'reset-file-handler-alist-h)
 
 ;; handy definitions
-(defun emacsd (path) (expand-file-name path user-emacs-directory))
+(defun emacs.d (path) (expand-file-name path user-emacs-directory))
 (defconst IS-MAC (eq system-type 'darwin))
 
 ;; straight
@@ -46,19 +62,21 @@
 (setq use-package-compute-statistics t) ;; M-x use-package-report
 (setq use-package-always-defer t)
 
-;; (add-to-list 'load-path (emacsd "lisp"))
-(load-file (emacsd "funcs.el"))
+(use-package benchmark-init
+  ;; :demand
+  :config (add-hook 'window-setup-hook 'benchmark-init/deactivate))
+
+;; load custom functions and UIs
+(load-theme 'aura 'no-confirm)
+(load-file (emacs.d "funcs.el"))
+(load-file (emacs.d "mudline.el"))
+(mudline-mode)
 
 ;; defaults
 (use-package emacs
   :init
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
-
-  (load-theme 'aura 'no-confirm)
-
-  (load-file (emacsd "mudline.el"))
-  (mudline-mode)
 
   ;; sensible defaults
   (setq inhibit-splash-screen t)
@@ -72,9 +90,9 @@
   (setq show-paren-delay 0.0)
 
   ;; save history of minibuffer, recent files, last place
-  (setq savehist-file (emacsd "cache/savehist")
-        save-place-file (emacsd "cache/saveplace")
-        recentf-save-file (emacsd "cache/recentf")
+  (setq savehist-file (emacs.d "cache/savehist")
+        save-place-file (emacs.d "cache/saveplace")
+        recentf-save-file (emacs.d "cache/recentf")
         recentf-auto-cleanup nil
         recentf-max-saved-items 400)
   (savehist-mode)
@@ -99,7 +117,7 @@
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
   ;; custom
-  (setq custom-file (emacsd "custom.el"))
+  (setq custom-file (emacs.d "custom.el"))
   (when (file-exists-p custom-file)
     (load-file custom-file))
 
@@ -121,7 +139,7 @@
         sentence-end-double-space nil)
   (setq create-lockfiles nil
         make-backup-files nil
-        auto-save-list-file-prefix (emacsd "cache/autosave/")
+        auto-save-list-file-prefix (emacs.d "cache/autosave/")
         auto-save-default nil)
 
   ;; for prog mode
@@ -144,7 +162,7 @@
   (setq display-time-format "%a %H:%M"
         display-time-default-load-average nil)
 
-  (setq eshell-directory-name (emacsd "cache/eshell"))
+  (setq eshell-directory-name (emacs.d "cache/eshell"))
 
   ;; do not show line number in modeline
   (setq line-number-mode nil)
@@ -153,7 +171,6 @@
   (setq diff-refine nil)  ;; no hunk refinement
   )
 
-;; packages
 (use-package gcmh
   :hook (after-init . gcmh-mode)
   :custom
@@ -246,7 +263,7 @@
     "ff" 'find-file
     "fs" 'save-buffer
     "fr" #'recentf-open-files
-    "fp" '((lambda () (interactive) (find-file (emacsd "init.el"))) :wk "edit init.el")
+    "fp" '((lambda () (interactive) (find-file (emacs.d "init.el"))) :wk "edit init.el")
 
     "g" '(:ignore t :wk "git")
     "gg" #'magit-status
@@ -414,7 +431,7 @@
 (use-package undo-fu-session
   :demand
   :config (undo-fu-session-global-mode)
-  :custom (undo-fu-session-directory (emacsd "cache/undo-fu-session"))
+  :custom (undo-fu-session-directory (emacs.d "cache/undo-fu-session"))
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package which-key
@@ -632,9 +649,9 @@
 
 (use-package magit
   :custom
-  (transient-levels-file  (emacsd "cache/transient/levels"))
-  (transient-values-file  (emacsd "cache/transient/values"))
-  (transient-history-file (emacsd "cache/transient/history"))
+  (transient-levels-file  (emacs.d "cache/transient/levels"))
+  (transient-values-file  (emacs.d "cache/transient/values"))
+  (transient-history-file (emacs.d "cache/transient/history"))
   (transient-default-level 7) ;; for --autostash
   (transient-display-buffer-action '(display-buffer-below-selected))
   (magit-save-repository-buffers nil)
@@ -672,7 +689,7 @@
   :config
   ;; do not move these to `custom'
   (setq tramp-verbose 1)
-  (setq tramp-persistency-file-name (emacsd "cache/tramp"))
+  (setq tramp-persistency-file-name (emacs.d "cache/tramp"))
   (setq tramp-ssh-controlmaster-options "-o ControlPath=~/.ssh/master-%%h:%%p -o ControlMaster=auto -o ControlPersist=yes")
   ;; for magit to use newer git
   (add-to-list 'tramp-remote-path "~/.local/bin")
@@ -682,7 +699,7 @@
   :config (projectile-mode)
   :custom
   (projectile-cache-file "/dev/null")
-  (projectile-known-projects-file (emacsd "cache/projectile.projects"))
+  (projectile-known-projects-file (emacs.d "cache/projectile.projects"))
   (projectile-auto-discover nil)
   (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
   (projectile-globally-ignored-file-suffixes '(".elc" ".pyc" ".o"))
@@ -753,7 +770,7 @@
   (org-list-allow-alphabetical t)
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 1)
-  (org-persist-directory (emacsd "cache/org-persist"))
+  (org-persist-directory (emacs.d "cache/org-persist"))
   (org-src-preserve-indentation t)
   (org-html-head-include-default-style nil) ;; org-html-style-default
   (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
