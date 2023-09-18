@@ -17,11 +17,6 @@
           (lambda () (message "startup in %.2f ms"
                               (* 1000.0 (float-time (time-since before-init-time))))))
 
-;; disable startup messages
-;; (setq-default inhibit-redisplay t inhibit-message t)
-;; (add-hook 'window-setup-hook
-;;           (lambda () (setq-default inhibit-redisplay nil inhibit-message nil) (redisplay)))
-
 ;; say no to `package.el'
 (setq package-enable-at-startup nil)
 (setq load-prefer-newer t)

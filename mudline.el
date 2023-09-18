@@ -52,7 +52,11 @@ aligned respectively."
 (defun mudline-segment-recording ()
   "Segment to show macro recording status."
   (when (or defining-kbd-macro executing-kbd-macro)
-    (mudline--icon 'mdicon "nf-md-record_circle" 'font-lock-keyword-face)))
+    (concat
+     (mudline--icon 'mdicon "nf-md-record_circle" 'font-lock-keyword-face)
+     (propertize (format "@%s " (char-to-string evil-this-macro))
+                 'face 'font-lock-keyword-face 'help-echo "macro recording")
+     )))
 
 (defun mudline-segment-iedit-count ()
   "Segment to show curent and total count of iedit selection."
