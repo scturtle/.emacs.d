@@ -167,3 +167,5 @@
                    (disp (propertize (concat icon " ") 'face 'region)))
               (setf (alist-get kind +corfu-icons--cache) disp)
               disp))))))
+
+(provide 'funcs)

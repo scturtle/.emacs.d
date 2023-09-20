@@ -61,10 +61,14 @@
   ;; :demand
   :config (add-hook 'window-setup-hook 'benchmark-init/deactivate))
 
-;; load custom functions and UIs
-(load-theme 'aura 'no-confirm)
-(load-file (emacs.d "funcs.el"))
-(load-file (emacs.d "mudline.el"))
+(use-package nerd-icons :demand)
+
+;; load custom funcs and UIs
+(add-to-list 'custom-theme-load-path (emacs.d "lisp"))
+(load-theme 'aura t)
+(add-to-list 'load-path (emacs.d "lisp"))
+(require 'funcs)
+(require 'mudline)
 (mudline-mode)
 
 ;; defaults
@@ -213,7 +217,7 @@
   :demand
   :config
 
-  ;; https://github.com/noctuid/general.el/issues/493
+  ;; fix message buffer https://github.com/noctuid/general.el/issues/493
   (add-hook 'after-init-hook
             (lambda (&rest _)
               (when-let ((messages-buffer (get-buffer "*Messages*")))
@@ -345,9 +349,9 @@
    "C-h"      'delete-backward-char
    "C-u"      'evil-delete-back-to-indentation)
 
-  ;; oevrride evil ex mode (in ":")
+  ;; oevrride evil ex mode (in ":" "/")
   (general-define-key
-   :keymaps 'evil-ex-completion-map
+   :keymaps '(evil-ex-completion-map evil-ex-search-keymap)
    "C-a" 'move-beginning-of-line
    "C-f" 'forward-char
    "C-b" 'backward-char
@@ -416,6 +420,7 @@
   :general (:states 'visual "S" 'evil-surround-region))
 
 (use-package undo-fu
+  :demand
   :config
   (setq undo-limit         400000   ; 400kb (default is 160kb)
         undo-strong-limit 3000000   ; 3mb   (default is 240kb)
@@ -438,8 +443,6 @@
   (which-key-side-window-slot -10)
   ;; (which-key-idle-delay 1.5)
   )
-
-(use-package nerd-icons)
 
 (use-package vertico
   :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))

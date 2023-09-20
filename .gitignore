@@ -1,7 +1,6 @@
 /straight
-/recentf
 /cache
 /custom.el
 /.lsp-session-v1
-/flycheck_funcs.el
+flycheck_*.el
 *.elc

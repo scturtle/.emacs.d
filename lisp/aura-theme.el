@@ -202,7 +202,7 @@
    ;;;; vertico
    `(vertico-current         ((t (:background ,region :extend t))))
    `(vertico-group-title     ((t (:foreground ,comments))))
-   `(vertico-group-separator ((t (:foreground ,comments))))
+   `(vertico-group-separator ((t (:foreground ,comments :strike-through t))))
 
    ;;;; orderless
    `(orderless-match-face-0 ((t (:foreground ,(blend blue3  fg 0.6) :background ,(blend blue3  bg 0.1)))))
