@@ -690,8 +690,10 @@
 
 (use-package projectile
   :config (projectile-mode)
+  ;; only load projectile when it is needed
+  :autoload projectile-project-p projectile-project-root projectile-acquire-root
   :custom
-  (projectile-cache-file "/dev/null")
+  (projectile-cache-file (emacs.d "cache/projectile.cache"))
   (projectile-known-projects-file (emacs.d "cache/projectile.projects"))
   (projectile-auto-discover nil)
   (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
@@ -701,10 +703,6 @@
   (projectile-kill-buffers-filter 'kill-only-files)
   (projectile-indexing-method 'alien)
   :preface
-  ;; only load projectile when it is needed
-  (autoload 'projectile-project-p "projectile")
-  (autoload 'projectile-project-root "projectile")
-  (autoload 'projectile-acquire-root "projectile")
   ;; disable checking and cleaning especially for remote projects
   (advice-add #'projectile--cleanup-known-projects :override (lambda (&rest _)))
   ;; disable serialize to `projectile-cache-file', may be large to load
