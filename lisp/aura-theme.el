@@ -265,6 +265,12 @@
    `(magit-process-ok  ((t (:inherit 'success))))
    ;; TODO: magit cherry dimmed reflog sequence signature
 
+   ;;;; smerge-mode
+   `(smerge-upper           ((t (:background ,(blend vc-deleted bg 0.1) :extend t))))
+   `(smerge-lower           ((t (:background ,(blend vc-added bg 0.1) :extend t))))
+   `(smerge-base            ((t (:background ,(blend orange bg 0.1) :extend t))))
+   `(smerge-markers         ((t (:background ,(darken blue3 0.3) :extend t))))
+
    ;;;; neotree
    `(neo-root-dir-face      ((t (:foreground ,green))))
    `(neo-file-link-face     ((t (:foreground ,constants))))
