@@ -569,11 +569,15 @@
           completion-cycle-threshold completion-cycling)
       (apply #'consult-completion-in-region completion-in-region--data)))
   ;; use nerd-icons
-  (add-to-list 'corfu-margin-formatters #'+corfu/margin-formatter)
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
   :general
   (:keymaps 'corfu-map
             "M-SPC" 'corfu-insert-separator
             "M-m"   'corfu-move-to-minibuffer)
+  )
+
+(use-package nerd-icons-corfu
+  :straight (:host github :repo "LuigiPiucco/nerd-icons-corfu")
   )
 
 (use-package corfu-terminal
