@@ -19,7 +19,7 @@
 
 ;; say no to `package.el'
 (setq package-enable-at-startup nil)
-(setq load-prefer-newer t)
+;; (setq load-prefer-newer t)
 
 ;; disable `file-name-handler-alist' during startup
 (defvar file-name-handler-alist-backup file-name-handler-alist)
