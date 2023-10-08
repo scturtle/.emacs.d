@@ -301,6 +301,7 @@
 
     "t"  '(:ignore t :wk "toggle")
     "tl" '(display-line-numbers-mode :wk "toggle line numbers")
+    "tt" '(toggle-truncate-lines :wk "toggle truncate lines")
     "tn" #'tab-bar-new-tab
     "tm" #'tab-bar-move-tab
     "1"  '((lambda() (interactive) (tab-bar-select-tab 1)) :wk "switch tab 1")
@@ -630,7 +631,8 @@
   (ccls-args '("--log-file=/tmp/ccls.log"))
   :config
   (setq ccls-initialization-options
-        '(:index (:trackDependency 1 :threads 8) :completion (:caseSensitivity 0 :filterAndSort t :maxNum 300)))
+        `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
+          :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
   (when IS-MAC
     (setq ccls-initialization-options
           (append ccls-initialization-options
