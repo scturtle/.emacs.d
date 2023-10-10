@@ -84,6 +84,7 @@
   (setq use-short-answers t) ;; y-or-n-p for >= 28
   (delete-selection-mode +1)
   (setq vc-follow-symlinks t)
+  (setq apropos-do-all t)
   (setq require-final-newline t)
   (show-paren-mode t)
   (setq show-paren-delay 0.0)
@@ -309,6 +310,10 @@
     "3"  '((lambda() (interactive) (tab-bar-select-tab 3)) :wk "switch tab 3")
     "4"  '((lambda() (interactive) (tab-bar-select-tab 4)) :wk "switch tab 4")
     "5"  '((lambda() (interactive) (tab-bar-select-tab 5)) :wk "switch tab 5")
+    "6"  '((lambda() (interactive) (tab-bar-select-tab 6)) :wk "switch tab 6")
+    "7"  '((lambda() (interactive) (tab-bar-select-tab 7)) :wk "switch tab 7")
+    "8"  '((lambda() (interactive) (tab-bar-select-tab 8)) :wk "switch tab 8")
+    "9"  '((lambda() (interactive) (tab-bar-select-tab 9)) :wk "switch tab 9")
 
     "w" '(:ignore t :wk "window")
     "wd" #'evil-window-delete
@@ -368,18 +373,6 @@
    ">" #'+evil/shift-right)
   )
 
-;; better `describe-*' functions
-(use-package helpful
-  :hook (helpful-mode . visual-line-mode)
-  :custom
-  (apropos-do-all t) ;; ???
-  :general
-  ([remap describe-function] 'helpful-callable
-   [remap describe-command]  'helpful-command
-   [remap describe-variable] 'helpful-variable
-   [remap describe-key]      'helpful-key
-   [remap describe-symbol]   'helpful-symbol))
-
 ;; OSC52 FTW
 (use-package clipetty
   :demand
@@ -413,12 +406,13 @@
                                                   evil-window-down evil-window-next evil-window-prev)))
 
 (use-package evil-nerd-commenter
-  :general
-  ("M-;" 'comment-line
-   [remap comment-line] #'evilnc-comment-or-uncomment-lines))
+  :bind
+  ("M-;" . 'comment-line)
+  ([remap comment-line] . #'evilnc-comment-or-uncomment-lines))
 
 (use-package evil-surround
-  :general (:states 'visual "S" 'evil-surround-region))
+  :commands evil-surround-region
+  :init (evil-define-key 'visual global-map "S" #'evil-surround-region))
 
 (use-package undo-fu
   :demand
@@ -455,9 +449,10 @@
 
 (use-package marginalia
   :hook (after-init . marginalia-mode)
-  :general
-  (:keymaps 'minibuffer-local-map
-            "M-A" #'marginalia-cycle))
+  :bind
+  (:map minibuffer-local-map
+        ("M-A" . #'marginalia-cycle))
+  )
 
 (use-package orderless
   :custom
@@ -468,22 +463,22 @@
   )
 
 (use-package consult
-  :general
-  ([remap apropos]                       #'consult-apropos
-   [remap bookmark-jump]                 #'consult-bookmark
-   [remap evil-show-marks]               #'consult-mark
-   [remap evil-show-registers]           #'consult-register
-   [remap goto-line]                     #'consult-goto-line
-   [remap imenu]                         #'consult-imenu
-   [remap locate]                        #'consult-locate
-   [remap load-theme]                    #'consult-theme
-   [remap man]                           #'consult-man
-   [remap recentf-open-files]            #'consult-recent-file
-   [remap switch-to-buffer]              #'consult-buffer
-   [remap switch-to-buffer-other-window] #'consult-buffer-other-window
-   [remap switch-to-buffer-other-frame]  #'consult-buffer-other-frame
-   [remap yank-pop]                      #'consult-yank-pop
-   [remap projectile-ripgrep]            #'consult-ripgrep)
+  :bind
+  ([remap apropos]                       . #'consult-apropos)
+  ([remap bookmark-jump]                 . #'consult-bookmark)
+  ([remap evil-show-marks]               . #'consult-mark)
+  ([remap evil-show-registers]           . #'consult-register)
+  ([remap goto-line]                     . #'consult-goto-line)
+  ([remap imenu]                         . #'consult-imenu)
+  ([remap locate]                        . #'consult-locate)
+  ([remap load-theme]                    . #'consult-theme)
+  ([remap man]                           . #'consult-man)
+  ([remap recentf-open-files]            . #'consult-recent-file)
+  ([remap switch-to-buffer]              . #'consult-buffer)
+  ([remap switch-to-buffer-other-window] . #'consult-buffer-other-window)
+  ([remap switch-to-buffer-other-frame]  . #'consult-buffer-other-frame)
+  ([remap yank-pop]                      . #'consult-yank-pop)
+  ([remap projectile-ripgrep]            . #'consult-ripgrep)
   :custom
   (consult-project-function #'projectile-project-root)
   (consult-narrow-key "<") ;; restrict results to certain groups
@@ -571,10 +566,11 @@
       (apply #'consult-completion-in-region completion-in-region--data)))
   ;; use nerd-icons
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-  :general
-  (:keymaps 'corfu-map
-            "M-SPC" 'corfu-insert-separator
-            "M-m"   'corfu-move-to-minibuffer)
+  :bind
+  (:map corfu-map
+        ("M-SPC" . 'corfu-insert-separator)
+        ("M-m"   . 'corfu-move-to-minibuffer)
+        )
   )
 
 (use-package nerd-icons-corfu
