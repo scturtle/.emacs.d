@@ -814,3 +814,11 @@
   :mode ("\\.mlir\\'"))
 
 (use-package rainbow-mode)
+
+(use-package web-mode
+  :mode "\\.\\(html?\\|css\\|js\\)\\'"
+  :custom
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  )
