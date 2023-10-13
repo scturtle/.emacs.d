@@ -57,6 +57,9 @@
 (setq use-package-compute-statistics t) ;; M-x use-package-report
 (setq use-package-always-defer t)
 
+;; put autogen files into ~/.emacs.d/etc and ~/.emacs.d/var
+(use-package no-littering :demand)
+
 (use-package benchmark-init
   ;; :demand
   :config (add-hook 'window-setup-hook 'benchmark-init/deactivate))
@@ -90,10 +93,7 @@
   (setq show-paren-delay 0.0)
 
   ;; save history of minibuffer, recent files, last place
-  (setq savehist-file (emacs.d "cache/savehist")
-        save-place-file (emacs.d "cache/saveplace")
-        recentf-save-file (emacs.d "cache/recentf")
-        recentf-auto-cleanup nil
+  (setq recentf-auto-cleanup nil
         recentf-max-saved-items 400)
   (savehist-mode)
   (recentf-mode)
@@ -139,7 +139,6 @@
         sentence-end-double-space nil)
   (setq create-lockfiles nil
         make-backup-files nil
-        auto-save-list-file-prefix (emacs.d "cache/autosave/")
         auto-save-default nil)
 
   ;; for prog mode
@@ -161,8 +160,6 @@
   ;; display-time-mode
   (setq display-time-format "%a %H:%M"
         display-time-default-load-average nil)
-
-  (setq eshell-directory-name (emacs.d "cache/eshell"))
 
   ;; do not show line number in modeline
   (setq line-number-mode nil)
@@ -425,7 +422,6 @@
 (use-package undo-fu-session
   :demand
   :config (undo-fu-session-global-mode)
-  :custom (undo-fu-session-directory (emacs.d "cache/undo-fu-session"))
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package which-key
@@ -644,9 +640,6 @@
 
 (use-package magit
   :custom
-  (transient-levels-file  (emacs.d "cache/transient/levels"))
-  (transient-values-file  (emacs.d "cache/transient/values"))
-  (transient-history-file (emacs.d "cache/transient/history"))
   (transient-default-level 7) ;; for --autostash
   (transient-display-buffer-action '(display-buffer-below-selected))
   (magit-save-repository-buffers nil)
@@ -684,7 +677,6 @@
   :config
   ;; do not move these to `custom'
   (setq tramp-verbose 1)
-  (setq tramp-persistency-file-name (emacs.d "cache/tramp"))
   (setq tramp-ssh-controlmaster-options "-o ControlPath=~/.ssh/master-%%h:%%p -o ControlMaster=auto -o ControlPersist=yes")
   ;; for magit to use newer git
   (add-to-list 'tramp-remote-path "~/.local/bin")
@@ -695,8 +687,6 @@
   ;; only load projectile when it is needed
   :autoload projectile-project-p projectile-project-root projectile-acquire-root
   :custom
-  (projectile-cache-file (emacs.d "cache/projectile.cache"))
-  (projectile-known-projects-file (emacs.d "cache/projectile.projects"))
   (projectile-auto-discover nil)
   (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
   (projectile-globally-ignored-file-suffixes '(".elc" ".pyc" ".o"))
@@ -706,9 +696,9 @@
   (projectile-indexing-method 'alien)
   :preface
   ;; disable checking and cleaning especially for remote projects
-  (advice-add #'projectile--cleanup-known-projects :override (lambda (&rest _)))
+  (advice-add #'projectile--cleanup-known-projects :override #'ignore)
   ;; disable serialize to `projectile-cache-file', may be large to load
-  (advice-add #'projectile-serialize-cache :override (lambda (&rest _)))
+  (advice-add #'projectile-serialize-cache :override #'ignore)
   :config
   (add-to-list 'projectile-globally-ignored-directories "^build$")
   (add-to-list 'projectile-globally-ignored-directories "^\\.ccls-cache$")
@@ -763,7 +753,6 @@
   (org-list-allow-alphabetical t)
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-cycle-separator-lines 1)
-  (org-persist-directory (emacs.d "cache/org-persist"))
   (org-src-preserve-indentation t)
   (org-html-head-include-default-style nil) ;; org-html-style-default
   (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
