@@ -19,7 +19,6 @@
 
 ;; say no to `package.el'
 (setq package-enable-at-startup nil)
-;; (setq load-prefer-newer t)
 
 ;; disable `file-name-handler-alist' during startup
 (defvar file-name-handler-alist-backup file-name-handler-alist)
@@ -106,11 +105,13 @@
   ;; override the env SHELL for fish is slow to start
   (setq-default shell-file-name "/bin/bash")
 
-  ;; from doom-start
-  (set-language-environment "UTF-8")
+  ;; encoding
+  (set-charset-priority 'unicode)
+  (prefer-coding-system 'utf-8)
   (setq default-input-method nil)
   (setq bidi-inhibit-bpa t)
-  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setq-default bidi-display-reordering  'left-to-right
+                bidi-paragraph-direction 'left-to-right)
 
   ;; IO-related tunings
   (setq read-process-output-max (* 1024 1024))
@@ -583,11 +584,10 @@
   (flycheck-indication-mode 'left-margin)
   (flycheck-check-syntax-automatically '(mode-enabled save))
   (flycheck-emacs-lisp-load-path 'inherit)
-  ;; (flycheck-idle-change-delay 1.0)
   (flycheck-display-errors-delay '0.2)
-  :config
   ;; less warnings (for editing config like this init.el)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  :config
   (setq flycheck-emacs-lisp-check-form
         (prin1-to-string
          `(progn
@@ -668,6 +668,7 @@
   :hook (diff-hl-mode . diff-hl-margin-mode)
   ;; :hook (diff-hl-mode . diff-hl-flydiff-mode)
   :commands diff-hl-next-hunk diff-hl-previous-hunk
+  :custom (vc-handled-backends '(Git))
   )
 
 (use-package tramp

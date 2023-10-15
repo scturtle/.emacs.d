@@ -208,13 +208,14 @@ aligned respectively."
                              (:eval (mudline-segment-buffer-name))
                              ))
                           ;; Right
-                          (format-mode-line
-                           '(
-                             (:eval (mudline-segment-misc-info))
-                             (:eval (mudline-segment-lsp))
-                             (:eval (mudline-segment-flycheck))
-                             (:eval (mudline-segment-position))
-                             ))
+                          (when (mode-line-window-selected-p)
+                            (format-mode-line
+                             '(
+                               (:eval (mudline-segment-misc-info))
+                               (:eval (mudline-segment-lsp))
+                               (:eval (mudline-segment-flycheck))
+                               (:eval (mudline-segment-position))
+                               )))
                           )))))
     (progn
       ;; Remove flycheck hooks
