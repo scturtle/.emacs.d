@@ -324,16 +324,11 @@
     )
 
   ;; override "gd" to `evil-goto-definition'
-  (general-define-key
-   :states 'normal
-   "gd" #'+goto-definition
-   "gD" #'lsp-ui-peek-find-references
-   "gb" #'xref-go-back
-   "gf" #'xref-go-forward)
-
-  ;; unbind tab for neotree
-  (general-define-key
-   :states '(normal motion) [?\t] nil)
+  (evil-define-key 'normal 'global
+    "gd" #'+goto-definition
+    "gD" #'lsp-ui-peek-find-references
+    "gb" #'xref-go-back
+    "gf" #'xref-go-forward)
 
   ;; mimic emacs key bindings
   (general-define-key
@@ -365,10 +360,9 @@
    "C-k" 'kill-line)
 
   ;; don't leave visual mode after shifting
-  (general-define-key
-   :states 'visual
-   "<" #'+evil/shift-left
-   ">" #'+evil/shift-right)
+  (evil-define-key 'visual 'global
+    "<" #'+evil/shift-left
+    ">" #'+evil/shift-right)
   )
 
 ;; OSC52 FTW
@@ -437,7 +431,7 @@
   )
 
 (use-package vertico
-  :straight (:host github :repo "minad/vertico" :files (:defaults "extensions/*"))
+  :straight (:files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
   :custom
   (vertico-resize nil)
@@ -536,19 +530,17 @@
   :custom
   (lsp-ui-doc-enable nil)
   (lsp-ui-sideline-enable nil)
-  :config
-  (general-define-key
-   :keymaps 'lsp-ui-peek-mode-map
-   "k" #'lsp-ui-peek--select-prev
-   "j" #'lsp-ui-peek--select-next
-   ))
+  :bind
+  (:map lsp-ui-peek-mode-map
+        ("k" . #'lsp-ui-peek--select-prev)
+        ("j" . #'lsp-ui-peek--select-next)))
 
 (use-package yasnippet
   :hook (lsp-mode . yas-minor-mode) ;; for yas-enable-snippet
   )
 
 (use-package corfu
-  :straight (:host github :repo "minad/corfu" :files (:defaults "extensions/*.el"))
+  :straight (:files (:defaults "extensions/*.el"))
   :hook (prog-mode . corfu-mode)
   :custom
   (corfu-auto t)
@@ -566,13 +558,9 @@
   :bind
   (:map corfu-map
         ("M-SPC" . 'corfu-insert-separator)
-        ("M-m"   . 'corfu-move-to-minibuffer)
-        )
-  )
+        ("M-m"   . 'corfu-move-to-minibuffer)))
 
-(use-package nerd-icons-corfu
-  :straight (:host github :repo "LuigiPiucco/nerd-icons-corfu")
-  )
+(use-package nerd-icons-corfu)
 
 (use-package corfu-terminal
   :straight (:host codeberg :repo "scturtle/emacs-corfu-terminal" :branch "test")
@@ -624,7 +612,7 @@
   :config
   (setq ccls-initialization-options
         `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
-          :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
+                 :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
   (when IS-MAC
     (setq ccls-initialization-options
           (append ccls-initialization-options
@@ -647,18 +635,15 @@
   (magit-display-buffer-function '+magit-display-buffer-fn)
   ;; (magit-auto-revert-mode nil) ;; too slow for tramp
   :config
-  (general-define-key
-   :keymaps 'magit-mode-map :states 'normal
-   "zt" #'evil-scroll-line-to-top
-   "zz" #'evil-scroll-line-to-center
-   "zb" #'evil-scroll-line-to-bottom)
-  (general-define-key
-   :keymaps 'magit-status-mode-map :states 'normal
-   "gt" #'tab-bar-switch-to-next-tab)
-  (general-define-key
-   :keymaps 'magit-diff-mode-map :states 'normal
-   "w" #'evil-forward-word-begin
-   "b" #'evil-backward-word-begin)
+  (evil-define-key 'normal magit-mode-map
+    "zt" #'evil-scroll-line-to-top
+    "zz" #'evil-scroll-line-to-center
+    "zb" #'evil-scroll-line-to-bottom)
+  (evil-define-key 'normal magit-status-mode-map
+    "gt" #'tab-bar-switch-to-next-tab)
+  (evil-define-key 'normal magit-diff-mode-map
+    "w" #'evil-forward-word-begin
+    "b" #'evil-backward-word-begin)
   (define-key transient-map [escape] #'transient-quit-one)
   (add-hook 'git-commit-setup-hook #'evil-insert-state)
   )
@@ -728,10 +713,8 @@
   :config
   ;; use nerd-icons
   (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
-  (general-define-key
-   :keymaps 'neotree-mode-map :states 'normal
-   "w" #'+neotree/set-width
-   )
+  (evil-define-key 'motion 'global (kbd "TAB") nil) ;; unbind
+  (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
   )
 
 (use-package tree-sitter

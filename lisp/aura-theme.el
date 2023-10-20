@@ -1,6 +1,6 @@
 ;;; aura-theme.el --- aura theme -*- lexical-binding: t; -*-
 ;;
-;; Author: scturtle <https://github.com/scturtle>
+;; Author: scturtle <sctuetle@gmail.com>
 ;; Source: https://github.com/scturtle/.emacs.d
 ;;
 ;;; Commentary:

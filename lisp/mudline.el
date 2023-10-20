@@ -1,7 +1,8 @@
 ;;; mudline.el --- A minimal mode-line inspired by doom-modeline and mood-line -*- lexical-binding: t; -*-
 
 ;; Author: scturtle <sctuetle@gmail.com>
-;; Keywords: mode-line faces
+;; Source: https://github.com/scturtle/.emacs.d
+;; Keywords: mode-line
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "29.1"))
 

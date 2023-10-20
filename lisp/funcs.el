@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
-;;; lots of functions are stolen and modified from doomemacs
+
+;; lots of functions are stolen and modified from doomemacs
 
 (defun +symbol-highlight (beg end)
   "Highlight current symbol. Restrict by evil visual region."
