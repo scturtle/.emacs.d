@@ -183,6 +183,7 @@
   :custom
   (evil-want-keybinding nil) ; for evil-collection
   (evil-want-C-g-bindings t)
+  (evil-want-C-i-jump nil) ;; unbind tab for neotree/org-mode
   (evil-want-C-u-scroll t)
   (evil-want-C-u-delete t)
   (evil-want-C-w-delete t)
@@ -713,7 +714,6 @@
   :config
   ;; use nerd-icons
   (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
-  (evil-define-key 'motion 'global (kbd "TAB") nil) ;; unbind
   (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
   )
 
@@ -733,6 +733,7 @@
   :straight (:type built-in)
   :hook (org-mode . org-indent-mode)
   :hook (org-mode . evil-org-mode)
+  :hook (org-mode . corfu-mode)
   :custom
   (org-list-allow-alphabetical t)
   (org-fold-catch-invisible-edits 'show-and-error)
