@@ -238,9 +238,9 @@
    `(magit-diff-context-highlight ((t (:foreground ,fg :background ,bg-alt :extend t))))
    `(magit-diff-hunk-heading           ((t (:foreground ,fg-alt :background ,(darken blue3 0.3) :extend t))))
    `(magit-diff-hunk-heading-highlight ((t (:foreground ,fg     :background ,blue3 :weight bold :extend t))))
-   ;; `(magit-diff-file-heading           ((t (:foreground ,fg :weight bold :extend t))))
-   ;; `(magit-diff-file-heading-selection ((t (:foreground ,magenta :background ,blue :weight bold :extend t))))
-   ;; `(magit-diff-lines-heading          ((t (:foreground ,yellow :background ,red :extend t))))
+   `(magit-diff-file-heading           ((t (:foreground ,fg :weight bold :extend t))))
+   `(magit-diff-file-heading-selection ((t (:foreground ,orange :weight bold :extend t))))
+   `(magit-diff-lines-heading ((t (:inherit 'magit-diff-hunk-heading-highlight))))
    `(magit-diffstat-added   ((t (:foreground ,vc-added))))
    `(magit-diffstat-removed ((t (:foreground ,vc-deleted))))
    ;;;; magit bisect/blame/branch
