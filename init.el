@@ -752,7 +752,12 @@
 
 (use-package htmlize)
 
-(use-package evil-org)
+(use-package evil-org
+  :custom
+  (evil-org-retain-visual-state-on-shift t)
+  ;; remove `return'/`insert' to fix ret/C-d, others are not useful
+  (evil-org-key-theme '(navigation textobjects todo heading))
+  )
 
 (use-package lsp-pyright
   :custom
