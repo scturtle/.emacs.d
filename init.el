@@ -561,6 +561,9 @@
         ("M-SPC" . 'corfu-insert-separator)
         ("M-m"   . 'corfu-move-to-minibuffer)))
 
+(use-package dabbrev
+  :bind (("M-/" . dabbrev-completion)))
+
 (use-package nerd-icons-corfu)
 
 (use-package corfu-terminal
@@ -731,16 +734,19 @@
 
 (use-package org
   :straight (:type built-in)
-  :hook (org-mode . org-indent-mode)
   :hook (org-mode . evil-org-mode)
-  :hook (org-mode . corfu-mode)
+  :hook (org-mode . corfu-mode) ;; for dabbrev
   :custom
+  (org-modules nil)
+  (org-startup-indented t) ;; org-indent-mode
+  (org-startup-folded nil) ;; hide drawers
   (org-list-allow-alphabetical t)
   (org-fold-catch-invisible-edits 'show-and-error)
-  (org-cycle-separator-lines 1)
+  (org-cycle-separator-lines 1) ;; empty lines to keep between collapsed trees
   (org-src-preserve-indentation t)
   (org-html-head-include-default-style nil) ;; org-html-style-default
   (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
+  ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
   :config
   (general-define-key
    :keymaps 'org-mode-map
