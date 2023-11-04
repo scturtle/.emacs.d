@@ -144,13 +144,18 @@ aligned respectively."
         (pcase status
           ('finished  (if flycheck-current-errors
                           (let-alist (flycheck-count-errors flycheck-current-errors)
-                            (let ((sum (+ (or .error 0) (or .warning 0)))
-                                  (face (cond ((> .error 0) 'error)
-                                              ((> .warning 0) 'warning)
-                                              (t 'success))))
+                            (let* ((error (or .error 0))
+                                   (warning (or .warning 0))
+                                   (info (or .info 0))
+                                   (num (cond ((> error 0) error)
+                                               ((> warning 0) warning)
+                                               (t info)))
+                                   (face (cond ((> error 0) 'error)
+                                               ((> warning 0) 'warning)
+                                               (t 'success))))
                               (concat
                                (mudline--icon 'mdicon "nf-md-alert_circle_outline" face)
-                               (propertize (number-to-string sum) 'face face))))
+                               (propertize (number-to-string num) 'face face))))
                         (mudline--icon 'mdicon "nf-md-check_circle_outline" 'success)))
           ('running     (mudline--icon 'mdicon "nf-md-timer_sand" 'success))
           ('errored     (mudline--icon 'mdicon "nf-md-alert_circle_outline" 'error))
