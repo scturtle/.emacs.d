@@ -554,8 +554,9 @@
     (let ((completion-extra-properties corfu--extra)
           completion-cycle-threshold completion-cycling)
       (apply #'consult-completion-in-region completion-in-region--data)))
-  ;; use nerd-icons
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+  ;; instead of using nerd-icons, why not just a simple space margin
+  (defun +simple-margin-formatter (_) (lambda (_) " "))
+  (add-to-list 'corfu-margin-formatters #'+simple-margin-formatter)
   :bind
   (:map corfu-map
         ("M-SPC" . 'corfu-insert-separator)
@@ -563,8 +564,6 @@
 
 (use-package dabbrev
   :bind (("M-/" . dabbrev-completion)))
-
-(use-package nerd-icons-corfu)
 
 (use-package corfu-terminal
   :straight (:host codeberg :repo "scturtle/emacs-corfu-terminal" :branch "test")
@@ -721,6 +720,7 @@
   )
 
 (use-package tree-sitter
+  :straight (:host github :repo "emacs-tree-sitter/elisp-tree-sitter" :branch "master")
   :hook (prog-mode . global-tree-sitter-mode)
   :hook (tree-sitter-mode . tree-sitter-hl-mode)
   )
