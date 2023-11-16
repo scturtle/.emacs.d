@@ -230,6 +230,9 @@
     :non-normal-prefix "M-SPC"
     :keymaps 'override)
 
+  ;; Make SPC u SPC u [...] possible
+  (define-key universal-argument-map " u" #'universal-argument-more)
+
   (global-leader
     "SPC" '(execute-extended-command :wk "execute command")
     [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
@@ -563,6 +566,9 @@
         ("M-m"   . 'corfu-move-to-minibuffer)))
 
 (use-package dabbrev
+  :custom
+  (dabbrev-case-replace nil) ;; do not downcase
+  (dabbrev-check-other-buffers nil) ;; only in this buffer
   :bind (("M-/" . dabbrev-completion)))
 
 (use-package corfu-terminal
@@ -735,7 +741,7 @@
 (use-package org
   :straight (:type built-in)
   :hook (org-mode . evil-org-mode)
-  :hook (org-mode . corfu-mode) ;; for dabbrev
+  ;; :hook (org-mode . corfu-mode) ;; terminal not compat with org-indent-mode
   :custom
   (org-modules nil)
   (org-startup-indented t) ;; org-indent-mode
