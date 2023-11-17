@@ -83,33 +83,6 @@
     (switch-to-buffer buffer t t)
     (selected-window)))
 
-
-;; https://github.com/emacs-lsp/lsp-mode/pull/2531
-;; https://github.com/emacs-lsp/lsp-mode/issues/2375
-(defun lsp-tramp-connection@override (local-command)
-  (defvar tramp-connection-properties)
-  (list :connect (lambda (filter sentinel name environment-fn _workspace)
-                   (add-to-list 'tramp-connection-properties
-                                (list (regexp-quote (file-remote-p default-directory))
-                                      "direct-async-process" t))
-                   (let* ((final-command (lsp-resolve-final-function local-command))
-                          (process-name (generate-new-buffer-name name))
-                          (stderr-buf (format "*%s::stderr*" process-name))
-                          (process-environment (lsp--compute-process-environment environment-fn))
-                          (proc (make-process
-                                 :name process-name
-                                 :buffer (format "*%s*" process-name)
-                                 :command final-command
-                                 :connection-type 'pipe
-                                 :coding 'no-conversion
-                                 :noquery t
-                                 :filter filter
-                                 :sentinel sentinel
-                                 :stderr (generate-new-buffer stderr-buf)
-                                 :file-handler t)))
-                     (cons proc proc)))
-        :test? (lambda () (-> local-command lsp-resolve-final-function lsp-server-present?))))
-
 (defun +neotree/find-this-file ()
   (interactive)
   (let ((path buffer-file-name)

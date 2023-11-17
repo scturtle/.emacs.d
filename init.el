@@ -518,15 +518,6 @@
   ;; setup the orderless-flex style for its 1st search term
   (defun +orderless-flex-first (_pat idx _tot) (if (eq idx 0) 'orderless-flex 'orderless-literal))
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
-  ;; override `lsp-tramp-connection'
-  (advice-add 'lsp-tramp-connection :override #'lsp-tramp-connection@override)
-  ;; register remote ccls client
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-tramp-connection "ccls")
-                    :activation-fn (lsp-activate-on "c" "cpp")
-                    :remote? t
-                    :multi-root nil
-                    :server-id 'ccls-remote))
   )
 
 (use-package lsp-ui
