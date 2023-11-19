@@ -5,3 +5,4 @@
 /.lsp-session-v1
 flycheck_*.el
 *.elc
+/tree-sitter/

@@ -146,9 +146,6 @@
   (add-hook 'prog-mode-hook 'electric-pair-mode) ;; TODO: smartparens?
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-  ;; TODO: treesitter
-  ;; (setq treesit-extra-load-path '("~/code/repos/tree-sitter-module/dist"))
-
   ;; tab bar
   (setq tab-bar-separator ""
         tab-bar-tab-hints t  ;; show index number
@@ -492,8 +489,28 @@
   :custom
   (evil-multiedit-follow-matches t))
 
+(use-package treesit
+  :demand t
+  :straight (:type built-in)
+  :custom
+  (treesit-font-lock-level 4)
+  (major-mode-remap-alist
+   '((c-mode . c-ts-mode)
+     (c++-mode . c++-ts-mode)
+     (rust-mode . rust-ts-mode)
+     (python-mode . python-ts-mode))))
+
+(use-package treesit-auto
+  :commands treesit-auto-install-all
+  :custom (treesit-auto-langs '(c cpp python rust)))
+
+(use-package treesit-fold
+  :straight (:host github :repo "abougouffa/treesit-fold")
+  :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
+
+
 (use-package lsp-mode
-  :hook ((c-mode c++-mode python-mode) . lsp-deferred)
+  :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . lsp-deferred)
   :custom
   (lsp-idle-delay 0)
   (eldoc-idle-delay 0)
@@ -604,8 +621,6 @@
       (lsp--render-element (concat "```rust\n" sig "\n```"))))
   )
 
-(use-package rustic)
-
 (use-package ccls
   :custom
   (ccls-args '("--log-file=/tmp/ccls.log"))
@@ -714,19 +729,6 @@
   ;; use nerd-icons
   (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
   (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
-  )
-
-(use-package tree-sitter
-  :straight (:host github :repo "emacs-tree-sitter/elisp-tree-sitter" :branch "master")
-  :hook (prog-mode . global-tree-sitter-mode)
-  :hook (tree-sitter-mode . tree-sitter-hl-mode)
-  )
-
-(use-package tree-sitter-langs)
-
-(use-package ts-fold
-  :straight (:host github :repo "emacs-tree-sitter/ts-fold")
-  :hook (tree-sitter-mode . ts-fold-mode)
   )
 
 (use-package org

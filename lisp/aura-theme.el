@@ -97,22 +97,34 @@
    `(trailing-whitespace ((t (:foreground ,fg :background ,red))))
 
    ;;;; font-lock
-   `(font-lock-builtin-face  ((t (:foreground ,builtin))))
-   `(font-lock-comment-face  ((t (:foreground ,comments))))
-   `(font-lock-constant-face ((t (:foreground ,constants))))
-   `(font-lock-doc-face      ((t (:foreground ,doc-comments))))
-   `(font-lock-keyword-face  ((t (:foreground ,keywords))))
-   `(font-lock-string-face   ((t (:foreground ,strings))))
-   `(font-lock-type-face     ((t (:foreground ,type))))
-   `(font-lock-warning-face  ((t (:inherit 'warning))))
-   `(font-lock-function-name-face ((t (:foreground ,functions))))
-   `(font-lock-variable-name-face ((t (:foreground ,variables))))
+   `(font-lock-comment-face           ((t (:foreground ,comments))))
    `(font-lock-comment-delimiter-face ((t (:inherit 'font-lock-comment-face))))
-   `(font-lock-negation-char-face        ((t (:weight bold :foreground ,operators))))
-   `(font-lock-preprocessor-face         ((t (:weight bold :foreground ,operators))))
-   `(font-lock-preprocessor-char-face    ((t (:weight bold :foreground ,operators))))
-   `(font-lock-regexp-grouping-backslash ((t (:weight bold :foreground ,operators))))
-   `(font-lock-regexp-grouping-construct ((t (:weight bold :foreground ,operators))))
+   `(font-lock-string-face            ((t (:foreground ,strings))))
+   `(font-lock-doc-face               ((t (:foreground ,doc-comments))))
+   ;; font-lock-doc-markup-face
+   `(font-lock-keyword-face           ((t (:foreground ,keywords))))
+   `(font-lock-builtin-face           ((t (:foreground ,builtin))))
+   `(font-lock-function-name-face     ((t (:foreground ,functions))))
+   `(font-lock-function-call-face     ((t (:foreground ,blue2))))
+   `(font-lock-variable-name-face     ((t (:foreground ,variables))))
+   `(font-lock-variable-use-face      ((t (:foreground unspecified))))
+   `(font-lock-type-face              ((t (:foreground ,type))))
+   `(font-lock-constant-face          ((t (:foreground ,constants))))
+   `(font-lock-warning-face           ((t (:inherit 'warning))))
+   `(font-lock-negation-char-face     ((t (:weight bold :foreground ,operators))))
+   `(font-lock-preprocessor-face      ((t (:weight bold :foreground ,operators))))
+   ;; font-lock-regexp-face
+   ;; font-lock-regexp-grouping-backslash
+   ;; font-lock-regexp-grouping-construct
+   ;; font-lock-escape-face
+   `(font-lock-number-face            ((t (:foreground ,numbers))))
+   `(font-lock-operator-face          ((t (:foreground ,grey))))
+   `(font-lock-property-name-face     ((t (:foreground ,blue2))))
+   `(font-lock-property-use-face      ((t (:foreground ,blue2))))
+   `(font-lock-punctuation-face       ((t (:foreground ,grey))))
+   ;; font-lock-bracket-face
+   ;; font-lock-delimiter-face
+   ;; font-lock-misc-punctuation-face
 
    ;;;; line-number
    `(line-number ((t (:foreground ,comments :background ,bg :italic t))))
@@ -299,15 +311,6 @@
    ;;;; corfu
    `(corfu-default ((t (:inherit 'tooltip))))
    `(corfu-current ((t (:background ,selection-bg :foreground ,fg))))
-
-   ;;;; tree-sitter
-   `(tree-sitter-hl-face:property           ((t (:inhert nil :foreground ,blue2))))
-   `(tree-sitter-hl-face:punctuation        ((t (:foreground ,grey))))
-   `(tree-sitter-hl-face:operator           ((t (:foreground ,grey))))
-   `(tree-sitter-hl-face:function.call      ((t (:foreground ,blue2))))
-   `(tree-sitter-hl-face:variable.parameter ((t (:foreground ,functions))))
-   `(tree-sitter-hl-face:variable.special   ((t (:foreground ,constants))))
-   `(tree-sitter-hl-face:number             ((t (:foreground ,numbers))))
 
    ;;;; org mode
    `(org-archived                 ((t (:foreground ,doc-comments))))
