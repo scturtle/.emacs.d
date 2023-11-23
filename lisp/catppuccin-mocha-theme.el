@@ -329,10 +329,8 @@
 
   (apply #'custom-theme-set-faces
          'catppuccin-mocha
-         (let* (whole-theme)
-           (pcase-dolist (`(,face . ,spec) faces)
-             (push `(,face ((t ,spec))) whole-theme))
-           whole-theme)))
+         (mapcar (lambda (face) `(,(car face) ((t ,(cdr face))))) faces))
+  )
 
 (when load-file-name
   (add-to-list
