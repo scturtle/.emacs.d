@@ -67,7 +67,8 @@
 
 ;; load custom funcs and UIs
 (add-to-list 'custom-theme-load-path (emacs.d "lisp"))
-(load-theme 'aura t)
+;; (load-theme 'aura t)
+(load-theme 'catppuccin-mocha t)
 (add-to-list 'load-path (emacs.d "lisp"))
 (require 'funcs)
 (require 'mudline)
