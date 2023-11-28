@@ -747,6 +747,8 @@
   (org-html-head-include-default-style nil) ;; org-html-style-default
   (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
   ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
+  (org-src-lang-modes '(("C" . c-ts) ("c" . c-ts) ("C++" . c++-ts) ("c++" . c++-ts)
+                        ("rust" . rust-ts) ("python" . python-ts)))
   :config
   (general-define-key
    :keymaps 'org-mode-map

@@ -153,7 +153,7 @@
         (lazy-highlight :foreground ,mantle :background ,lavender :weight bold)
         (isearch :inherit lazy-highlight)
         (isearch-fail :inherit error)
-        (iedit-occurrence :inherit lazy-highlight :weight bold)
+        (iedit-occurrence :inherit lazy-highlight)
         (iedit-read-only-occurrence :inherit region)
 
         ;; evil search
@@ -201,11 +201,13 @@
         ;; (marginalia-size :foreground ,blue)
         ;; (marginalia-date :foreground ,mauve)
 
+        ;; transient
+        (transient-active-infix :background ,current :extend t)
+
         ;; magit section
         (magit-section-heading :foreground ,blue :weight bold)
+        (magit-section-highlight :background unspecified)
         (magit-section-heading-selection :foreground ,peach :weight bold)
-        (magit-section-highlight :background unspecified :extend t)
-        (magit-section-secondary-heading :foreground ,pink :weight bold :extend t)
         ;; magit diff
         (magit-diff-added             :background ,(blend green bg 0.05) :foreground ,green :extend t)
         (magit-diff-added-highlight   :background ,(blend green bg 0.1) :foreground ,green :extend t)
@@ -215,14 +217,14 @@
         (magit-diff-base-highlight    :background ,base :foreground ,peach :extend t)
         (magit-diff-context           :foreground ,overlay2 :extend t)
         (magit-diff-context-highlight :background ,base :foreground ,text :extend t)
-        (magit-diff-hunk-region :inherit unspecified)
-        (magit-diff-hunk-heading :background ,surface0)
+        (magit-diff-hunk-heading           :background ,surface0)
         (magit-diff-hunk-heading-highlight :background ,surface1)
         (magit-diff-hunk-heading-selection :foreground ,peach)
-        (magit-diff-file-heading :weight unspecified)
+        (magit-diff-file-heading           :foreground ,pink)
         (magit-diff-file-heading-highlight :inherit magit-diff-file-heading)
         (magit-diff-file-heading-selection :foreground ,peach)
         (magit-diff-lines-heading :inherit magit-diff-hunk-heading-highlight)
+        (magit-diff-hunk-region :inherit unspecified)
         (magit-diffstat-added :foreground ,green)
         (magit-diffstat-removed :foreground ,red)
         (magit-diff-revision-summary :foreground ,blue :weight bold)
@@ -292,7 +294,7 @@
 
         ;; org mode
         (org-archived :inherit font-lock-comment-face)
-        (org-block :extend t :background ,mantle :foreground ,green)
+        (org-block :extend t :background ,mantle :foreground ,subtext1)
         (org-block-begin-line :inherit org-meta-line :extend t :background ,mantle)
         (org-block-end-line :inherit org-block-begin-line :extend t :background ,mantle)
         (org-done :inherit font-lock-comment-face)
