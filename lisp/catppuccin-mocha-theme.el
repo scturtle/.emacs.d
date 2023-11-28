@@ -153,7 +153,7 @@
         (lazy-highlight :foreground ,mantle :background ,lavender :weight bold)
         (isearch :inherit lazy-highlight)
         (isearch-fail :inherit error)
-        (iedit-occurrence :inherit match :weight bold)
+        (iedit-occurrence :inherit lazy-highlight :weight bold)
         (iedit-read-only-occurrence :inherit region)
 
         ;; evil search
@@ -250,10 +250,16 @@
         (magit-process-ok  :foreground ,green :weight bold)
 
         ;; smerge-mode
-        (smerge-upper    :background ,red :extend t)
-        (smerge-lower    :background ,green :extend t)
-        (smerge-base     :background ,peach :extend t)
-        (smerge-markers  :background ,blue :extend t)
+        (smerge-upper    :background ,(blend red bg 0.2) :extend t)
+        (smerge-lower    :background ,(blend green bg 0.2) :extend t)
+        (smerge-base     :background ,(blend peach bg 0.2) :extend t)
+        (smerge-markers  :background ,(blend blue bg 0.2) :extend t)
+        ;; diff-mode
+        (diff-header      :background unspecified)
+        (diff-file-header :background unspecified :foreground ,pink)
+        (diff-hunk-header :background ,(blend blue bg 0.2))
+        (diff-removed     :background ,(blend red bg 0.2))
+        (diff-added       :background ,(blend green bg 0.2))
 
         ;; neotree
         (neo-root-dir-face :foreground ,green)
