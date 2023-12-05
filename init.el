@@ -501,9 +501,12 @@
      (rust-mode . rust-ts-mode)
      (python-mode . python-ts-mode))))
 
+(use-package cmake-ts-mode
+  :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
+
 (use-package treesit-auto
   :commands treesit-auto-install-all
-  :custom (treesit-auto-langs '(c cpp python rust)))
+  :custom (treesit-auto-langs '(c cpp python rust cmake)))
 
 (use-package treesit-fold
   :straight (:host github :repo "abougouffa/treesit-fold")
@@ -637,8 +640,6 @@
                                               "-isystem/usr/local/include"]
                                   :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   )
-
-(use-package cmake-mode)
 
 (use-package elisp-def)
 
@@ -783,7 +784,7 @@
   :if +llvm-dir
   :straight (:type built-in)
   :load-path (lambda () (concat +llvm-dir "/llvm/utils/emacs"))
-  :mode ("\\.td\\'")
+  :mode "\\.td\\'"
   :hook (tablegen-mode . lsp-deferred)
   :config
   (with-eval-after-load 'lsp-mode
@@ -798,7 +799,7 @@
   :if +llvm-dir
   :straight (:type built-in)
   :load-path (lambda () (concat +llvm-dir "/mlir/utils/emacs"))
-  :mode ("\\.mlir\\'"))
+  :mode "\\.mlir\\'")
 
 (use-package rainbow-mode)
 
