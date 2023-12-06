@@ -248,6 +248,7 @@
     "bi" 'ibuffer
     "bm" '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "message buffer")
     "bk" 'kill-current-buffer
+    "bf" #'lsp-format-buffer
 
     "c" '(:ignore t :wk "code")
     "ca" #'lsp-execute-code-action

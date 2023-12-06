@@ -268,12 +268,13 @@
         (neo-file-link-face :inherit link)
         (neo-dir-link-face :foreground ,blue)
         (neo-expand-btn-face :foreground ,text)
-        (neo-vc-edited-face :foreground ,peach)
+        (neo-vc-edited-face :foreground ,rosewater)
         (neo-vc-added-face :foreground ,green)
         (neo-vc-removed-face :foreground ,red)
         (neo-vc-conflict-face :inherit error)
         (neo-vc-ignored-face :inherit font-lock-comment-face)
         (neo-vc-up-to-date-face :foreground ,text)
+        (neo-vc-unregistered-face :foreground ,pink)
 
         ;; lsp-mode
         (lsp-face-highlight-textual :background ,(blend surface0 surface1 0.5))
