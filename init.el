@@ -499,7 +499,6 @@
   (major-mode-remap-alist
    '((c-mode . c-ts-mode)
      (c++-mode . c++-ts-mode)
-     (rust-mode . rust-ts-mode)
      (python-mode . python-ts-mode))))
 
 (use-package cmake-ts-mode
@@ -605,9 +604,8 @@
             ,(read (default-toplevel-value 'flycheck-emacs-lisp-check-form)))))
   )
 
-(use-package rust-mode
-  :custom
-  (rust-match-angle-brackets nil)
+(use-package rust-ts-mode
+  :mode "\\.rs\\'"
   :config
   ;; do not cache the shitty result from rust-analyzer
   (advice-add #'lsp-eldoc-function :after (lambda (&rest _) (setq lsp--hover-saved-bounds nil)))
