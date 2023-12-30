@@ -40,7 +40,7 @@
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -208,6 +208,8 @@
   ;; disable bindings that I don't want
   (advice-add #'evil-collection-neotree-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
+  (advice-add #'evil-collection-view-setup :after
+              (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
   )
 
 ;; put after evil for perf issue https://github.com/noctuid/general.el/issues/180
@@ -264,7 +266,7 @@
     "ff" 'find-file
     "fs" 'save-buffer
     "fr" #'recentf-open-files
-    "fp" '((lambda () (interactive) (find-file (emacs.d "init.el"))) :wk "edit init.el")
+    "fp" '((lambda () (interactive) (find-file user-init-file)) :wk "edit init.el")
 
     "g" '(:ignore t :wk "git")
     "gg" #'magit-status
