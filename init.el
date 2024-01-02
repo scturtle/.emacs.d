@@ -565,6 +565,7 @@
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.1)
   (corfu-preview-current nil)
+  (corfu-on-exact-match 'show)
   :config
   (defun corfu-move-to-minibuffer ()
     (interactive)
