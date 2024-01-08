@@ -607,6 +607,16 @@
             ,(read (default-toplevel-value 'flycheck-emacs-lisp-check-form)))))
   )
 
+(use-package c-ts-mode
+  :config
+  (defun +my-indent-style()
+    `(;; Indent the body of namespace definitions.
+      ((parent-is "declaration_list") standalone-parent 0)
+      ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp))
+      ))
+  (setq c-ts-mode-indent-style #'+my-indent-style)
+  )
+
 (use-package rust-ts-mode
   :mode "\\.rs\\'"
   :config
