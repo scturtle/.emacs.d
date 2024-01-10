@@ -587,7 +587,7 @@
   :bind (("M-/" . dabbrev-completion)))
 
 (use-package corfu-terminal
-  :straight (:host codeberg :repo "scturtle/emacs-corfu-terminal" :branch "test")
+  :straight (:host github :repo "scturtle/corfu-terminal")
   :hook (corfu-mode . corfu-terminal-mode))
 
 (use-package flycheck
@@ -827,3 +827,23 @@
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   )
+
+;; https://github.com/blahgeek/emacs-lsp-booster
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (funcall bytecode)))
+   (apply old-fn args)))
+
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)
+             (not (file-remote-p default-directory))
+             lsp-use-plists)
+        (cons "emacs-lsp-booster" orig-result)
+      orig-result)))
+
+(when (executable-find "emacs-lsp-booster")
+  (advice-add 'json-parse-buffer :around #'lsp-booster--advice-json-parse)
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
