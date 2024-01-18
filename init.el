@@ -610,8 +610,9 @@
 (use-package c-ts-mode
   :config
   (defun +my-indent-style()
-    `(;; Indent the body of namespace definitions.
-      ((parent-is "declaration_list") standalone-parent 0)
+    `(((parent-is "declaration_list") parent-bol 0) ;; namespace
+      ((parent-is "argument_list") parent-bol c-ts-mode-indent-offset)
+      ((parent-is "parameter_list") parent-bol c-ts-mode-indent-offset)
       ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp))
       ))
   (setq c-ts-mode-indent-style #'+my-indent-style)
