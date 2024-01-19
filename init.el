@@ -611,8 +611,10 @@
   :config
   (defun +my-indent-style()
     `(((parent-is "declaration_list") parent-bol 0) ;; namespace
-      ((parent-is "argument_list") parent-bol c-ts-mode-indent-offset)
-      ((parent-is "parameter_list") parent-bol c-ts-mode-indent-offset)
+      ((match nil "argument_list" nil 0 1) parent-bol c-ts-mode-indent-offset)
+      ((parent-is "argument_list") c-ts-mode--first-sibling 0)
+      ((match nil "parameter_list" nil 0 1) parent-bol c-ts-mode-indent-offset)
+      ((parent-is "parameter_list") c-ts-mode--first-sibling 0)
       ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp))
       ))
   (setq c-ts-mode-indent-style #'+my-indent-style)
