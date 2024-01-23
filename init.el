@@ -76,6 +76,7 @@
 
 ;; defaults
 (use-package emacs
+  :straight nil
   :init
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
@@ -495,7 +496,7 @@
 
 (use-package treesit
   :demand t
-  :straight (:type built-in)
+  :straight nil
   :custom
   (treesit-font-lock-level 4)
   (major-mode-remap-alist
@@ -504,6 +505,7 @@
      (python-mode . python-ts-mode))))
 
 (use-package cmake-ts-mode
+  :straight nil
   :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
 
 (use-package treesit-auto
@@ -581,6 +583,7 @@
         ("M-m"   . 'corfu-move-to-minibuffer)))
 
 (use-package dabbrev
+  :straight nil
   :custom
   (dabbrev-case-replace nil) ;; do not downcase
   (dabbrev-check-other-buffers nil) ;; only in this buffer
@@ -608,6 +611,7 @@
   )
 
 (use-package c-ts-mode
+  :straight nil
   :config
   (defun +my-indent-style()
     `(((parent-is "declaration_list") parent-bol 0) ;; namespace
@@ -621,6 +625,7 @@
   )
 
 (use-package rust-ts-mode
+  :straight nil
   :mode "\\.rs\\'"
   :config
   ;; do not cache the shitty result from rust-analyzer
@@ -694,7 +699,7 @@
   )
 
 (use-package tramp
-  :straight (:type built-in)
+  :straight nil
   :custom
   (tramp-default-method "ssh")
   :config
@@ -754,7 +759,7 @@
   )
 
 (use-package org
-  :straight (:type built-in)
+  :straight nil
   :hook (org-mode . evil-org-mode)
   ;; :hook (org-mode . corfu-mode) ;; terminal not compat with org-indent-mode
   :custom
@@ -802,7 +807,7 @@
 
 (use-package tablegen-mode
   :if +llvm-dir
-  :straight (:type built-in)
+  :straight nil
   :load-path (lambda () (concat +llvm-dir "/llvm/utils/emacs"))
   :mode "\\.td\\'"
   :hook (tablegen-mode . lsp-deferred)
@@ -817,7 +822,7 @@
 
 (use-package mlir-mode
   :if +llvm-dir
-  :straight (:type built-in)
+  :straight nil
   :load-path (lambda () (concat +llvm-dir "/mlir/utils/emacs"))
   :mode "\\.mlir\\'")
 
