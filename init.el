@@ -571,9 +571,12 @@
   :config
   (defun corfu-move-to-minibuffer ()
     (interactive)
-    (let ((completion-extra-properties corfu--extra)
-          completion-cycle-threshold completion-cycling)
-      (apply #'consult-completion-in-region completion-in-region--data)))
+    (corfu--popup-hide) ;; NOTE: hide the terminal popup
+    (pcase completion-in-region--data
+      (`(,beg ,end ,table ,pred ,extras)
+       (let ((completion-extra-properties extras)
+             completion-cycle-threshold completion-cycling)
+         (consult-completion-in-region beg end table pred)))))
   ;; instead of using nerd-icons, why not just a simple space margin
   (defun +simple-margin-formatter (_) (lambda (_) " "))
   (add-to-list 'corfu-margin-formatters #'+simple-margin-formatter)
