@@ -665,7 +665,10 @@
           (append ccls-initialization-options
                   `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
                                               "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                                              "-isystem/usr/local/include"]
+                                              "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
+                                              "-isystem/usr/local/include"
+                                              "-isystem/opt/homebrew/include"
+                                              ]
                                   :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   )
 
@@ -777,7 +780,7 @@
   (org-return-follows-link t) ;; org-open-at-point (C-c C-o)
   ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
   (org-src-lang-modes '(("C" . c-ts) ("c" . c-ts) ("C++" . c++-ts) ("c++" . c++-ts)
-                        ("rust" . rust-ts) ("python" . python-ts)))
+                        ("rust" . rust-ts) ("python" . python-ts) ("cmake" . cmake-ts)))
   :config
   (general-define-key
    :keymaps 'org-mode-map
