@@ -663,12 +663,13 @@
   (when IS-MAC
     (setq ccls-initialization-options
           (append ccls-initialization-options
-                  `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
-                                              "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                                              "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
-                                              "-isystem/usr/local/include"
-                                              "-isystem/opt/homebrew/include"
-                                              ]
+                  `(:clang ,(list :extraArgs
+                                  [
+                                   "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
+                                   "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                                   "-isystem/usr/local/include"
+                                   "-isystem/opt/homebrew/include"
+                                   ]
                                   :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   )
 
