@@ -6,11 +6,9 @@
 (setq mode-line-format nil)
 
 ;; disable GC during startup
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-(add-hook 'emacs-startup-hook
-          (lambda () (setq gc-cons-threshold (* 16 1024 1024)
-                           gc-cons-percentage 0.1)))
+(setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'after-init-hook
+          (lambda () (setq gc-cons-threshold (* 64 1024 1024)))) ; 64 mb
 
 ;; show startup time
 (add-hook 'window-setup-hook
@@ -21,13 +19,10 @@
 (setq package-enable-at-startup nil)
 
 ;; disable `file-name-handler-alist' during startup
-(defvar file-name-handler-alist-backup file-name-handler-alist)
+(defvar file-name-handler-alist-bak file-name-handler-alist)
 (setq file-name-handler-alist nil)
-(defun reset-file-handler-alist-h ()
-  (dolist (handler file-name-handler-alist)
-    (add-to-list 'file-name-handler-alist-backup handler))
-  (setq file-name-handler-alist file-name-handler-alist-backup))
-(add-hook 'emacs-startup-hook #'reset-file-handler-alist-h)
+(add-hook 'after-init-hook
+          (lambda () (setq file-name-handler-alist file-name-handler-alist-bak)))
 
 ;; handy definitions
 (defun emacs.d (path) (expand-file-name path user-emacs-directory))
@@ -173,7 +168,7 @@
   :custom
   (gcmh-idle-delay 'auto) ; default is 15s
   (gcmh-auto-idle-delay-factor 10)
-  (gcmh-high-cons-threshold (* 16 1024 1024)) ; 16mb
+  (gcmh-high-cons-threshold (* 64 1024 1024)) ; 64 mb
   )
 
 (use-package evil
