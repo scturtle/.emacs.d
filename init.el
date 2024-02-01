@@ -290,6 +290,7 @@
     "pr" #'projectile-recentf
     "pi" #'projectile-invalidate-cache
     "pf" #'projectile-find-file
+    "pd" #'consult-fd
     "ga" #'projectile-find-other-file
     "op" #'neotree-toggle
     "oP" #'+neotree/find-this-file
