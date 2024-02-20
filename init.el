@@ -495,24 +495,19 @@
   :demand t
   :straight nil
   :custom
-  (treesit-font-lock-level 4)
-  (major-mode-remap-alist
-   '((c-mode . c-ts-mode)
-     (c++-mode . c++-ts-mode)
-     (python-mode . python-ts-mode))))
+  (treesit-font-lock-level 4))
 
 (use-package cmake-ts-mode
   :straight nil
   :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
 
 (use-package treesit-auto
-  :commands treesit-auto-install-all
+  :hook (after-init . global-treesit-auto-mode)
   :custom (treesit-auto-langs '(c cpp python rust cmake)))
 
 (use-package treesit-fold
   :straight (:host github :repo "abougouffa/treesit-fold")
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
-
 
 (use-package lsp-mode
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . lsp-deferred)
