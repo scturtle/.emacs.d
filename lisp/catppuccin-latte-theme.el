@@ -236,7 +236,7 @@
         (magit-bisect-skip    :foreground ,peach)
         (magit-blame-hash     :foreground ,yellow)
         (magit-blame-date     :foreground ,yellow)
-        (magit-blame-heading  :foreground ,yellow :background ,surface0 :extend t)
+        (magit-blame-heading  :foreground ,yellow :background ,mantle :extend t)
         (magit-branch-current :foreground ,blue)
         (magit-branch-local   :foreground ,sky)
         (magit-branch-remote  :foreground ,green)
