@@ -55,8 +55,8 @@
      (crust     "#dce0e8")
 
      (bg        base)
-     (current   (blend base surface0 0.3))
-     (filename  sky)
+     (current   "#e3e4e8")
+     (filename  text)
 
      (faces
       `(
@@ -65,6 +65,7 @@
         (region :background ,surface0 :extend t)
         (highlight :foreground ,text :background ,current)
         (hl-line :background ,current :extend t)
+        (hl-todo :foreground ,peach)
         (link :foreground ,lavender :underline t)
         (tooltip :foreground ,overlay2 :background ,surface0)
         (match :background ,rosewater :foreground ,mantle)
@@ -72,11 +73,11 @@
         (error :foreground ,red)
         (success :foreground ,green)
         (warning :foreground ,yellow)
-        (line-number :foreground ,surface1 :background ,base)
-        (line-number-current-line :foreground ,lavender :inherit line-number)
+        (line-number :foreground ,surface1)
+        (line-number-current-line :foreground ,lavender)
         (minibuffer-prompt :foreground ,subtext0)
         (mode-line :background ,mantle :foreground ,text)
-        (mode-line-inactive :background ,surface0 :foreground ,surface2)
+        (mode-line-inactive :background ,crust :foreground ,overlay0)
         (trailing-whitespace :background ,red)
         (vertical-border :foreground ,mantle :background ,mantle)
         (escape-glyph :foreground ,pink)
@@ -93,12 +94,12 @@
         (font-lock-variable-name-face :foreground ,text)
         (font-lock-variable-use-face :foreground ,text)
         (font-lock-type-face :foreground ,flamingo)
-        (font-lock-constant-face :foreground ,teal)
+        (font-lock-constant-face :foreground ,peach)
         (font-lock-warning-face :inherit warning)
         (font-lock-negation-char-face :foreground ,sky)
         (font-lock-preprocessor-face :foreground ,teal)
         (font-lock-escape-face :foreground ,pink)
-        (font-lock-number-face :foreground ,teal)
+        (font-lock-number-face :foreground ,peach)
         (font-lock-operator-face :foreground ,overlay2)
         (font-lock-property-name-face :foreground ,text)
         (font-lock-property-use-face :foreground ,text)
@@ -170,7 +171,7 @@
         (flycheck-info    :foreground ,green :underline t)
 
         ;; diff-hl
-        (diff-hl-change :foreground ,peach :background ,peach)
+        (diff-hl-change :foreground ,yellow :background ,yellow)
         (diff-hl-delete :foreground ,red :background ,red)
         (diff-hl-insert :foreground ,green :background ,green)
 
@@ -182,7 +183,7 @@
         (which-key-local-map-description-face :foreground ,green)
 
         ;; show-paren
-        (show-paren-match :foreground ,text :weight bold :background ,surface2)
+        (show-paren-match :foreground ,text :weight bold :background ,surface0)
         (show-paren-mismatch :foreground ,mantle :background ,red)
 
         ;; vertico
@@ -192,13 +193,13 @@
         (consult-file            :foreground ,text)
 
         ;; orderless
-        (orderless-match-face-0 :foreground ,blue :background ,(blend blue bg 0.15))
-        (orderless-match-face-1 :foreground ,mauve :background ,(blend mauve bg 0.15))
-        (orderless-match-face-2 :foreground ,teal :background ,(blend teal bg 0.15))
-        (orderless-match-face-3 :foreground ,peach :background ,(blend peach bg 0.15))
+        (orderless-match-face-0 :foreground ,blue :weight bold)
+        (orderless-match-face-1 :foreground ,mauve :weight bold)
+        (orderless-match-face-2 :foreground ,teal :weight bold)
+        (orderless-match-face-3 :foreground ,peach :weight bold)
 
         ;; marginalia
-        (marginalia-documentation :foreground ,surface1)
+        (marginalia-documentation :foreground ,overlay0)
         ;; (marginalia-size :foreground ,blue)
         ;; (marginalia-date :foreground ,mauve)
 
@@ -230,6 +231,7 @@
         (magit-diffstat-removed :foreground ,red)
         (magit-diff-revision-summary :foreground ,blue :weight bold)
         (magit-diff-revision-summary-highlight :inherit magit-diff-revision-summary)
+        (git-commit-summary :inherit magit-diff-revision-summary)
         ;; magit bisect/blame/branch
         (magit-bisect-bad     :foreground ,red)
         (magit-bisect-good    :foreground ,green)
@@ -242,7 +244,7 @@
         (magit-branch-remote  :foreground ,green)
         (magit-branch-remote-head :foreground ,green)
         ;; magit log
-        (magit-header-line :background ,surface0 :foreground ,blue :underline nil :weight bold)
+        (magit-header-line :background ,crust :foreground ,blue :underline nil :weight bold)
         (magit-tag         :foreground ,peach)
         (magit-hash        :foreground ,blue)
         (magit-filename    :foreground ,filename)
@@ -278,22 +280,22 @@
         (neo-vc-unregistered-face :foreground ,pink)
 
         ;; lsp-mode
-        (lsp-face-highlight-textual :background ,crust)
+        (lsp-face-highlight-textual :inherit highlight)
         (lsp-face-highlight-read    :inherit lsp-face-highlight-textual)
         (lsp-face-highlight-write   :inherit lsp-face-highlight-textual)
         ;; lsp-ui-peek
         (lsp-ui-peek-filename    :foreground ,filename)
-        (lsp-ui-peek-header      :background ,surface0)
+        (lsp-ui-peek-header      :foreground ,blue :background ,crust)
         (lsp-ui-peek-selection   :background ,surface0)
         (lsp-ui-peek-list        :background ,mantle)
         (lsp-ui-peek-peek        :background ,mantle)
-        (lsp-ui-peek-highlight   :background ,surface0)
+        (lsp-ui-peek-highlight   :background ,crust)
         (lsp-ui-peek-line-number :inherit line-number)
 
         ;; corfu
         (corfu-default :background ,mantle)
-        (corfu-current :background ,current)
-        (corfu-bar     :background ,current)
+        (corfu-current :background ,surface0)
+        (corfu-bar     :background ,surface0)
 
         ;; org mode
         (org-archived :inherit font-lock-comment-face)
