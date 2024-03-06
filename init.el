@@ -510,6 +510,7 @@
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
 
 (use-package lsp-mode
+  ;; :straight (:build (:not compile)) ;; for debug
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . lsp-deferred)
   :custom
   (lsp-idle-delay 0)
@@ -535,6 +536,10 @@
   ;; setup the orderless-flex style for its 1st search term
   (defun +orderless-flex-first (_pat idx _tot) (if (eq idx 0) 'orderless-flex 'orderless-literal))
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
+  ;; HACK: `lsp--fontlock-with-mode' is SLOW with treesit
+  (advice-add #'lsp--render-string :filter-args
+              (lambda (args) (if (string= (cadr args) "markdown") args
+                               (list (concat "```" (cadr args) "\n" (car args) "\n" "```") "markdown"))))
   )
 
 (use-package lsp-ui
@@ -834,23 +839,3 @@
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   )
-
-;; https://github.com/blahgeek/emacs-lsp-booster
-(defun lsp-booster--advice-json-parse (old-fn &rest args)
-  (or
-   (when (equal (following-char) ?#)
-     (let ((bytecode (read (current-buffer))))
-       (funcall bytecode)))
-   (apply old-fn args)))
-
-(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-  (let ((orig-result (funcall old-fn cmd test?)))
-    (if (and (not test?)
-             (not (file-remote-p default-directory))
-             lsp-use-plists)
-        (cons "emacs-lsp-booster" orig-result)
-      orig-result)))
-
-(when (executable-find "emacs-lsp-booster")
-  (advice-add 'json-parse-buffer :around #'lsp-booster--advice-json-parse)
-  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
