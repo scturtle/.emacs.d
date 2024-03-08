@@ -56,7 +56,6 @@
 
      (bg        base)
      (current   "#e3e4e8")
-     (filename  text)
 
      (faces
       `(
@@ -222,7 +221,7 @@
         (magit-diff-hunk-heading           :background ,surface0)
         (magit-diff-hunk-heading-highlight :background ,surface1)
         (magit-diff-hunk-heading-selection :foreground ,peach)
-        (magit-diff-file-heading           :foreground ,filename)
+        (magit-diff-file-heading           :foreground ,text :weight bold)
         (magit-diff-file-heading-highlight :inherit magit-diff-file-heading)
         (magit-diff-file-heading-selection :foreground ,peach)
         (magit-diff-lines-heading :inherit magit-diff-hunk-heading-highlight)
@@ -247,7 +246,7 @@
         (magit-header-line :background ,crust :foreground ,blue :underline nil :weight bold)
         (magit-tag         :foreground ,peach)
         (magit-hash        :foreground ,blue)
-        (magit-filename    :foreground ,filename)
+        (magit-filename    :foreground ,text)
         (magit-log-author  :foreground ,mauve)
         (magit-log-date    :foreground ,teal)
         (magit-log-graph   :foreground ,surface1)
@@ -261,7 +260,7 @@
         (smerge-markers  :background ,(blend blue bg 0.2) :extend t)
         ;; diff-mode
         (diff-header      :background unspecified)
-        (diff-file-header :background unspecified :foreground ,filename)
+        (diff-file-header :background unspecified :foreground ,text)
         (diff-hunk-header :background ,(blend blue bg 0.2))
         (diff-removed     :background ,(blend red bg 0.2))
         (diff-added       :background ,(blend green bg 0.2))
@@ -284,7 +283,7 @@
         (lsp-face-highlight-read    :inherit lsp-face-highlight-textual)
         (lsp-face-highlight-write   :inherit lsp-face-highlight-textual)
         ;; lsp-ui-peek
-        (lsp-ui-peek-filename    :foreground ,filename)
+        (lsp-ui-peek-filename    :foreground ,teal)
         (lsp-ui-peek-header      :foreground ,blue :background ,crust)
         (lsp-ui-peek-selection   :background ,surface0)
         (lsp-ui-peek-list        :background ,mantle)
