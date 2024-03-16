@@ -744,10 +744,10 @@
 (use-package deft
   :straight (:host github :repo "scturtle/deft")
   :custom
-  (deft-extensions '("org"))
   (deft-directory "~/code/notes")
   :config
   (evil-set-initial-state 'deft-mode 'insert)
+  (advice-add #'deft-mode :after #'hl-line-mode)
   )
 
 (use-package neotree
