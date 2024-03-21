@@ -15,6 +15,10 @@
           (lambda () (message "startup in %.2f ms"
                               (* 1000.0 (float-time (time-since before-init-time))))))
 
+;; remove searching for .gz files (from geza-herman)
+(setq jka-compr-load-suffixes nil)
+(jka-compr-update)
+
 ;; say no to `package.el'
 (setq package-enable-at-startup nil)
 
@@ -86,8 +90,6 @@
   (setq vc-follow-symlinks t)
   (setq apropos-do-all t)
   (setq require-final-newline t)
-  (show-paren-mode t)
-  (setq show-paren-delay 0.0)
 
   ;; save history of minibuffer, recent files, last place
   (setq recentf-auto-cleanup nil
@@ -140,9 +142,14 @@
         make-backup-files nil
         auto-save-default nil)
 
-  ;; for prog mode
-  (add-hook 'prog-mode-hook 'electric-pair-mode) ;; TODO: smartparens?
+  ;; show line number
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+  ;; see smartparens
+  (setq blink-paren-function nil)
+  (show-paren-mode -1)
+  ;; (setq show-paren-delay 0.0)
+  ;; (add-hook 'prog-mode-hook 'electric-pair-mode)
 
   ;; tab bar
   (setq tab-bar-separator ""
@@ -163,6 +170,14 @@
   ;; diff-mode
   (setq diff-refine nil)  ;; no hunk refinement
   )
+
+(use-package smartparens
+  :hook (prog-mode . smartparens-mode)
+  :hook (prog-mode . show-smartparens-mode)
+  :custom
+  (sp-show-pair-delay 0.0)
+  :config
+  (require 'smartparens-config))
 
 (use-package gcmh
   :hook (after-init . gcmh-mode)
