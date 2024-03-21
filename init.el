@@ -89,7 +89,7 @@
   (delete-selection-mode +1)
   (setq vc-follow-symlinks t)
   (setq apropos-do-all t)
-  (setq require-final-newline t)
+  ;; (setq require-final-newline t)
 
   ;; save history of minibuffer, recent files, last place
   (setq recentf-auto-cleanup nil
@@ -145,11 +145,11 @@
   ;; show line number
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-  ;; see smartparens
+  ;; show or insert matching paren (smartparens?)
   (setq blink-paren-function nil)
-  (show-paren-mode -1)
-  ;; (setq show-paren-delay 0.0)
-  ;; (add-hook 'prog-mode-hook 'electric-pair-mode)
+  (setq show-paren-delay 0.0)
+  (show-paren-mode 1)
+  (add-hook 'prog-mode-hook 'electric-pair-mode)
 
   ;; tab bar
   (setq tab-bar-separator ""
@@ -170,14 +170,6 @@
   ;; diff-mode
   (setq diff-refine nil)  ;; no hunk refinement
   )
-
-(use-package smartparens
-  :hook (prog-mode . smartparens-mode)
-  :hook (prog-mode . show-smartparens-mode)
-  :custom
-  (sp-show-pair-delay 0.0)
-  :config
-  (require 'smartparens-config))
 
 (use-package gcmh
   :hook (after-init . gcmh-mode)
