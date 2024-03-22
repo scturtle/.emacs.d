@@ -811,15 +811,14 @@
   (lsp-pyright-typechecking-mode "off"))
 
 ;; setup llvm
-(defvar +llvm-dir nil)
-(cl-loop for dir in '("~/workspace/llvm-utils" "~/code/llvm-utils")
-         when (file-directory-p dir)
-         do (setq +llvm-dir dir))
+(defvar +llvm-dir (emacs.d "lisp/llvm-utils"))
+(unless (file-directory-p +llvm-dir)
+  (setq +llvm-dir nil))
 
 (use-package tablegen-mode
   :if +llvm-dir
   :straight nil
-  :load-path (lambda () (concat +llvm-dir "/llvm/utils/emacs"))
+  :load-path +llvm-dir
   :mode "\\.td\\'"
   :hook (tablegen-mode . lsp-deferred)
   :config
@@ -834,7 +833,7 @@
 (use-package mlir-mode
   :if +llvm-dir
   :straight nil
-  :load-path (lambda () (concat +llvm-dir "/mlir/utils/emacs"))
+  :load-path +llvm-dir
   :mode "\\.mlir\\'")
 
 (use-package rainbow-mode)

@@ -6,3 +6,4 @@
 flycheck_*.el
 *.elc
 /tree-sitter/
+/lisp/llvm-utils/
