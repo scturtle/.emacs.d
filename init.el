@@ -76,7 +76,7 @@
 
 ;; defaults
 (use-package emacs
-  :straight nil
+  :straight (:type built-in)
   :init
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
@@ -500,12 +500,12 @@
 
 (use-package treesit
   :demand t
-  :straight nil
+  :straight (:type built-in)
   :custom
   (treesit-font-lock-level 4))
 
 (use-package cmake-ts-mode
-  :straight nil
+  :straight (:type built-in)
   :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
 
 (use-package treesit-auto
@@ -590,7 +590,7 @@
         ("M-m"   . 'corfu-move-to-minibuffer)))
 
 (use-package dabbrev
-  :straight nil
+  :straight (:type built-in)
   :custom
   (dabbrev-case-replace nil) ;; do not downcase
   (dabbrev-check-other-buffers nil) ;; only in this buffer
@@ -618,7 +618,7 @@
   )
 
 (use-package c-ts-mode
-  :straight nil
+  :straight (:type built-in)
   :config
   (defun +my-indent-style()
     `(((parent-is "declaration_list") parent-bol 0) ;; namespace
@@ -632,7 +632,7 @@
   )
 
 (use-package rust-ts-mode
-  :straight nil
+  :straight (:type built-in)
   :mode "\\.rs\\'"
   :config
   ;; do not cache the shitty result from rust-analyzer
@@ -710,7 +710,7 @@
   )
 
 (use-package tramp
-  :straight nil
+  :straight (:type built-in)
   :custom
   (tramp-default-method "ssh")
   :config
@@ -770,7 +770,7 @@
   )
 
 (use-package org
-  :straight nil
+  :straight (:type built-in)
   :hook (org-mode . evil-org-mode)
   ;; :hook (org-mode . corfu-mode) ;; terminal not compat with org-indent-mode
   :custom
