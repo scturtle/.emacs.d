@@ -414,7 +414,12 @@
 
 (use-package evil-surround
   :commands evil-surround-region
-  :init (evil-define-key 'visual global-map "S" #'evil-surround-region))
+  :init (evil-define-key 'visual global-map "S" #'evil-surround-region)
+  :config
+  ;; use non-spaced pairs when surrounding with an opening brace
+  (setf (alist-get ?\( evil-surround-pairs-alist) '("(" . ")"))
+  (setf (alist-get ?\[ evil-surround-pairs-alist) '("[" . "]"))
+  (setf (alist-get ?\{ evil-surround-pairs-alist) '("{" . "}")))
 
 (use-package undo-fu
   :demand
@@ -786,10 +791,13 @@
   ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
   (org-src-lang-modes '(("C" . c-ts) ("c" . c-ts) ("C++" . c++-ts) ("c++" . c++-ts)
                         ("rust" . rust-ts) ("python" . python-ts) ("cmake" . cmake-ts)))
+  (org-agenda-files (list "~/gtd.org"))
+  (org-log-done 'time)
   :config
   (general-define-key
    :keymaps 'org-mode-map
    "C-c s" #'org-insert-structure-template
+   "C-c a" #'org-agenda
    )
   ;; open file links in current window, rather than split window
   (setf (alist-get 'file org-link-frame-setup) #'find-file)
