@@ -329,7 +329,12 @@
         (org-level-6 :weight normal :foreground ,lavender)
         (org-level-7 :weight normal :foreground ,mauve)
         (org-level-8 :weight normal :foreground ,maroon)
-
+        ;; org-agenda
+        (org-agenda-date :weight normal :foreground ,blue)
+        (org-agenda-date-today :weight bold :foreground ,blue :underline t)
+        (org-scheduled-previously :foreground ,rosewater)
+        (org-scheduled-today :foreground ,mauve)
+        (org-scheduled :foreground ,flamingo)
         )))
 
   (apply #'custom-theme-set-faces

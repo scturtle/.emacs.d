@@ -791,8 +791,12 @@
   ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
   (org-src-lang-modes '(("C" . c-ts) ("c" . c-ts) ("C++" . c++-ts) ("c++" . c++-ts)
                         ("rust" . rust-ts) ("python" . python-ts) ("cmake" . cmake-ts)))
+  ;; for org-agenda
   (org-agenda-files (list "~/gtd.org"))
   (org-log-done 'time)
+  (org-agenda-window-setup 'current-window)
+  (org-agenda-span 'day)
+  (org-agenda-compact-blocks t)
   :config
   (general-define-key
    :keymaps 'org-mode-map
