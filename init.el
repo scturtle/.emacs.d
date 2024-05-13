@@ -89,7 +89,7 @@
   (delete-selection-mode +1)
   (setq vc-follow-symlinks t)
   (setq apropos-do-all t)
-  ;; (setq require-final-newline t)
+  (setq-default require-final-newline nil)
 
   ;; save history of minibuffer, recent files, last place
   (setq recentf-auto-cleanup nil
