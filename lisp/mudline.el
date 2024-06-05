@@ -65,7 +65,7 @@ aligned respectively."
              (bound-and-true-p iedit-occurrences-overlays))
     (let* ((this-oc (or (let ((inhibit-message t))
                           (iedit-find-current-occurrence-overlay))
-                        (save-excursion (iedit-prev-occurrence)
+                        (save-excursion (ignore-errors (iedit-prev-occurrence))
                                         (iedit-find-current-occurrence-overlay))))
            (sorted (sort (append iedit-occurrences-overlays nil)
                          (lambda (a b) (< (overlay-start a) (overlay-start b)))))
