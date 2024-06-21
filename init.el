@@ -512,7 +512,7 @@
   :custom (treesit-auto-langs '(c cpp python rust cmake)))
 
 (use-package treesit-fold
-  :straight (:host github :repo "abougouffa/treesit-fold")
+  :straight (:host github :repo "emacs-tree-sitter/treesit-fold")
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
 
 (use-package lsp-mode
