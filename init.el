@@ -181,17 +181,16 @@
 
 (use-package evil
   :demand
-  :config (evil-mode)
+  :init
+  (setq evil-disable-insert-state-bindings t)
   :custom
   (evil-want-keybinding nil) ; for evil-collection
+  (evil-disable-insert-state-bindings t)
   (evil-want-C-g-bindings t)
   (evil-want-C-i-jump nil) ;; unbind tab for neotree/org-mode
   (evil-want-C-u-scroll t)
   (evil-want-C-u-delete t)
-  (evil-want-C-w-delete t)
-  (evil-want-Y-yank-to-eol t)
   (evil-want-abbrev-expand-on-insert-exit nil)
-  (evil-respect-visual-line-mode nil)
   (evil-symbol-word-search t)
   (evil-want-fine-undo t)
   (evil-undo-system 'undo-fu)
@@ -199,6 +198,7 @@
   (evil-visual-update-x-selection-p nil)
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
+  (evil-mode)
   )
 
 (use-package evil-collection
@@ -343,13 +343,7 @@
   ;; mimic emacs key bindings
   (general-define-key
    :states 'insert
-   "C-a" 'move-beginning-of-line
-   "C-e" 'move-end-of-line
-   "C-p" 'previous-line
-   "C-n" 'next-line
-   "C-d" 'delete-forward-char
    "C-h" 'delete-backward-char
-   "C-k" 'kill-line
    "C-g" 'evil-normal-state)
 
   (general-define-key
