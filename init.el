@@ -367,6 +367,11 @@
   (evil-define-key 'visual 'global
     "<" #'+evil/shift-left
     ">" #'+evil/shift-right)
+
+  ;; rime
+  (global-unset-key (kbd "C-@"))
+  (global-unset-key (kbd "C-SPC"))
+  (global-unset-key (kbd "<f10>"))
   )
 
 ;; OSC52 FTW
