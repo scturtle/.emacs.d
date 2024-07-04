@@ -420,6 +420,12 @@
   (setf (alist-get ?\[ evil-surround-pairs-alist) '("[" . "]"))
   (setf (alist-get ?\{ evil-surround-pairs-alist) '("{" . "}")))
 
+;; use s/S for 2-character motions
+(use-package evil-snipe
+  :hook (after-init . evil-snipe-mode)
+  :hook (after-init . evil-snipe-override-mode)
+  )
+
 (use-package undo-fu
   :demand
   :config
