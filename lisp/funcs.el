@@ -102,4 +102,10 @@
     (setq neo-window-width width)
     (neo-global--set-window-width width)))
 
+(defun +colorize (color-list)
+  (setq colors-alist (mapcar (lambda (l) (cons (symbol-name (car l)) (cadr l))) color-list))
+  (setq font-lock-keywords `((,(regexp-opt (mapcar 'car colors-alist) 'words)
+                              (0 (rainbow-colorize-by-assoc colors-alist)))))
+  (font-lock-add-keywords nil font-lock-keywords t))
+
 (provide 'funcs)

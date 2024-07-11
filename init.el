@@ -185,7 +185,6 @@
   (setq evil-disable-insert-state-bindings t)
   :custom
   (evil-want-keybinding nil) ; for evil-collection
-  (evil-disable-insert-state-bindings t)
   (evil-want-C-g-bindings t)
   (evil-want-C-i-jump nil) ;; unbind tab for neotree/org-mode
   (evil-want-C-u-scroll t)
@@ -855,7 +854,10 @@
   :load-path +llvm-dir
   :mode "\\.mlir\\'")
 
-(use-package rainbow-mode)
+(use-package rainbow-mode
+  :custom
+  (rainbow-x-colors nil)
+  )
 
 (use-package web-mode
   :mode "\\.\\(html?\\|css\\|js\\)\\'"
