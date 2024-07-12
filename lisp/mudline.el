@@ -16,16 +16,6 @@
   ""
   :group 'mode-line)
 
-(defun mudline--format (left right)
-  "Return a string of `window-width' length containing LEFT and RIGHT,
-aligned respectively."
-  (let ((reserve (length right)))
-    (concat left
-            " "
-            (propertize " "
-                        'display `((space :align-to (- right ,reserve))))
-            right)))
-
 (defun mudline--icon (icon-set icon-name face)
   (let ((func (nerd-icons--function-name icon-set)))
     (concat (propertize (funcall func icon-name) 'face face) " ")))
@@ -134,7 +124,7 @@ aligned respectively."
 
 (defun mudline-segment-position ()
   "Displays the current cursor position in the mode-line."
-  (propertize "%03c %p%%" 'face 'shadow))
+  (propertize "%03c %p%" 'face 'shadow))
 
 (declare-function flycheck-count-errors "flycheck" (errors))
 
@@ -148,8 +138,8 @@ aligned respectively."
                                    (warning (or .warning 0))
                                    (info (or .info 0))
                                    (num (cond ((> error 0) error)
-                                               ((> warning 0) warning)
-                                               (t info)))
+                                              ((> warning 0) warning)
+                                              (t info)))
                                    (face (cond ((> error 0) 'error)
                                                ((> warning 0) 'warning)
                                                (t 'success))))
@@ -201,33 +191,23 @@ aligned respectively."
 
         ;; Set the new mode-line-format
         (setq-default mode-line-format
-                      '((:eval
-                         (mudline--format
-                          ;; Left
-                          (format-mode-line
-                           '(
-                             (:eval (mudline-segment-evil-state))
-                             (:eval (mudline-segment-recording))
-                             (:eval (mudline-segment-iedit-count))
-                             (:eval (mudline-segment-major-mode-icon))
-                             (:eval (mudline-segment-buffer-state-icon))
-                             (:eval (mudline-segment-buffer-name))
-                             ))
-                          ;; Right
-                          (when (mode-line-window-selected-p)
-                            (format-mode-line
-                             '(
-                               (:eval (mudline-segment-misc-info))
-                               (:eval (mudline-segment-lsp))
-                               (:eval (mudline-segment-flycheck))
-                               (:eval (mudline-segment-position))
-                               )))
-                          )))))
-    (progn
-      ;; Remove flycheck hooks
-      (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
-      (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
-      )))
+                      '(
+                        (:eval (mudline-segment-evil-state))
+                        (:eval (mudline-segment-recording))
+                        (:eval (mudline-segment-iedit-count))
+                        (:eval (mudline-segment-major-mode-icon))
+                        (:eval (mudline-segment-buffer-state-icon))
+                        (:eval (mudline-segment-buffer-name))
+                        mode-line-format-right-align
+                        (:eval (mudline-segment-misc-info))
+                        (:eval (mudline-segment-lsp))
+                        (:eval (mudline-segment-flycheck))
+                        (:eval (mudline-segment-position))
+                        " ")))
+    ;; Remove flycheck hooks
+    (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+    (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+    ))
 
 (provide 'mudline)
 ;;; mudline.el ends here

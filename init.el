@@ -370,7 +370,6 @@
   ;; rime
   (global-unset-key (kbd "C-@"))
   (global-unset-key (kbd "C-SPC"))
-  (global-unset-key (kbd "<f10>"))
   )
 
 ;; OSC52 FTW
@@ -439,6 +438,7 @@
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package which-key
+  :straight (:type built-in)
   :hook (after-init . which-key-mode)
   :custom
   (which-key-sort-order #'which-key-key-order-alpha)
@@ -513,13 +513,13 @@
   :custom
   (treesit-font-lock-level 4))
 
-(use-package cmake-ts-mode
-  :straight (:type built-in)
-  :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
-
 (use-package treesit-auto
   :hook (after-init . global-treesit-auto-mode)
-  :custom (treesit-auto-langs '(c cpp python rust cmake)))
+  :custom
+  (treesit-auto-langs '(c cpp python rust cmake yaml))
+  :config
+  (treesit-auto-add-to-auto-mode-alist treesit-auto-langs)
+  )
 
 (use-package treesit-fold
   :straight (:host github :repo "emacs-tree-sitter/treesit-fold")
@@ -545,7 +545,7 @@
   :config
   ;; fix modeline progress report, see `mudline-segment-misc-info'
   (advice-add #'lsp--progress-status :filter-return
-              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%%%" s))))
+              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
   ;; for corfu, original style is lsp-passthrough
   (defun +lsp-orderless () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless)))))
   (add-hook 'lsp-completion-mode-hook #'+lsp-orderless)
@@ -661,11 +661,6 @@
       ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp))
       ))
   (setq c-ts-mode-indent-style #'+my-indent-style)
-  )
-
-(use-package rust-ts-mode
-  :straight (:type built-in)
-  :mode "\\.rs\\'"
   )
 
 (use-package ccls
