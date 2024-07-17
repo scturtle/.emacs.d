@@ -533,6 +533,8 @@
   :straight (:type built-in)
   )
 
+(use-package markdown-mode)
+
 (use-package eldoc
   :straight (:type built-in)
   :custom
@@ -582,7 +584,7 @@
   (with-eval-after-load 'rust-ts-mode
     (require 's)
     (require 'dash)
-    (advice-add #'+eglot--hover-info :override #'eglot-rust-hover-info))
+    (advice-add #'eglot--hover-info :override #'+eglot-rust-hover-info))
   )
 
 (use-package corfu
