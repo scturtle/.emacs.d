@@ -253,17 +253,17 @@
     "bi" 'ibuffer
     "bm" '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "message buffer")
     "bk" 'kill-current-buffer
-    "bf" #'lsp-format-buffer
+    "bf" 'eglot-format-buffer
 
     "c" '(:ignore t :wk "code")
-    "ca" #'lsp-execute-code-action
-    "cr" #'lsp-rename
+    "ca" #'eglot-code-actions
+    "cr" #'eglot-rename
     "cw" 'delete-trailing-whitespace
 
     "e" '(:ignore t :wk "error")
-    "el" #'flycheck-list-errors
-    "ep" #'flycheck-previous-error
-    "en" #'flycheck-next-error
+    "el" #'flymake-show-buffer-diagnostics
+    "ep" #'flymake-goto-prev-error
+    "en" #'flymake-goto-next-error
 
     "f" '(:ignore t :wk "file")
     "ff" 'find-file
@@ -335,7 +335,7 @@
   ;; override "gd" to `evil-goto-definition'
   (evil-define-key 'normal 'global
     "gd" #'+goto-definition
-    "gD" #'lsp-ui-peek-find-references
+    "gD" #'xref-find-references
     "gb" #'xref-go-back
     "gf" #'xref-go-forward)
 
@@ -525,74 +525,64 @@
   :straight (:host github :repo "emacs-tree-sitter/treesit-fold")
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
 
-(use-package lsp-mode
-  ;; :straight (:build (:not compile)) ;; for debug
-  :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . lsp-deferred)
+(use-package yasnippet
+  :hook (eglot--managed-mode . yas-minor-mode)
+  )
+
+(use-package flymake
+  :straight (:type built-in)
+  )
+
+(use-package eldoc
+  :straight (:type built-in)
   :custom
-  (lsp-idle-delay 0)
-  (eldoc-idle-delay 0)
-  (lsp-lens-enable nil)
-  (lsp-enable-snippet t) ;; to insert func params
-  (lsp-enable-file-watchers nil)
-  (lsp-signature-render-documentation nil)
-  (lsp-client-packages '(ccls lsp-rust lsp-pyright))
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-completion-provider :none) ;; use corfu
-  (lsp-modeline-diagnostics-enable nil) ;; use checker segment
+  (eldoc-idle-delay 0.0)
+  )
+
+(use-package eglot
+  :straight (:type built-in)
+  :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . eglot-ensure)
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-autoreconnect nil)
+  (eglot-events-buffer-config (list :size nil :format 'full))
+  (eglot-menu-string "e")
+  (eglot-send-changes-idle-time 0.0)
+  (eglot-ignored-server-capabilities '(:inlayHintProvider))
   :custom-face
-  ;; remove underline in hover
-  (lsp-face-highlight-read ((t :underline nil)))
+  (eglot-highlight-symbol-face ((t :inherit highlight)))
+  (eglot-mode-line ((t :inherit font-lock-string-face :bold nil)))
   :config
-  ;; fix modeline progress report, see `mudline-segment-misc-info'
-  (advice-add #'lsp--progress-status :filter-return
-              (lambda (s) (unless (null s) (replace-regexp-in-string "%" "%%" s))))
-  ;; for corfu, original style is lsp-passthrough
-  (defun +lsp-orderless () (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless)))))
-  (add-hook 'lsp-completion-mode-hook #'+lsp-orderless)
+  ;; ccls
+  (add-to-list
+   'eglot-server-programs
+   `((c-ts-mode c++-ts-mode) .
+     ("ccls" "--log-file=/tmp/ccls.log"
+      :initializationOptions
+      (:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
+              :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)
+              :clang (:extraArgs
+                      ["-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
+                       "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                       "-isystem/usr/local/include"
+                       "-isystem/opt/homebrew/include"]
+                      :resourceDir ,(string-trim (shell-command-to-string "clang -print-resource-dir")))))))
+  ;; FIXME: hotfix pyright
+  (advice-add 'file-notify-add-watch :override #'ignore)
+  (advice-add 'file-notify-rm-watch :override #'ignore)
+  ;; fix progress report
+  (advice-add 'eglot--mode-line-props :filter-args
+              (lambda (args) (cons (replace-regexp-in-string "%%" "%%%%" (car args)) (cdr args))))
+  ;; use orderless
+  (setq completion-category-defaults nil)
   ;; setup the orderless-flex style for its 1st search term
   (defun +orderless-flex-first (_pat idx _tot) (if (eq idx 0) 'orderless-flex 'orderless-literal))
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
-  ;; HACK: `lsp--fontlock-with-mode' is SLOW with treesit
-  (advice-add #'lsp--render-string :filter-args
-              (lambda (args) (if (string= (cadr args) "markdown") args
-                               (list (concat "```" (cadr args) "\n" (car args) "\n" "```") "markdown"))))
-  ;; override the builtin one
-  (with-eval-after-load 'lsp-rust
-    ;; do not cache the shitty result from rust-analyzer
-    (advice-add #'lsp-eldoc-function :after (lambda (&rest _) (setq lsp--hover-saved-bounds nil)))
-    ;; extract and show short signature for rust-analyzer
-    (cl-defmethod lsp-clients-extract-signature-on-hover (contents (_server-id (eql rust-analyzer)))
-      (let* ((value (if lsp-use-plists (plist-get contents :value) (gethash "value" contents)))
-             (groups (--partition-by (s-blank? it) (s-lines (s-trim value))))
-             (mod-group (cond ((s-equals? "```rust" (car (-fifth-item groups))) (-third-item groups))
-                              ((s-equals? "```rust" (car (-third-item groups))) (-first-item groups))
-                              (t nil)))
-             (cmt (if (null mod-group) "" (concat " // " (cadr mod-group))))
-             (sig-group (cond ((s-equals? "```rust" (car (-fifth-item groups))) (-fifth-item groups))
-                              ((s-equals? "```rust" (car (-third-item groups))) (-third-item groups))
-                              (t (-first-item groups))))
-             (sig (->> sig-group
-                       (--drop-while (s-starts-with? "```" it))
-                       (--take-while (not (s-equals? "```" it)))
-                       (--map (s-replace-regexp "//.*" "" it))
-                       (--map (s-trim it))
-                       (s-join " "))))
-        (lsp--render-element (concat "```rust\n" sig cmt "\n```"))))
-    )
-  )
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-sideline-enable nil)
-  :bind
-  (:map lsp-ui-peek-mode-map
-        ("k" . #'lsp-ui-peek--select-prev)
-        ("j" . #'lsp-ui-peek--select-next)))
-
-(use-package yasnippet
-  :hook (lsp-mode . yas-minor-mode) ;; for yas-enable-snippet
+  ;; extract and show short signature for rust-analyzer
+  (with-eval-after-load 'rust-ts-mode
+    (require 's)
+    (require 'dash)
+    (advice-add #'+eglot--hover-info :override #'eglot-rust-hover-info))
   )
 
 (use-package corfu
@@ -632,23 +622,6 @@
   :straight (:host github :repo "scturtle/corfu-terminal")
   :hook (corfu-mode . corfu-terminal-mode))
 
-(use-package flycheck
-  :hook (prog-mode . flycheck-mode)
-  :custom
-  (flycheck-indication-mode 'left-margin)
-  (flycheck-check-syntax-automatically '(mode-enabled save))
-  (flycheck-emacs-lisp-load-path 'inherit)
-  (flycheck-display-errors-delay '0.2)
-  ;; less warnings (for editing config like this init.el)
-  (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-  :config
-  (setq flycheck-emacs-lisp-check-form
-        (prin1-to-string
-         `(progn
-            (setq byte-compile-warnings '(not free-vars noruntime unresolved))
-            ,(read (default-toplevel-value 'flycheck-emacs-lisp-check-form)))))
-  )
-
 (use-package c-ts-mode
   :straight (:type built-in)
   :config
@@ -661,26 +634,6 @@
       ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp))
       ))
   (setq c-ts-mode-indent-style #'+my-indent-style)
-  )
-
-(use-package ccls
-  :custom
-  (ccls-args '("--log-file=/tmp/ccls.log"))
-  :config
-  (setq ccls-initialization-options
-        `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
-                 :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
-  (when IS-MAC
-    (setq ccls-initialization-options
-          (append ccls-initialization-options
-                  `(:clang ,(list :extraArgs
-                                  [
-                                   "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
-                                   "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                                   "-isystem/usr/local/include"
-                                   "-isystem/opt/homebrew/include"
-                                   ]
-                                  :resourceDir (string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   )
 
 (use-package elisp-def)
@@ -817,12 +770,6 @@
   (evil-org-key-theme '(navigation textobjects todo heading))
   )
 
-(use-package lsp-pyright
-  :custom
-  ;; (lsp-pyright-use-library-code-for-types nil)
-  (lsp-pyright-python-executable-cmd "python3")
-  (lsp-pyright-typechecking-mode "off"))
-
 ;; setup llvm
 (defvar +llvm-dir (emacs.d "lisp/llvm-utils"))
 (unless (file-directory-p +llvm-dir)
@@ -833,7 +780,7 @@
   :straight nil
   :load-path +llvm-dir
   :mode "\\.td\\'"
-  :hook (tablegen-mode . lsp-deferred)
+  :hook (tablegen-mode . lsp-deferred)  ;; FIXME
   :config
   (with-eval-after-load 'lsp-mode
     (let ((lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))

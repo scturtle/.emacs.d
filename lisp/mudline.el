@@ -156,22 +156,6 @@
   "Segment to show flycheck status."
   (propertize mudline--flycheck-text 'help-echo "flycheck-mode"))
 
-(defvar-local mudline--lsp-text "")
-(defun mudline--update-lsp (&optional _)
-  (setq mudline--lsp-text
-        (let ((workspaces (lsp-workspaces)))
-          (mudline--icon 'octicon "nf-oct-rocket"
-                         (if workspaces 'success 'warning)))))
-(add-hook 'lsp-before-initialize-hook        #'mudline--update-lsp)
-(add-hook 'lsp-after-initialize-hook         #'mudline--update-lsp)
-(add-hook 'lsp-after-uninitialized-functions #'mudline--update-lsp)
-(add-hook 'lsp-before-open-hook              #'mudline--update-lsp)
-(add-hook 'lsp-after-open-hook               #'mudline--update-lsp)
-
-(defun mudline-segment-lsp ()
-  "Segment to show lsp-mode status."
-  (propertize mudline--lsp-text 'help-echo "lsp-mode"))
-
 (defun mudline-segment-misc-info ()
   "Segment to display `mode-line-misc-info'."
   (let ((str (format-mode-line mode-line-misc-info 'shadow)))
@@ -200,7 +184,6 @@
                         (:eval (mudline-segment-buffer-name))
                         mode-line-format-right-align
                         (:eval (mudline-segment-misc-info))
-                        (:eval (mudline-segment-lsp))
                         (:eval (mudline-segment-flycheck))
                         (:eval (mudline-segment-position))
                         " ")))
