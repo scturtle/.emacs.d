@@ -498,6 +498,7 @@
   (consult-async-input-throttle 0.2)
   (consult-async-input-debounce 0.1)
   (completion-in-region-function #'consult-completion-in-region) ;; in `Eval:'
+  (xref-show-xrefs-function #'consult-xref) ;; for xref-find-references
   )
 
 (use-package iedit :commands iedit-start)
@@ -556,19 +557,21 @@
   (eglot-mode-line ((t :inherit font-lock-string-face :bold nil)))
   :config
   ;; ccls
-  (add-to-list
-   'eglot-server-programs
-   `((c-ts-mode c++-ts-mode) .
-     ("ccls" "--log-file=/tmp/ccls.log"
-      :initializationOptions
-      (:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
-              :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)
-              :clang (:extraArgs
-                      ["-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
-                       "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                       "-isystem/usr/local/include"
-                       "-isystem/opt/homebrew/include"]
-                      :resourceDir ,(string-trim (shell-command-to-string "clang -print-resource-dir")))))))
+  (setq ccls-initialization-options
+        `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
+                 :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
+  (when IS-MAC
+    (setq ccls-initialization-options
+          (append ccls-initialization-options
+                  `(:clang (:extraArgs
+                            ["-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
+                             "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                             "-isystem/usr/local/include"
+                             "-isystem/opt/homebrew/include"]
+                            :resourceDir ,(string-trim (shell-command-to-string "clang -print-resource-dir")))))))
+  (add-to-list 'eglot-server-programs
+               `((c-ts-mode c++-ts-mode) . ("ccls" "--log-file=/tmp/ccls.log"
+                                            :initializationOptions ,ccls-initialization-options)))
   ;; FIXME: hotfix pyright
   (advice-add 'file-notify-add-watch :override #'ignore)
   (advice-add 'file-notify-rm-watch :override #'ignore)
