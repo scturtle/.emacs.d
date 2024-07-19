@@ -452,10 +452,21 @@
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
+  :hook (minibuffer-setup . vertico-repeat-save)
   :custom
   (vertico-resize nil)
   (vertico-count 17)
-  (vertico-cycle t))
+  (vertico-cycle t)
+  (vertico-scroll-margin 0)
+  :bind
+  (:map vertico-map
+        ("M-."       . #'vertico-repeat)
+        ("M-p"       . #'vertico-scroll-down)
+        ("M-n"       . #'vertico-scroll-up)
+        ("<tab>"     . #'vertico-next-group)
+        ("<backtab>" . #'vertico-previous-group)
+        )
+  )
 
 (use-package marginalia
   :hook (after-init . marginalia-mode)
@@ -573,6 +584,7 @@
                `((c-ts-mode c++-ts-mode) . ("ccls" "--log-file=/tmp/ccls.log"
                                             :initializationOptions ,ccls-initialization-options)))
   ;; FIXME: hotfix pyright
+  (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
   (advice-add 'file-notify-add-watch :override #'ignore)
   (advice-add 'file-notify-rm-watch :override #'ignore)
   ;; fix progress report
