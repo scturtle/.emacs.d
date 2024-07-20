@@ -213,6 +213,10 @@
               (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
   (advice-add #'evil-collection-view-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
+  (advice-add #'evil-collection-eglot-setup :after
+              (lambda (&rest _)
+                (evil-collection-define-key 'normal 'eglot-mode-map "gD" nil)
+                (evil-collection-define-key 'normal 'eglot-mode-map "gr" nil)))
   )
 
 ;; put after evil for perf issue https://github.com/noctuid/general.el/issues/180
@@ -335,7 +339,7 @@
   ;; override "gd" to `evil-goto-definition'
   (evil-define-key 'normal 'global
     "gd" #'+goto-definition
-    "gD" #'xref-find-references
+    "gD" #'lsp-ui-peek-find-references
     "gb" #'xref-go-back
     "gf" #'xref-go-forward)
 
@@ -600,6 +604,15 @@
     (require 's)
     (require 'dash)
     (advice-add #'eglot--hover-info :override #'+eglot-rust-hover-info))
+  )
+
+(use-package lsp-ui-peek
+  :straight (:host github :repo "scturtle/lsp-ui-peek")
+  :commands lsp-ui-peek-find-references
+  :bind
+  (:map lsp-ui-peek-mode-map
+        ("k" . #'lsp-ui-peek--select-prev)
+        ("j" . #'lsp-ui-peek--select-next))
   )
 
 (use-package corfu
