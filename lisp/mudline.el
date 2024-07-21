@@ -208,9 +208,9 @@
   (if mudline-mode
       (progn
         ;; Setup hooks
-        ;; (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
-        ;; (add-hook 'flycheck-mode-hook #'mudline--update-flycheck)
-        (advice-add #'flymake--handle-report :after #'mudline--update-flymake)
+        (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+        (add-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+        ;; (advice-add #'flymake--handle-report :after #'mudline--update-flymake)
 
         ;; Set the new mode-line-format
         (setq-default mode-line-format
@@ -223,14 +223,14 @@
                         (:eval (mudline-segment-buffer-name))
                         mode-line-format-right-align
                         (:eval (mudline-segment-misc-info))
-                        ;; (:eval (mudline-segment-flycheck))
-                        (:eval (mudline-segment-flymake))
+                        (:eval (mudline-segment-flycheck))
+                        ;; (:eval (mudline-segment-flymake))
                         (:eval (mudline-segment-position))
                         " ")))
     ;; Remove hooks
-    ;; (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
-    ;; (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
-    (advice-remove #'flymake--handle-report #'mudline--update-flymake)
+    (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+    (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+    ;; (advice-remove #'flymake--handle-report #'mudline--update-flymake)
     ))
 
 (provide 'mudline)

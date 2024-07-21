@@ -49,6 +49,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; declare built-in packages
+(setq straight-built-in-pseudo-packages
+      (append straight-built-in-pseudo-packages
+              '(compat dabbrev eglot eldoc flymake jsonrpc org project seq tramp
+                       transient treesit use-package which-key xref c-ts-mode)))
+
 ;; relationship with `use-package'
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
@@ -76,7 +82,6 @@
 
 ;; defaults
 (use-package emacs
-  :straight (:type built-in)
   :init
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
@@ -207,16 +212,13 @@
   (evil-collection-magit-want-horizontal-movement t)
   (evil-collection-magit-use-z-for-folds t)
   :config
+  (delete 'eglot evil-collection-mode-list)
   (evil-collection-init)
   ;; disable bindings that I don't want
   (advice-add #'evil-collection-neotree-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
   (advice-add #'evil-collection-view-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
-  (advice-add #'evil-collection-eglot-setup :after
-              (lambda (&rest _)
-                (evil-collection-define-key 'normal 'eglot-mode-map "gD" nil)
-                (evil-collection-define-key 'normal 'eglot-mode-map "gr" nil)))
   )
 
 ;; put after evil for perf issue https://github.com/noctuid/general.el/issues/180
@@ -265,9 +267,9 @@
     "cw" 'delete-trailing-whitespace
 
     "e" '(:ignore t :wk "error")
-    "el" #'consult-flymake
-    "ep" #'flymake-goto-prev-error
-    "en" #'flymake-goto-next-error
+    "el" #'flycheck-list-errors
+    "ep" #'flycheck-previous-error
+    "en" #'flycheck-next-error
 
     "f" '(:ignore t :wk "file")
     "ff" 'find-file
@@ -442,7 +444,6 @@
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package which-key
-  :straight (:type built-in)
   :hook (after-init . which-key-mode)
   :custom
   (which-key-sort-order #'which-key-key-order-alpha)
@@ -470,20 +471,6 @@
         ("<tab>"     . #'vertico-next-group)
         ("<backtab>" . #'vertico-previous-group)
         )
-  :config
-  ;; HACK: just to the nearest item in consult-flymake
-  (defvar consult--current-line nil)
-  (defun consult--set-current-line (&optional arg1 arg2)
-    (setq consult--current-line (line-number-at-pos)))
-  (defun consult-vertico--update-choose (&rest _)
-    (when consult--current-line
-      (setq vertico--index
-            (or (seq-position vertico--candidates consult--current-line
-                              (lambda (cand line) (>= (string-to-number (nth 1 (split-string cand " "))) line)))
-                (1- (length vertico--candidates)))))
-    (setq consult--current-line nil))
-  (advice-add #'consult-flymake :before #'consult--set-current-line)
-  (advice-add #'vertico--update :after #'consult-vertico--update-choose)
   )
 
 (use-package marginalia
@@ -539,7 +526,6 @@
 
 (use-package treesit
   :demand t
-  :straight (:type built-in)
   :custom
   (treesit-font-lock-level 4))
 
@@ -556,44 +542,18 @@
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
 
 (use-package yasnippet
-  :hook (eglot--managed-mode . yas-minor-mode)
-  )
-
-(use-package flymake
-  :straight (:type built-in)
-  )
-
-(use-package elisp-mode
-  :straight (:type built-in)
-  :hook (emacs-lisp-mode . flymake-mode)
-  :hook (emacs-lisp-mode . (lambda ()
-                             ;; use straight load path
-                             (advice-add #'elisp-flymake-byte-compile
-                                         :around (lambda (orig-fn &rest args)
-                                                   (let ((byte-compile-warnings '(not free-vars noruntime))
-                                                         (elisp-flymake-byte-compile-load-path
-                                                          (append elisp-flymake-byte-compile-load-path load-path)))
-                                                     (apply orig-fn args))))
-                             ;; no check doc
-                             (remove-hook 'flymake-diagnostic-functions #'elisp-flymake-checkdoc t)))
-  )
-
-(use-package elisp-def)
-
-(use-package sideline-flymake
-  :hook (flymake-mode . sideline-mode)
-  :custom (sideline-backends-right '(sideline-flymake)))
-
-(use-package markdown-mode)
+  :hook (eglot-managed-mode . yas-minor-mode))
 
 (use-package eldoc
-  :straight (:type built-in)
   :custom
   (eldoc-idle-delay 0.0)
   )
 
+(use-package markdown-mode)
+
+(use-package elisp-def)
+
 (use-package eglot
-  :straight (:type built-in)
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . eglot-ensure)
   :custom
   (eglot-autoshutdown t)
@@ -650,6 +610,20 @@
         ("j" . #'lsp-ui-peek--select-next))
   )
 
+(use-package flycheck
+  :hook (prog-mode . flycheck-mode)
+  :custom
+  (flycheck-indication-mode 'left-margin)
+  ;; (flycheck-check-syntax-automatically '(mode-enabled save))
+  (flycheck-emacs-lisp-load-path 'inherit)
+  (flycheck-display-errors-delay '0.2)
+  ;; less warnings (for editing config like this init.el)
+  (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  )
+
+(use-package flycheck-eglot
+  :hook (eglot-managed-mode . flycheck-eglot-mode))
+
 (use-package corfu
   :straight (:files (:defaults "extensions/*.el"))
   :hook (prog-mode . corfu-mode)
@@ -677,7 +651,6 @@
         ("M-m"   . 'corfu-move-to-minibuffer)))
 
 (use-package dabbrev
-  :straight (:type built-in)
   :custom
   (dabbrev-case-replace nil) ;; do not downcase
   (dabbrev-check-other-buffers nil) ;; only in this buffer
@@ -688,7 +661,6 @@
   :hook (corfu-mode . corfu-terminal-mode))
 
 (use-package c-ts-mode
-  :straight (:type built-in)
   :config
   (defun +my-indent-style()
     `(((parent-is "declaration_list") parent-bol 0) ;; namespace
@@ -732,7 +704,6 @@
   )
 
 (use-package tramp
-  :straight (:type built-in)
   :custom
   (tramp-default-method "ssh")
   :config
@@ -792,7 +763,6 @@
   )
 
 (use-package org
-  :straight (:type built-in)
   :hook (org-mode . evil-org-mode)
   ;; :hook (org-mode . corfu-mode) ;; terminal not compat with org-indent-mode
   :custom

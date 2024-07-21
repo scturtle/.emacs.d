@@ -165,9 +165,9 @@
         (evil-ex-substitute-replacement :foreground ,green)
 
         ;; flycheck
-        (flycheck-error   :foreground ,red :underline t)
-        (flycheck-warning :foreground ,yellow :underline t)
-        (flycheck-info    :foreground ,green :underline t)
+        (flycheck-error   :underline (:style wave :color ,red))
+        (flycheck-warning :underline (:style wave :color ,yellow))
+        (flycheck-info    :underline (:style wave :color ,green))
 
         ;; diff-hl
         (diff-hl-change :foreground ,yellow :background ,yellow)
