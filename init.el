@@ -265,7 +265,7 @@
     "cw" 'delete-trailing-whitespace
 
     "e" '(:ignore t :wk "error")
-    "el" #'flymake-show-buffer-diagnostics
+    "el" #'consult-flymake
     "ep" #'flymake-goto-prev-error
     "en" #'flymake-goto-next-error
 
@@ -470,6 +470,20 @@
         ("<tab>"     . #'vertico-next-group)
         ("<backtab>" . #'vertico-previous-group)
         )
+  :config
+  ;; HACK: just to the nearest item in consult-flymake
+  (defvar consult--current-line nil)
+  (defun consult--set-current-line (&optional arg1 arg2)
+    (setq consult--current-line (line-number-at-pos)))
+  (defun consult-vertico--update-choose (&rest _)
+    (when consult--current-line
+      (setq vertico--index
+            (or (seq-position vertico--candidates consult--current-line
+                              (lambda (cand line) (>= (string-to-number (nth 1 (split-string cand " "))) line)))
+                (1- (length vertico--candidates)))))
+    (setq consult--current-line nil))
+  (advice-add #'consult-flymake :before #'consult--set-current-line)
+  (advice-add #'vertico--update :after #'consult-vertico--update-choose)
   )
 
 (use-package marginalia
@@ -548,6 +562,27 @@
 (use-package flymake
   :straight (:type built-in)
   )
+
+(use-package elisp-mode
+  :straight (:type built-in)
+  :hook (emacs-lisp-mode . flymake-mode)
+  :hook (emacs-lisp-mode . (lambda ()
+                             ;; use straight load path
+                             (advice-add #'elisp-flymake-byte-compile
+                                         :around (lambda (orig-fn &rest args)
+                                                   (let ((byte-compile-warnings '(not free-vars noruntime))
+                                                         (elisp-flymake-byte-compile-load-path
+                                                          (append elisp-flymake-byte-compile-load-path load-path)))
+                                                     (apply orig-fn args))))
+                             ;; no check doc
+                             (remove-hook 'flymake-diagnostic-functions #'elisp-flymake-checkdoc t)))
+  )
+
+(use-package elisp-def)
+
+(use-package sideline-flymake
+  :hook (flymake-mode . sideline-mode)
+  :custom (sideline-backends-right '(sideline-flymake)))
 
 (use-package markdown-mode)
 
@@ -665,8 +700,6 @@
       ))
   (setq c-ts-mode-indent-style #'+my-indent-style)
   )
-
-(use-package elisp-def)
 
 (use-package magit
   :custom
@@ -838,3 +871,7 @@
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   )
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:

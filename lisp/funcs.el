@@ -127,3 +127,7 @@
     (eglot--format-markup (concat "```rust\n" sig cmt "\n```"))))
 
 (provide 'funcs)
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:

@@ -156,6 +156,44 @@
   "Segment to show flycheck status."
   (propertize mudline--flycheck-text 'help-echo "flycheck-mode"))
 
+(defvar-local mudline--flymake-text "")
+
+(defun mudline--flymake-count (type)
+  (cl-loop for diag in (flymake-diagnostics)
+           as diag-type = (flymake-diagnostic-type diag)
+           count (eq (flymake--lookup-type-property diag-type 'severity)
+                     (flymake--lookup-type-property type 'severity))))
+
+(defun mudline--update-flymake (&rest _args)
+  (setq mudline--flymake-text
+        (when-let ((flymake-active (and (fboundp 'flymake-is-running)
+                                        (flymake-is-running)))
+                   (status (if (seq-difference (flymake-running-backends)
+                                               (flymake-reporting-backends))
+                               'running 'finished))
+                   (error (mudline--flymake-count :error))
+                   (warning (mudline--flymake-count :warning))
+                   (note (mudline--flymake-count :note)))
+          (setq mudline--flycheck-text
+                (pcase status
+                  ('finished
+                   (let* ((num (cond ((> error 0) error)
+                                     ((> warning 0) warning)
+                                     (t note)))
+                          (face (cond ((> error 0) 'error)
+                                      ((> warning 0) 'warning)
+                                      (t 'success))))
+                     (concat
+                      (mudline--icon 'mdicon "nf-md-alert_circle_outline" face)
+                      (unless (eq face 'finished)
+                        (propertize (number-to-string num) 'face face)))))
+                  ('running (mudline--icon 'mdicon "nf-md-timer_sand" 'success))
+                  )))))
+
+(defun mudline-segment-flymake ()
+  "Segment to show flymake status."
+  (propertize mudline--flymake-text 'help-echo "flymake-mode"))
+
 (defun mudline-segment-misc-info ()
   "Segment to display `mode-line-misc-info'."
   (let ((str (format-mode-line mode-line-misc-info 'shadow)))
@@ -169,9 +207,10 @@
   :lighter nil
   (if mudline-mode
       (progn
-        ;; Setup flycheck hooks
-        (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
-        (add-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+        ;; Setup hooks
+        ;; (add-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+        ;; (add-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+        (advice-add #'flymake--handle-report :after #'mudline--update-flymake)
 
         ;; Set the new mode-line-format
         (setq-default mode-line-format
@@ -184,13 +223,18 @@
                         (:eval (mudline-segment-buffer-name))
                         mode-line-format-right-align
                         (:eval (mudline-segment-misc-info))
-                        (:eval (mudline-segment-flycheck))
+                        ;; (:eval (mudline-segment-flycheck))
+                        (:eval (mudline-segment-flymake))
                         (:eval (mudline-segment-position))
                         " ")))
-    ;; Remove flycheck hooks
-    (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
-    (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+    ;; Remove hooks
+    ;; (remove-hook 'flycheck-status-changed-functions #'mudline--update-flycheck)
+    ;; (remove-hook 'flycheck-mode-hook #'mudline--update-flycheck)
+    (advice-remove #'flymake--handle-report #'mudline--update-flymake)
     ))
 
 (provide 'mudline)
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
 ;;; mudline.el ends here
