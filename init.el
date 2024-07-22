@@ -561,14 +561,14 @@
   (eglot-events-buffer-config (list :size nil :format 'full))
   (eglot-menu-string "e")
   (eglot-send-changes-idle-time 0.0)
-  (eglot-ignored-server-capabilities '(:inlayHintProvider))
+  (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
   :custom-face
   (eglot-highlight-symbol-face ((t :inherit highlight)))
   (eglot-mode-line ((t :inherit font-lock-string-face :bold nil)))
   :config
   ;; ccls
   (setq ccls-initialization-options
-        `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)))
+        `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)) :comments 0)
                  :completion (:caseSensitivity 0 :filterAndSort t :maxNum 500)))
   (when IS-MAC
     (setq ccls-initialization-options
