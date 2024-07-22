@@ -756,9 +756,8 @@
   (neo-show-hidden-files t)
   (neo-window-width 30)
   (neo-vc-integration '(face))
+  (neo-theme 'nerd-icons)
   :config
-  ;; use nerd-icons
-  (advice-add 'neo-buffer--insert-fold-symbol :override #'+neotree/insert-symbol)
   (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
   )
 
