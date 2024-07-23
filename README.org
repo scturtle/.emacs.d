@@ -1,10 +1,10 @@
-* Personal Emacs Configuration
+* scturtle's .emacs.d
 
 [[https://v.scturtle.me/img/emacs.png]]
 
-- emacs 29
+- emacs 30
 - terminal only
-- evil mode, straight.el, general.el
+- evil, straight.el, general.el
 - vertico, marginalia, orderless, consult
-- lsp-mode, corfu, for C++ & Rust & Python
+- eglot, corfu, tree-sitter, flycheck, projectile
 - handcrafted theme and modeline
