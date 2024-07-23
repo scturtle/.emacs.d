@@ -547,6 +547,8 @@
 (use-package eldoc
   :custom
   (eldoc-idle-delay 0.0)
+  ;; when `eldoc-doc-buffer' is opened, do not show in echo area
+  (eldoc-echo-area-prefer-doc-buffer t)
   )
 
 (use-package markdown-mode)
@@ -812,15 +814,15 @@
   :straight nil
   :load-path +llvm-dir
   :mode "\\.td\\'"
-  :hook (tablegen-mode . lsp-deferred)  ;; FIXME
+  :hook (tablegen-mode . eglot-ensure)
+  :hook (tablegen-mode . prog-mode)
   :config
-  (with-eval-after-load 'lsp-mode
-    (let ((lsp-cmds '("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))
-      (add-to-list 'lsp-language-id-configuration '(tablegen-mode . "tablegen"))
-      (lsp-register-client
-       (make-lsp-client :new-connection (lsp-stdio-connection lsp-cmds)
-                        :major-modes '(tablegen-mode)
-                        :server-id 'tblgenls)))))
+  (with-eval-after-load 'electric-pair
+    (add-to-list 'electric-pair-pairs '(?\< . ?\>))
+  )
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 `(tablegen-mode . ("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))))
 
 (use-package mlir-mode
   :if +llvm-dir
