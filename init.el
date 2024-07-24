@@ -233,129 +233,125 @@
                 (with-current-buffer messages-buffer
                   (evil-normalize-keymaps)))))
 
-  (general-create-definer global-leader
-    :states '(normal visual insert emacs)
-    :prefix "SPC"
-    :non-normal-prefix "M-SPC"
-    :keymaps 'override)
-
   ;; Make SPC u SPC u [...] possible
   (define-key universal-argument-map " u" #'universal-argument-more)
 
-  (global-leader
-    "SPC" '(execute-extended-command :wk "execute command")
-    [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
-    "u" '(universal-argument :wk "universal")
-    ";" '(pp-eval-expression :wk "eval expr")
-    ":" '(pp-eval-expression :wk "eval expr")
-    "," 'switch-to-buffer
-    "*" '(+search-project-for-symbol-at-point :wk "search symbol in project")
-    "qq" 'save-buffers-kill-terminal
+  (general-define-key
+   :states '(normal visual)
+   :prefix "SPC"
+   :keymaps 'override
+   "SPC" '(execute-extended-command :wk "execute command")
+   [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
+   "u" '(universal-argument :wk "universal")
+   ";" '(pp-eval-expression :wk "eval expr")
+   ":" '(pp-eval-expression :wk "eval expr")
+   "," 'switch-to-buffer
+   "*" '(+search-project-for-symbol-at-point :wk "search symbol in project")
+   "qq" 'save-buffers-kill-terminal
 
-    "b" '(:ignore t :wk "buffer")
-    "bb" 'switch-to-buffer
-    "br" 'revert-buffer
-    "bd" 'kill-current-buffer
-    "bi" 'ibuffer
-    "bm" '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "message buffer")
-    "bk" 'kill-current-buffer
-    "bf" 'eglot-format-buffer
+   "b" '(:ignore t :wk "buffer")
+   "bb" 'switch-to-buffer
+   "br" 'revert-buffer
+   "bd" 'kill-current-buffer
+   "bi" 'ibuffer
+   "bm" '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "message buffer")
+   "bk" 'kill-current-buffer
+   "bf" #'eglot-format-buffer
 
-    "c" '(:ignore t :wk "code")
-    "ca" #'eglot-code-actions
-    "cr" #'eglot-rename
-    "cw" 'delete-trailing-whitespace
+   "c" '(:ignore t :wk "code")
+   "ca" #'eglot-code-actions
+   "cr" #'eglot-rename
+   "cw" 'delete-trailing-whitespace
 
-    "e" '(:ignore t :wk "error")
-    "el" #'flycheck-list-errors
-    "ep" #'flycheck-previous-error
-    "en" #'flycheck-next-error
+   "e" '(:ignore t :wk "error")
+   "el" #'flycheck-list-errors
+   "ep" #'flycheck-previous-error
+   "en" #'flycheck-next-error
 
-    "f" '(:ignore t :wk "file")
-    "ff" 'find-file
-    "fs" 'save-buffer
-    "fr" #'recentf-open-files
-    "fp" '((lambda () (interactive) (find-file user-init-file)) :wk "edit init.el")
+   "f" '(:ignore t :wk "file")
+   "ff" 'find-file
+   "fs" 'save-buffer
+   "fr" #'recentf-open-files
+   "fp" '((lambda () (interactive) (find-file user-init-file)) :wk "edit init.el")
 
-    "g" '(:ignore t :wk "git")
-    "gg" #'magit-status
-    "gb" #'magit-blame-addition
-    "gp" #'diff-hl-previous-hunk
-    "gn" #'diff-hl-next-hunk
-    "cp" #'smerge-prev
-    "cn" #'smerge-next
+   "g" '(:ignore t :wk "git")
+   "gg" #'magit-status
+   "gb" #'magit-blame-addition
+   "gp" #'diff-hl-previous-hunk
+   "gn" #'diff-hl-next-hunk
+   "cp" #'smerge-prev
+   "cn" #'smerge-next
 
-    "h" '(:ignore t :wk "help")
-    "he" 'view-echo-area-messages
-    "hf" 'describe-function
-    "hF" 'describe-face
-    "hl" 'view-lossage
-    "hm" 'describe-mode
-    "hk" 'describe-key
-    "hp" 'describe-package
-    "hv" 'describe-variable
+   "h" '(:ignore t :wk "help")
+   "hf" 'describe-function
+   "hF" 'describe-face
+   "hm" 'describe-mode
+   "hk" 'describe-key
+   "hp" 'describe-package
+   "hv" 'describe-variable
 
-    "n" '(:ignore t :wk "note")
-    "nd" #'deft
+   "n" '(:ignore t :wk "note")
+   "nd" #'deft
 
-    "p" '(:ignore t :wk "project")
-    "pp" #'projectile-switch-project
-    "pr" #'projectile-recentf
-    "pi" #'projectile-invalidate-cache
-    "pf" #'projectile-find-file
-    "pd" #'consult-fd
-    "ga" #'projectile-find-other-file
-    "op" #'neotree-toggle
-    "oP" #'+neotree/find-this-file
+   "p" '(:ignore t :wk "project")
+   "pp" #'projectile-switch-project
+   "pr" #'projectile-recentf
+   "pi" #'projectile-invalidate-cache
+   "pf" #'projectile-find-file
+   "pd" #'consult-fd
+   "ga" #'projectile-find-other-file
+   "op" #'neotree-toggle
+   "oP" #'+neotree/find-this-file
 
-    "s" '(:ignore t :wk "search")
-    "sh" #'+symbol-highlight
-    "sb" #'consult-line
-    "sp" '(consult-ripgrep :wk "search in project")
+   "s" '(:ignore t :wk "search")
+   "sh" #'+symbol-highlight
+   "sb" #'consult-line
+   "sp" #'consult-ripgrep
 
-    "t"  '(:ignore t :wk "toggle")
-    "tl" '(display-line-numbers-mode :wk "toggle line numbers")
-    "tt" '(toggle-truncate-lines :wk "toggle truncate lines")
-    "tn" #'tab-bar-new-tab
-    "tm" #'tab-bar-move-tab
-    "1"  '((lambda() (interactive) (tab-bar-select-tab 1)) :wk "switch tab 1")
-    "2"  '((lambda() (interactive) (tab-bar-select-tab 2)) :wk "switch tab 2")
-    "3"  '((lambda() (interactive) (tab-bar-select-tab 3)) :wk "switch tab 3")
-    "4"  '((lambda() (interactive) (tab-bar-select-tab 4)) :wk "switch tab 4")
-    "5"  '((lambda() (interactive) (tab-bar-select-tab 5)) :wk "switch tab 5")
-    "6"  '((lambda() (interactive) (tab-bar-select-tab 6)) :wk "switch tab 6")
-    "7"  '((lambda() (interactive) (tab-bar-select-tab 7)) :wk "switch tab 7")
-    "8"  '((lambda() (interactive) (tab-bar-select-tab 8)) :wk "switch tab 8")
-    "9"  '((lambda() (interactive) (tab-bar-select-tab 9)) :wk "switch tab 9")
+   "t"  '(:ignore t :wk "toggle")
+   "tl" '(display-line-numbers-mode :wk "toggle line numbers")
+   "tt" '(toggle-truncate-lines :wk "toggle truncate lines")
+   "tn" #'tab-bar-new-tab
+   "tm" #'tab-bar-move-tab
+   "1"  '((lambda() (interactive) (tab-bar-select-tab 1)) :wk "switch tab 1")
+   "2"  '((lambda() (interactive) (tab-bar-select-tab 2)) :wk "switch tab 2")
+   "3"  '((lambda() (interactive) (tab-bar-select-tab 3)) :wk "switch tab 3")
+   "4"  '((lambda() (interactive) (tab-bar-select-tab 4)) :wk "switch tab 4")
+   "5"  '((lambda() (interactive) (tab-bar-select-tab 5)) :wk "switch tab 5")
+   "6"  '((lambda() (interactive) (tab-bar-select-tab 6)) :wk "switch tab 6")
+   "7"  '((lambda() (interactive) (tab-bar-select-tab 7)) :wk "switch tab 7")
+   "8"  '((lambda() (interactive) (tab-bar-select-tab 8)) :wk "switch tab 8")
+   "9"  '((lambda() (interactive) (tab-bar-select-tab 9)) :wk "switch tab 9")
 
-    "w" '(:ignore t :wk "window")
-    "wd" #'evil-window-delete
-    "wo" 'delete-other-windows
-    "wk" #'evil-window-up
-    "wj" #'evil-window-down
-    "wl" #'evil-window-right
-    "wh" #'evil-window-left
-    "ww" #'evil-window-next
-    )
+   "w" '(:ignore t :wk "window")
+   "wd" #'evil-window-delete
+   "wo" 'delete-other-windows
+   "wk" #'evil-window-up
+   "wj" #'evil-window-down
+   "wl" #'evil-window-right
+   "wh" #'evil-window-left
+   "ww" #'evil-window-next
+   )
 
   ;; override "gd" to `evil-goto-definition'
-  (evil-define-key 'normal 'global
-    "gd" #'+goto-definition
-    "gD" #'lsp-ui-peek-find-references
-    "gb" #'xref-go-back
-    "gf" #'xref-go-forward)
+  (general-define-key
+   :states 'normal
+   "gd" #'+goto-definition
+   "gD" #'lsp-ui-peek-find-references
+   "gb" #'xref-go-back
+   "gf" #'xref-go-forward)
 
   ;; mimic emacs key bindings
   (general-define-key
    :states 'insert
    "C-h" 'delete-backward-char
-   "C-g" 'evil-normal-state)
+   "C-g" #'evil-normal-state)
 
   (general-define-key
    :keymaps 'minibuffer-mode-map
    "<escape>" 'abort-recursive-edit
    "C-h"      'delete-backward-char
-   "C-u"      'evil-delete-back-to-indentation)
+   "C-u"      #'evil-delete-back-to-indentation)
 
   ;; oevrride evil ex mode (in ":" "/")
   (general-define-key
@@ -369,9 +365,10 @@
    "C-k" 'kill-line)
 
   ;; don't leave visual mode after shifting
-  (evil-define-key 'visual 'global
-    "<" #'+evil/shift-left
-    ">" #'+evil/shift-right)
+  (general-define-key
+   :states 'visual
+   "<" #'+evil/shift-left
+   ">" #'+evil/shift-right)
 
   ;; rime
   (global-unset-key (kbd "C-@"))
@@ -417,7 +414,7 @@
 
 (use-package evil-surround
   :commands evil-surround-region
-  :init (evil-define-key 'visual global-map "S" #'evil-surround-region)
+  :general (:states 'visual "S" #'evil-surround-region)
   :config
   ;; use non-spaced pairs when surrounding with an opening brace
   (setf (alist-get ?\( evil-surround-pairs-alist) '("(" . ")"))
@@ -683,16 +680,17 @@
   (magit-revision-insert-related-refs nil)
   (magit-display-buffer-function '+magit-display-buffer-fn)
   ;; (magit-auto-revert-mode nil) ;; too slow for tramp
+  :general
+  (:states 'normal :keymaps 'magit-mode-map
+           "zt" #'evil-scroll-line-to-top
+           "zz" #'evil-scroll-line-to-center
+           "zb" #'evil-scroll-line-to-bottom)
+  (:states 'normal :keymaps 'magit-status-mode-map
+           "gt" #'tab-bar-switch-to-next-tab)
+  (:states 'normal :keymaps 'magit-diff-mode-map
+           "w" #'evil-forward-word-begin
+           "b" #'evil-backward-word-begin)
   :config
-  (evil-define-key 'normal magit-mode-map
-    "zt" #'evil-scroll-line-to-top
-    "zz" #'evil-scroll-line-to-center
-    "zb" #'evil-scroll-line-to-bottom)
-  (evil-define-key 'normal magit-status-mode-map
-    "gt" #'tab-bar-switch-to-next-tab)
-  (evil-define-key 'normal magit-diff-mode-map
-    "w" #'evil-forward-word-begin
-    "b" #'evil-backward-word-begin)
   (define-key transient-map [escape] #'transient-quit-one)
   (add-hook 'git-commit-setup-hook #'evil-insert-state)
   )
@@ -759,8 +757,8 @@
   (neo-window-width 30)
   (neo-vc-integration '(face))
   (neo-theme 'nerd-icons)
-  :config
-  (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
+  :general
+  (:states 'motion :keymaps 'neotree-mode-map "w" #'+neotree/set-width)
   )
 
 (use-package org
@@ -785,12 +783,11 @@
   (org-agenda-window-setup 'current-window)
   (org-agenda-span 'day)
   (org-agenda-compact-blocks t)
+  :general
+  (:keymaps 'org-mode-map
+            "C-c s" #'org-insert-structure-template
+            "C-c a" #'org-agenda)
   :config
-  (general-define-key
-   :keymaps 'org-mode-map
-   "C-c s" #'org-insert-structure-template
-   "C-c a" #'org-agenda
-   )
   ;; open file links in current window, rather than split window
   (setf (alist-get 'file org-link-frame-setup) #'find-file)
   )
@@ -817,9 +814,6 @@
   :hook (tablegen-mode . eglot-ensure)
   :hook (tablegen-mode . prog-mode)
   :config
-  (with-eval-after-load 'electric-pair
-    (add-to-list 'electric-pair-pairs '(?\< . ?\>))
-  )
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  `(tablegen-mode . ("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))))
