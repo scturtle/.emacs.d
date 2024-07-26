@@ -121,6 +121,15 @@
                    (s-join " "))))
     (eglot--format-markup (concat "```rust\n" sig cmt "\n```"))))
 
+(defun add-space-between-english-and-chinese (start end)
+  (interactive "r")
+  (save-excursion
+    (goto-char start)
+    (while (re-search-forward "\\([a-zA-Z0-9]\\)\\([[:multibyte:]]\\)\\|\\([[:multibyte:]]\\)\\([a-zA-Z0-9]\\)" end t)
+      (if (match-string 1)
+          (replace-match "\\1 \\2" nil nil)
+        (replace-match "\\3 \\4" nil nil)))))
+
 (provide 'funcs)
 
 ;; Local Variables:
