@@ -559,7 +559,7 @@
   :custom
   (eglot-autoshutdown t)
   (eglot-autoreconnect nil)
-  (eglot-events-buffer-config (list :size nil :format 'full))
+  (eglot-events-buffer-config (list :size 0 :format 'full)) ;; set size to nil for debug
   (eglot-menu-string "e")
   (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))

@@ -17,7 +17,7 @@
 (defun +goto-definition ()
   (interactive)
   (cond
-   ((bound-and-true-p lsp-ui-mode) (call-interactively #'lsp-ui-peek-find-definitions))
+   ((bound-and-true-p eglot--managed-mode) (call-interactively #'lsp-ui-peek-find-definitions))
    ((eq major-mode 'emacs-lisp-mode) (call-interactively #'elisp-def))
    (t (call-interactively #'evil-goto-definition))))
 
