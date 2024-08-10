@@ -604,7 +604,7 @@
 
 (use-package lsp-ui-peek
   :straight (:host github :repo "scturtle/lsp-ui-peek")
-  :commands lsp-ui-peek-find-references
+  :commands lsp-ui-peek-find-definitions lsp-ui-peek-find-references
   :bind
   (:map lsp-ui-peek-mode-map
         ("k" . #'lsp-ui-peek--select-prev)
