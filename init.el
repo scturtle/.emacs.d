@@ -583,6 +583,13 @@
   (add-to-list 'eglot-server-programs
                `((c-ts-mode c++-ts-mode) . ("ccls" "--log-file=/tmp/ccls.log"
                                             :initializationOptions ,ccls-initialization-options)))
+  ;; prefer directory with compile_commands.json for project root
+  (advice-add 'eglot--current-project :around
+              (lambda (orig &rest args)
+                (if (memq major-mode '(c-ts-mode c++-ts-mode))
+                    (if-let (json (locate-dominating-file default-directory "compile_commands.json"))
+                        `(transient . ,(expand-file-name json)) (apply orig args))
+                  (apply orig args))))
   ;; FIXME: hotfix pyright
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
   (advice-add 'file-notify-add-watch :override #'ignore)
