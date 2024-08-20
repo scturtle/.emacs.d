@@ -377,6 +377,7 @@
 
 ;; OSC52 FTW
 (use-package clipetty
+  :straight (:host github :repo "scturtle/clipetty")
   :demand
   :config (global-clipetty-mode))
 
