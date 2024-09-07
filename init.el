@@ -797,6 +797,9 @@
   (:keymaps 'org-mode-map
             "C-c s" #'org-insert-structure-template
             "C-c a" #'org-agenda)
+  (:keymaps 'org-agenda-mode-map
+            "j" #'org-agenda-next-line
+            "k" #'org-agenda-previous-line)
   :config
   ;; open file links in current window, rather than split window
   (setf (alist-get 'file org-link-frame-setup) #'find-file)
