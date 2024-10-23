@@ -452,6 +452,15 @@
   ;; (which-key-idle-delay 1.5)
   )
 
+(use-package posframe
+  :if (featurep 'tty-child-frames)
+  :config
+  (defun posframe-workable-p ()
+    (not (or noninteractive
+             emacs-basic-display
+             ;;(not (display-graphic-p))
+             (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
+
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
   :hook (after-init . vertico-mode)
@@ -643,6 +652,9 @@
   (corfu-preview-current nil)
   (corfu-on-exact-match 'show)
   :config
+  (when (featurep 'tty-child-frames)
+    (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
+    (cl-defgeneric corfu--popup-support-p () t))
   (defun corfu-move-to-minibuffer ()
     (interactive)
     (corfu--popup-hide) ;; NOTE: hide the terminal popup
@@ -652,8 +664,8 @@
              completion-cycle-threshold completion-cycling)
          (consult-completion-in-region beg end table pred)))))
   ;; instead of using nerd-icons, why not just a simple space margin
-  (defun +simple-margin-formatter (_) (lambda (_) " "))
-  (add-to-list 'corfu-margin-formatters #'+simple-margin-formatter)
+  ;; (defun +simple-margin-formatter (_) (lambda (_) ""))
+  ;; (add-to-list 'corfu-margin-formatters #'+simple-margin-formatter)
   :bind
   (:map corfu-map
         ("M-SPC" . 'corfu-insert-separator)
@@ -666,6 +678,7 @@
   :bind (("M-/" . dabbrev-completion)))
 
 (use-package corfu-terminal
+  :if (not (featurep 'tty-child-frames))
   :straight (:host github :repo "scturtle/corfu-terminal")
   :hook (corfu-mode . corfu-terminal-mode))
 
