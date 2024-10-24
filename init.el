@@ -454,12 +454,7 @@
 
 (use-package posframe
   :if (featurep 'tty-child-frames)
-  :config
-  (defun posframe-workable-p ()
-    (not (or noninteractive
-             emacs-basic-display
-             ;;(not (display-graphic-p))
-             (eq (frame-parameter (selected-frame) 'minibuffer) 'only)))))
+  )
 
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
@@ -676,11 +671,6 @@
   (dabbrev-case-replace nil) ;; do not downcase
   (dabbrev-check-other-buffers nil) ;; only in this buffer
   :bind (("M-/" . dabbrev-completion)))
-
-(use-package corfu-terminal
-  :if (not (featurep 'tty-child-frames))
-  :straight (:host github :repo "scturtle/corfu-terminal")
-  :hook (corfu-mode . corfu-terminal-mode))
 
 (use-package c-ts-mode
   :config
