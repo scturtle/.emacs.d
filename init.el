@@ -453,8 +453,7 @@
   )
 
 (use-package posframe
-  :if (featurep 'tty-child-frames)
-  )
+  :if (featurep 'tty-child-frames))
 
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
@@ -647,6 +646,7 @@
   (corfu-preview-current nil)
   (corfu-on-exact-match 'show)
   :config
+  ;; use tty-child-frames instead of corfu-terminal
   (when (featurep 'tty-child-frames)
     (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
     (cl-defgeneric corfu--popup-support-p () t))
@@ -714,17 +714,6 @@
   ;; :hook (diff-hl-mode . diff-hl-flydiff-mode)
   :commands diff-hl-next-hunk diff-hl-previous-hunk
   :custom (vc-handled-backends '(Git))
-  )
-
-(use-package tramp
-  :custom
-  (tramp-default-method "ssh")
-  :config
-  ;; do not move these to `custom'
-  (setq tramp-verbose 1)
-  (setq tramp-ssh-controlmaster-options "-o ControlPath=~/.ssh/master-%%h:%%p -o ControlMaster=auto -o ControlPersist=yes")
-  ;; for magit to use newer git
-  (add-to-list 'tramp-remote-path "~/.local/bin")
   )
 
 (use-package projectile
