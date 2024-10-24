@@ -452,8 +452,8 @@
   ;; (which-key-idle-delay 1.5)
   )
 
-(use-package posframe
-  :if (featurep 'tty-child-frames))
+;; use tty-child-frames
+(use-package posframe)
 
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
@@ -647,9 +647,7 @@
   (corfu-on-exact-match 'show)
   :config
   ;; use tty-child-frames instead of corfu-terminal
-  (when (featurep 'tty-child-frames)
-    (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
-    (cl-defgeneric corfu--popup-support-p () t))
+  (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
   (defun corfu-move-to-minibuffer ()
     (interactive)
     (corfu--popup-hide) ;; NOTE: hide the terminal popup
