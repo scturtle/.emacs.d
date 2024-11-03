@@ -121,6 +121,33 @@
                    (s-join " "))))
     (eglot--format-markup (concat "```rust\n" sig cmt "\n```"))))
 
+;; ccls skipped ranges https://github.com/nemethf/eglot-x/pull/7
+(cl-defmethod eglot-client-capabilities :around (_)
+  (let ((base (cl-call-next-method)))
+    (setf (cl-getf (cl-getf base :textDocument)
+                   :inactiveRegionsCapabilities)
+          '(:inactiveRegions t))
+    base))
+
+(cl-defmethod eglot-handle-notification
+  (_server (_method (eql $ccls/publishSkippedRanges)) &key uri skippedRanges)
+  (eglot-x--hide-inactive-regions uri skippedRanges))
+
+(defun eglot-x--hide-inactive-regions (uri skipped-ranges)
+  (when-let* ((buffer (or (find-buffer-visiting (eglot-uri-to-path uri))
+                          (gethash uri eglot--temp-location-buffers))))
+    (with-current-buffer
+        buffer
+      (remove-overlays nil nil 'eglot-x--inactive-code t)
+      (mapc (lambda (range)
+              (pcase-let*
+                  ((`(,beg . ,end) (eglot-range-region range)))
+                (let ((ov (make-overlay beg end buffer t nil)))
+                  (overlay-put ov 'face 'font-lock-comment-face)
+                  (overlay-put ov 'eglot--overlay t)
+                  (overlay-put ov 'eglot-x--inactive-code t))))
+            skipped-ranges))))
+
 (provide 'funcs)
 
 ;; Local Variables:
