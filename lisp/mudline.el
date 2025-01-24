@@ -74,8 +74,8 @@
 
 (defun mudline-segment-major-mode-icon ()
   "Segment to show major mode as icon."
-  (when-let ((icon (or mudline--buffer-file-icon
-                       (mudline-update-buffer-file-icon))))
+  (when-let* ((icon (or mudline--buffer-file-icon
+                        (mudline-update-buffer-file-icon))))
     (unless (string-empty-p icon) (concat icon " "))))
 
 (defun mudline-segment-buffer-state-icon ()
@@ -166,14 +166,14 @@
 
 (defun mudline--update-flymake (&rest _args)
   (setq mudline--flymake-text
-        (when-let ((flymake-active (and (fboundp 'flymake-is-running)
-                                        (flymake-is-running)))
-                   (status (if (seq-difference (flymake-running-backends)
-                                               (flymake-reporting-backends))
-                               'running 'finished))
-                   (error (mudline--flymake-count :error))
-                   (warning (mudline--flymake-count :warning))
-                   (note (mudline--flymake-count :note)))
+        (when-let* ((flymake-active (and (fboundp 'flymake-is-running)
+                                         (flymake-is-running)))
+                    (status (if (seq-difference (flymake-running-backends)
+                                                (flymake-reporting-backends))
+                                'running 'finished))
+                    (error (mudline--flymake-count :error))
+                    (warning (mudline--flymake-count :warning))
+                    (note (mudline--flymake-count :note)))
           (setq mudline--flycheck-text
                 (pcase status
                   ('finished

@@ -229,7 +229,7 @@
   ;; fix message buffer https://github.com/noctuid/general.el/issues/493
   (add-hook 'after-init-hook
             (lambda (&rest _)
-              (when-let ((messages-buffer (get-buffer "*Messages*")))
+              (when-let* ((messages-buffer (get-buffer "*Messages*")))
                 (with-current-buffer messages-buffer
                   (evil-normalize-keymaps)))))
 
@@ -591,7 +591,7 @@
   (advice-add 'eglot--current-project :around
               (lambda (orig &rest args)
                 (if (memq major-mode '(c-ts-mode c++-ts-mode))
-                    (if-let (json (locate-dominating-file default-directory "compile_commands.json"))
+                    (if-let* ((json (locate-dominating-file default-directory "compile_commands.json")))
                         `(transient . ,(expand-file-name json)) (apply orig args))
                   (apply orig args))))
   ;; FIXME: hotfix pyright
