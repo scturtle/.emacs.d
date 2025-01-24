@@ -104,6 +104,9 @@
   (save-place-mode)
   (add-hook 'kill-emacs-hook #'recentf-cleanup)
 
+  ;; OSC 52
+  (setq xterm-extra-capabilities '(setSelection))
+
   ;; enable mouse in terminal
   (add-hook 'tty-setup-hook #'xterm-mouse-mode)
 
@@ -374,12 +377,6 @@
   (global-unset-key (kbd "C-@"))
   (global-unset-key (kbd "C-SPC"))
   )
-
-;; OSC52 FTW
-(use-package clipetty
-  :straight (:host github :repo "scturtle/clipetty")
-  :demand
-  :config (global-clipetty-mode))
 
 ;; display cursor as bar instread of box in terminal
 (use-package evil-terminal-cursor-changer
