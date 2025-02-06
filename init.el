@@ -759,7 +759,6 @@
   )
 
 (use-package org
-  :hook (org-mode . evil-org-mode)
   ;; :hook (org-mode . corfu-mode) ;; terminal not compat with org-indent-mode
   :custom
   (org-modules nil)
@@ -793,13 +792,6 @@
   )
 
 (use-package htmlize)
-
-(use-package evil-org
-  :custom
-  (evil-org-retain-visual-state-on-shift t)
-  ;; remove `return'/`insert' to fix ret/C-d, others are not useful
-  (evil-org-key-theme '(navigation textobjects todo heading))
-  )
 
 ;; setup llvm
 (defvar +llvm-dir (emacs.d "lisp/llvm-utils"))
