@@ -79,6 +79,7 @@
 (require 'funcs)
 (require 'mudline)
 (mudline-mode)
+(require 'linkding)
 
 ;; defaults
 (use-package emacs
@@ -828,6 +829,8 @@
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   )
+
+(use-package plz)
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars unresolved)
