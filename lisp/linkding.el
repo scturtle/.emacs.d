@@ -39,20 +39,21 @@
 
 (defun linkding--display-note (bookmark)
   "Display bookmark note in org-mode."
-  (let* ((buffer-name (format "*Linkding Bookmark %d*" (alist-get 'id bookmark)))
-         (buffer (get-buffer-create buffer-name)))
+  (let* ((file-name (format "/tmp/linkding_bookmark_%d.org" (alist-get 'id bookmark)))
+         (buffer (find-file-noselect file-name)))
     (with-current-buffer buffer
       (require 'org)
       (org-mode)
       (erase-buffer)
       (insert (alist-get 'notes bookmark))
+      (add-hook 'after-save-hook (lambda () (linkding-update-note)) nil t)
       (switch-to-buffer buffer))))
 
 (defun linkding-update-note ()
   "Submit the current buffer content as notes for a bookmark."
   (interactive)
-  (let* ((id-match (string-match "*Linkding Bookmark \\([0-9]+\\)*" (buffer-name)))
-         (id (if id-match (match-string 1 (buffer-name)) nil))
+  (let* ((id-match (string-match "\\.*/linkding_bookmark_\\([0-9]+\\)\\.org" (buffer-file-name)))
+         (id (if id-match (match-string 1 (buffer-file-name)) nil))
          (api-url (concat linkding-base-url "/api/bookmarks/" id "/"))
          (payload (json-encode `(("notes" . ,(buffer-string))))))
     (if (not id)
