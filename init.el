@@ -774,6 +774,7 @@
   ;; (org-hide-emphasis-markers t) ;; hide ==/++/**
   (org-src-lang-modes '(("C" . c-ts) ("c" . c-ts) ("C++" . c++-ts) ("c++" . c++-ts)
                         ("rust" . rust-ts) ("python" . python-ts) ("cmake" . cmake-ts)))
+  (org-fontify-quote-and-verse-blocks t)
   ;; for org-agenda
   (org-agenda-files (list "~/gtd.org"))
   (org-log-done 'time)

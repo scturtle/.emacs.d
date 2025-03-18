@@ -317,7 +317,7 @@
         (org-link :inherit link)
         (org-priority :foreground ,yellow)
         (org-priority-value :inherit font-lock-comment-face)
-        (org-quote :inherit org-block :slant italic)
+        (org-quote :inherit org-block)
         (org-table :foreground ,pink)
         (org-tag :foreground ,mauve :weight bold)
         (org-verbatim :foreground ,green)
