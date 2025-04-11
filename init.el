@@ -428,6 +428,7 @@
   )
 
 (use-package undo-fu
+  :straight (:host github :repo "emacsmirror/undo-fu") ;; codeberg
   :demand
   :config
   (setq undo-limit         400000   ; 400kb (default is 160kb)
@@ -436,6 +437,7 @@
   )
 
 (use-package undo-fu-session
+  :straight (:host github :repo "emacsmirror/undo-fu-session") ;; codeberg
   :demand
   :config (undo-fu-session-global-mode)
   :config (setq undo-fu-session-incompatible-files '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
