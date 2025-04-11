@@ -250,6 +250,7 @@
    ";" '(pp-eval-expression :wk "eval expr")
    ":" '(pp-eval-expression :wk "eval expr")
    "," 'switch-to-buffer
+   "i" #'consult-imenu
    "*" '(+search-project-for-symbol-at-point :wk "search symbol in project")
    "qq" 'save-buffers-kill-terminal
 
@@ -559,11 +560,12 @@
 (use-package eglot
   :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . eglot-ensure)
   :custom
+  (eglot-sync-connect nil) ;; blocking
   (eglot-autoshutdown t)
   (eglot-autoreconnect nil)
   (eglot-events-buffer-config (list :size 0 :format 'full)) ;; set size to nil for debug
   (eglot-menu-string "e")
-  (eglot-send-changes-idle-time 0.0)
+  ;; (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
   :custom-face
   (eglot-highlight-symbol-face ((t :inherit highlight)))
