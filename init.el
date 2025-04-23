@@ -160,6 +160,9 @@
   (show-paren-mode 1)
   (add-hook 'prog-mode-hook 'electric-pair-mode)
 
+  ;; highlight TODO/FIXME/NOTE
+  (add-hook 'prog-mode-hook 'highlight-codetags-watchwords)
+
   ;; tab bar
   (setq tab-bar-separator ""
         tab-bar-tab-hints t  ;; show index number
@@ -388,19 +391,6 @@
   :custom
   (evil-insert-state-cursor 'bar)
   (evil-visual-state-cursor 'hollow))
-
-(use-package hl-todo
-  :hook (prog-mode . hl-todo-mode)
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-        hl-todo-keyword-faces
-        '(("TODO" warning bold)
-          ("FIXME" error bold)
-          ("REVIEW" font-lock-keyword-face bold)
-          ("HACK" font-lock-constant-face bold)
-          ("DEPRECATED" font-lock-doc-face bold)
-          ("NOTE" success bold)
-          ("XXX" font-lock-constant-face bold))))
 
 (use-package golden-ratio
   :commands golden-ratio-mode

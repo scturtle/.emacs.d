@@ -157,6 +157,12 @@
         (hi-lock-unface-buffer regexp)
       (hi-lock-face-symbol-at-point))))
 
+(defun highlight-codetags-watchwords ()
+  (font-lock-add-keywords
+   nil '(("\\<\\(TODO\\(?:(.*)\\)?:?\\)\\>"  1 '(:inherit warning :weight bold) prepend)
+         ("\\<\\(FIXME\\(?:(.*)\\)?:?\\)\\>" 1 '(:inherit error :weight bold) prepend)
+         ("\\<\\(NOTE\\(?:(.*)\\)?:?\\)\\>"  1 '(:inherit success :weight bold) prepend))))
+
 (provide 'funcs)
 
 ;; Local Variables:
