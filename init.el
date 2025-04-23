@@ -71,7 +71,7 @@
 (use-package nerd-icons :demand)
 
 ;; load custom funcs and UIs
-(add-to-list 'custom-theme-load-path (emacs.d "lisp"))
+(setq custom-theme-directory (emacs.d "lisp"))
 ;; (load-theme 'aura t)
 ;; (load-theme 'catppuccin-mocha t)
 (load-theme 'catppuccin-latte t)
@@ -87,52 +87,43 @@
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
 
-  ;; sensible defaults
+  ;; startup
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
   (setq initial-major-mode 'fundamental-mode) ; for *scratch*
-  (setq use-short-answers t) ;; y-or-n-p for >= 28
+  ;; remove "For information about GNU Emacs..."
+  (advice-add 'display-startup-echo-area-message :override #'ignore)
+
+  ;; general
+  (setq use-short-answers t)
   (delete-selection-mode +1)
-  (setq vc-follow-symlinks t)
   (setq apropos-do-all t)
-  (setq-default require-final-newline nil)
-
-  ;; save history of minibuffer, recent files, last place
-  (setq recentf-auto-cleanup nil
-        recentf-max-saved-items 400)
-  (savehist-mode)
-  (recentf-mode)
-  (save-place-mode)
-  (add-hook 'kill-emacs-hook #'recentf-cleanup)
-
-  ;; OSC 52
-  (setq xterm-extra-capabilities '(setSelection))
-
-  ;; enable mouse in terminal
-  (add-hook 'tty-setup-hook #'xterm-mouse-mode)
-
-  ;; override the env SHELL for fish is slow to start
-  (setq-default shell-file-name "/bin/bash")
-
-  ;; encoding
-  (set-charset-priority 'unicode)
-  (prefer-coding-system 'utf-8)
-  (setq default-input-method nil)
-  (setq bidi-inhibit-bpa t)
-  (setq-default bidi-display-reordering  'left-to-right
-                bidi-paragraph-direction 'left-to-right)
-
-  ;; IO-related tunings
-  (setq read-process-output-max (* 1024 1024))
+  (setq shell-file-name "/bin/bash") ;; override fish
+  (setq xterm-extra-capabilities '(setSelection)) ;; OSC 52
+  (add-hook 'tty-setup-hook #'xterm-mouse-mode) ;; mouse in terminal
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
+
+  ;; perf (from doom-start)
+  (setq auto-mode-case-fold nil)
+  (setq redisplay-skip-fontification-on-input t)
+  (setq-default cursor-in-non-selected-windows nil)
+  (setq highlight-nonselected-windows nil)
+  (setq fast-but-imprecise-scrolling t)
+  (setq read-process-output-max (* 1024 1024))
 
   ;; custom
   (setq custom-file (emacs.d "custom.el"))
   (when (file-exists-p custom-file)
     (load-file custom-file))
 
+  ;; encoding
+  (set-language-environment "UTF-8")
+  (setq default-input-method nil)
+  (setq bidi-inhibit-bpa t)
+  (setq-default bidi-display-reordering  'left-to-right
+                bidi-paragraph-direction 'left-to-right)
+
   ;; from doom-ui
-  ;; scroll in small step not half page
   (setq hscroll-margin 2
         hscroll-step 1
         scroll-conservatively 101
@@ -143,25 +134,30 @@
   (setq blink-matching-paren nil)
 
   ;; from doom-editor
-  (setq-default indent-tabs-mode nil
-                tab-width 2)
-  (setq tab-always-indent nil
-        sentence-end-double-space nil)
+  (setq vc-follow-symlinks t)
   (setq create-lockfiles nil
-        make-backup-files nil
-        auto-save-default nil)
+        make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq-default indent-tabs-mode nil
+                tab-width 4)
+  (setq-default tab-always-indent nil)
+  (setq-default fill-column 80)
+  (setq sentence-end-double-space nil)
+  (setq-default require-final-newline nil)
 
-  ;; show line number
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  ;; history
+  (setq recentf-auto-cleanup nil
+        recentf-max-saved-items 200)
+  (add-hook 'kill-emacs-hook #'recentf-cleanup)
+  (recentf-mode)
+  (savehist-mode)
+  (save-place-mode)
 
-  ;; show or insert matching paren (smartparens?)
+  ;; paren
   (setq blink-paren-function nil)
   (setq show-paren-delay 0.0)
   (show-paren-mode 1)
   (add-hook 'prog-mode-hook 'electric-pair-mode)
-
-  ;; highlight TODO/FIXME/NOTE
-  (add-hook 'prog-mode-hook 'highlight-codetags-watchwords)
 
   ;; tab bar
   (setq tab-bar-separator ""
@@ -176,11 +172,17 @@
   (setq display-time-format "%a %H:%M"
         display-time-default-load-average nil)
 
+  ;; show line number
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
   ;; do not show line number in modeline
   (setq line-number-mode nil)
 
   ;; diff-mode
   (setq diff-refine nil)  ;; no hunk refinement
+
+  ;; highlight TODO/FIXME/NOTE
+  (add-hook 'prog-mode-hook 'highlight-codetags-watchwords)
   )
 
 (use-package gcmh
