@@ -148,6 +148,15 @@
                   (overlay-put ov 'eglot-x--inactive-code t))))
             skipped-ranges))))
 
+;; https://www.jamescherti.com/emacs-symbol-highlighting-built-in-functions
+(defun hi-lock-symbol-at-point ()
+  (interactive)
+  (require 'hi-lock)
+  (when-let* ((regexp (find-tag-default-as-symbol-regexp)))
+    (if (member regexp (hi-lock--regexps-at-point))
+        (hi-lock-unface-buffer regexp)
+      (hi-lock-face-symbol-at-point))))
+
 (provide 'funcs)
 
 ;; Local Variables:

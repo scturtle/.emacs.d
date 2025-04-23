@@ -294,6 +294,7 @@
    "hk" 'describe-key
    "hp" 'describe-package
    "hv" 'describe-variable
+   "hh" #'hi-lock-symbol-at-point
 
    "n" '(:ignore t :wk "note")
    "nd" #'deft
