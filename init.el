@@ -532,6 +532,7 @@
   (treesit-auto-add-to-auto-mode-alist treesit-auto-langs)
   ;; not listed in `treesit-auto-recipe-list'
   (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-ts-mode))
   )
 
 (use-package treesit-fold
