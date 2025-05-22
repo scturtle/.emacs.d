@@ -53,7 +53,7 @@
 (setq straight-built-in-pseudo-packages
       (append straight-built-in-pseudo-packages
               '(compat dabbrev eglot eldoc flymake jsonrpc org project seq tramp
-                       transient treesit use-package which-key xref c-ts-mode)))
+                       treesit use-package which-key xref c-ts-mode)))
 
 ;; relationship with `use-package'
 (straight-use-package 'use-package)
