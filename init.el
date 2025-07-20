@@ -562,7 +562,7 @@
   (eglot-events-buffer-config (list :size 0 :format 'full)) ;; set size to nil for debug
   (eglot-menu-string "e")
   ;; (eglot-send-changes-idle-time 0.0)
-  (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider :resolveProvider))
+  (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
   :custom-face
   (eglot-highlight-symbol-face ((t :inherit highlight)))
   (eglot-mode-line ((t :inherit font-lock-string-face :bold nil)))
