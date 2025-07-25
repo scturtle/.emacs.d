@@ -561,6 +561,7 @@
   (eglot-autoreconnect nil)
   (eglot-events-buffer-config (list :size 0 :format 'full)) ;; set size to nil for debug
   (eglot-menu-string "e")
+  (eglot-mode-line-format '(eglot-mode-line-session eglot-mode-line-progress))
   ;; (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
   :custom-face
@@ -596,7 +597,7 @@
   (advice-add 'file-notify-rm-watch :override #'ignore)
   ;; fix progress report
   (advice-add 'eglot--mode-line-props :filter-args
-              (lambda (args) (cons (replace-regexp-in-string "%%" "%%%%" (car args)) (cdr args))))
+              (lambda (args) (cons (replace-regexp-in-string "%%" "٪" (car args)) (cdr args))))
   ;; use orderless
   (setq completion-category-defaults nil)
   ;; setup the orderless-flex style for its 1st search term
