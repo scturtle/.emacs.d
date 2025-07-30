@@ -212,6 +212,150 @@
   :config
   (evil-select-search-module 'evil-search-module 'evil-search)
   (evil-mode)
+
+  (evil-set-leader '(normal visual) (kbd "SPC"))
+
+  (evil-define-key '(normal visual) 'global
+    ;; top-level
+    (kbd "<leader>SPC") #'execute-extended-command
+    (kbd "<leader>TAB") #'evil-switch-to-windows-last-buffer
+    (kbd "<leader>u")  #'universal-argument
+    (kbd "<leader>;")  #'pp-eval-expression
+    (kbd "<leader>:")  #'pp-eval-expression
+    (kbd "<leader>,")  #'switch-to-buffer
+    (kbd "<leader>i")  #'consult-imenu
+    (kbd "<leader>*")  #'+search-project-for-symbol-at-point
+    (kbd "<leader>qq") #'save-buffers-kill-terminal
+
+    ;; buffer
+    (kbd "<leader>bb") #'switch-to-buffer
+    (kbd "<leader>br") #'revert-buffer
+    (kbd "<leader>bd") #'kill-current-buffer
+    (kbd "<leader>bi") #'ibuffer
+    (kbd "<leader>bm") #'(lambda () (interactive) (switch-to-buffer "*Messages*"))
+    (kbd "<leader>bk") #'kill-current-buffer
+    (kbd "<leader>bf") #'eglot-format-buffer
+
+    ;; code
+    (kbd "<leader>ca") #'eglot-code-actions
+    (kbd "<leader>cr") #'eglot-rename
+    (kbd "<leader>cw") #'delete-trailing-whitespace
+
+    ;; error
+    (kbd "<leader>el") #'flycheck-list-errors
+    (kbd "<leader>ep") #'flycheck-previous-error
+    (kbd "<leader>en") #'flycheck-next-error
+
+    ;; file
+    (kbd "<leader>ff") #'find-file
+    (kbd "<leader>fs") #'save-buffer
+    (kbd "<leader>fr") #'recentf-open-files
+    (kbd "<leader>fp") #'(lambda () (interactive) (find-file user-init-file))
+
+    ;; git
+    (kbd "<leader>gg") #'magit-status
+    (kbd "<leader>gb") #'magit-blame-addition
+    (kbd "<leader>gp") #'diff-hl-previous-hunk
+    (kbd "<leader>gn") #'diff-hl-next-hunk
+    (kbd "<leader>cp") #'smerge-prev
+    (kbd "<leader>cn") #'smerge-next
+
+    ;; help
+    (kbd "<leader>hf") #'describe-function
+    (kbd "<leader>hF") #'describe-face
+    (kbd "<leader>hm") #'describe-mode
+    (kbd "<leader>hk") #'describe-key
+    (kbd "<leader>hp") #'describe-package
+    (kbd "<leader>hv") #'describe-variable
+    (kbd "<leader>hh") #'hi-lock-symbol-at-point
+
+    ;; note
+    (kbd "<leader>nd") #'deft
+
+    ;; project
+    (kbd "<leader>pp") #'projectile-switch-project
+    (kbd "<leader>pr") #'projectile-recentf
+    (kbd "<leader>pi") #'projectile-invalidate-cache
+    (kbd "<leader>pf") #'projectile-find-file
+    (kbd "<leader>pd") #'consult-fd
+    (kbd "<leader>ga") #'projectile-find-other-file
+    (kbd "<leader>op") #'neotree-toggle
+    (kbd "<leader>oP") #'+neotree/find-this-file
+
+    ;; search
+    (kbd "<leader>sh") #'+symbol-highlight
+    (kbd "<leader>sb") #'consult-line
+    (kbd "<leader>sp") #'consult-ripgrep
+
+    ;; toggle
+    (kbd "<leader>tl") #'display-line-numbers-mode
+    (kbd "<leader>tt") #'toggle-truncate-lines
+    (kbd "<leader>tn") #'tab-bar-new-tab
+    (kbd "<leader>tm") #'tab-bar-move-tab
+    (kbd "<leader>t1") #'(lambda() (interactive) (tab-bar-select-tab 1))
+    (kbd "<leader>t2") #'(lambda() (interactive) (tab-bar-select-tab 2))
+    (kbd "<leader>t3") #'(lambda() (interactive) (tab-bar-select-tab 3))
+    (kbd "<leader>t4") #'(lambda() (interactive) (tab-bar-select-tab 4))
+    (kbd "<leader>t5") #'(lambda() (interactive) (tab-bar-select-tab 5))
+    (kbd "<leader>t6") #'(lambda() (interactive) (tab-bar-select-tab 6))
+    (kbd "<leader>t7") #'(lambda() (interactive) (tab-bar-select-tab 7))
+    (kbd "<leader>t8") #'(lambda() (interactive) (tab-bar-select-tab 8))
+    (kbd "<leader>t9") #'(lambda() (interactive) (tab-bar-select-tab 9))
+
+    ;; window
+    (kbd "<leader>wd") #'evil-window-delete
+    (kbd "<leader>wo") #'delete-other-windows
+    (kbd "<leader>wk") #'evil-window-up
+    (kbd "<leader>wj") #'evil-window-down
+    (kbd "<leader>wl") #'evil-window-right
+    (kbd "<leader>wh") #'evil-window-left
+    (kbd "<leader>ww") #'evil-window-next
+    )
+
+  ;; override "gd" to `evil-goto-definition'
+  (evil-define-key 'normal 'global
+    "gd" #'+goto-definition
+    "gD" #'lsp-ui-peek-find-references
+    "gb" #'xref-go-back
+    "gf" #'xref-go-forward)
+
+  ;; mimic emacs key bindings
+  (evil-define-key 'insert 'global
+    (kbd "C-h") 'delete-backward-char
+    (kbd "C-g") #'evil-normal-state)
+
+  (with-eval-after-load 'minibuffer
+    (let ((map minibuffer-mode-map))
+      (define-key map (kbd "<escape>") 'abort-recursive-edit)
+      (define-key map (kbd "C-h")      'delete-backward-char)
+      (define-key map (kbd "C-u")      #'evil-delete-back-to-indentation)))
+
+  ;; oevrride evil ex mode (in ":" "/")
+  (with-eval-after-load 'evil-ex
+    (dolist (map (list evil-ex-completion-map evil-ex-search-keymap))
+      (define-key map (kbd "C-a") 'move-beginning-of-line)
+      (define-key map (kbd "C-f") 'forward-char)
+      (define-key map (kbd "C-b") 'backward-char)
+      (define-key map (kbd "C-d") 'delete-forward-char)
+      (define-key map (kbd "C-h") 'delete-backward-char)
+      (define-key map (kbd "C-u") 'evil-delete-back-to-indentation)
+      (define-key map (kbd "C-k") 'kill-line)))
+
+  ;; don't leave visual mode after shifting
+  (evil-define-key 'visual 'global
+    (kbd "<") #'+evil/shift-left
+    (kbd ">") #'+evil/shift-right)
+
+  ;; make SPC u SPC u [...] possible
+  (define-key universal-argument-map " u" #'universal-argument-more)
+
+  ;; rime
+  (global-unset-key (kbd "C-@"))
+  (global-unset-key (kbd "C-SPC"))
+
+  ;; magit
+  (with-eval-after-load 'magit
+    (define-key magit-status-mode-map (kbd "SPC") nil))
   )
 
 (use-package evil-collection
@@ -228,162 +372,6 @@
               (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
   (advice-add #'evil-collection-view-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
-  )
-
-;; put after evil for perf issue https://github.com/noctuid/general.el/issues/180
-(use-package general
-  :demand
-  :config
-
-  ;; fix message buffer https://github.com/noctuid/general.el/issues/493
-  (add-hook 'after-init-hook
-            (lambda (&rest _)
-              (when-let* ((messages-buffer (get-buffer "*Messages*")))
-                (with-current-buffer messages-buffer
-                  (evil-normalize-keymaps)))))
-
-  ;; Make SPC u SPC u [...] possible
-  (define-key universal-argument-map " u" #'universal-argument-more)
-
-  (general-define-key
-   :states '(normal visual)
-   :prefix "SPC"
-   :keymaps 'override
-   "SPC" '(execute-extended-command :wk "execute command")
-   [?\t] '(evil-switch-to-windows-last-buffer :wk "prev buffer")
-   "u" '(universal-argument :wk "universal")
-   ";" '(pp-eval-expression :wk "eval expr")
-   ":" '(pp-eval-expression :wk "eval expr")
-   "," 'switch-to-buffer
-   "i" #'consult-imenu
-   "*" '(+search-project-for-symbol-at-point :wk "search symbol in project")
-   "qq" 'save-buffers-kill-terminal
-
-   "b" '(:ignore t :wk "buffer")
-   "bb" 'switch-to-buffer
-   "br" 'revert-buffer
-   "bd" 'kill-current-buffer
-   "bi" 'ibuffer
-   "bm" '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "message buffer")
-   "bk" 'kill-current-buffer
-   "bf" #'eglot-format-buffer
-
-   "c" '(:ignore t :wk "code")
-   "ca" #'eglot-code-actions
-   "cr" #'eglot-rename
-   "cw" 'delete-trailing-whitespace
-
-   "e" '(:ignore t :wk "error")
-   "el" #'flycheck-list-errors
-   "ep" #'flycheck-previous-error
-   "en" #'flycheck-next-error
-
-   "f" '(:ignore t :wk "file")
-   "ff" 'find-file
-   "fs" 'save-buffer
-   "fr" #'recentf-open-files
-   "fp" '((lambda () (interactive) (find-file user-init-file)) :wk "edit init.el")
-
-   "g" '(:ignore t :wk "git")
-   "gg" #'magit-status
-   "gb" #'magit-blame-addition
-   "gp" #'diff-hl-previous-hunk
-   "gn" #'diff-hl-next-hunk
-   "cp" #'smerge-prev
-   "cn" #'smerge-next
-
-   "h" '(:ignore t :wk "help")
-   "hf" 'describe-function
-   "hF" 'describe-face
-   "hm" 'describe-mode
-   "hk" 'describe-key
-   "hp" 'describe-package
-   "hv" 'describe-variable
-   "hh" #'hi-lock-symbol-at-point
-
-   "n" '(:ignore t :wk "note")
-   "nd" #'deft
-
-   "p" '(:ignore t :wk "project")
-   "pp" #'projectile-switch-project
-   "pr" #'projectile-recentf
-   "pi" #'projectile-invalidate-cache
-   "pf" #'projectile-find-file
-   "pd" #'consult-fd
-   "ga" #'projectile-find-other-file
-   "op" #'neotree-toggle
-   "oP" #'+neotree/find-this-file
-
-   "s" '(:ignore t :wk "search")
-   "sh" #'+symbol-highlight
-   "sb" #'consult-line
-   "sp" #'consult-ripgrep
-
-   "t"  '(:ignore t :wk "toggle")
-   "tl" '(display-line-numbers-mode :wk "toggle line numbers")
-   "tt" '(toggle-truncate-lines :wk "toggle truncate lines")
-   "tn" #'tab-bar-new-tab
-   "tm" #'tab-bar-move-tab
-   "1"  '((lambda() (interactive) (tab-bar-select-tab 1)) :wk "switch tab 1")
-   "2"  '((lambda() (interactive) (tab-bar-select-tab 2)) :wk "switch tab 2")
-   "3"  '((lambda() (interactive) (tab-bar-select-tab 3)) :wk "switch tab 3")
-   "4"  '((lambda() (interactive) (tab-bar-select-tab 4)) :wk "switch tab 4")
-   "5"  '((lambda() (interactive) (tab-bar-select-tab 5)) :wk "switch tab 5")
-   "6"  '((lambda() (interactive) (tab-bar-select-tab 6)) :wk "switch tab 6")
-   "7"  '((lambda() (interactive) (tab-bar-select-tab 7)) :wk "switch tab 7")
-   "8"  '((lambda() (interactive) (tab-bar-select-tab 8)) :wk "switch tab 8")
-   "9"  '((lambda() (interactive) (tab-bar-select-tab 9)) :wk "switch tab 9")
-
-   "w" '(:ignore t :wk "window")
-   "wd" #'evil-window-delete
-   "wo" 'delete-other-windows
-   "wk" #'evil-window-up
-   "wj" #'evil-window-down
-   "wl" #'evil-window-right
-   "wh" #'evil-window-left
-   "ww" #'evil-window-next
-   )
-
-  ;; override "gd" to `evil-goto-definition'
-  (general-define-key
-   :states 'normal
-   "gd" #'+goto-definition
-   "gD" #'lsp-ui-peek-find-references
-   "gb" #'xref-go-back
-   "gf" #'xref-go-forward)
-
-  ;; mimic emacs key bindings
-  (general-define-key
-   :states 'insert
-   "C-h" 'delete-backward-char
-   "C-g" #'evil-normal-state)
-
-  (general-define-key
-   :keymaps 'minibuffer-mode-map
-   "<escape>" 'abort-recursive-edit
-   "C-h"      'delete-backward-char
-   "C-u"      #'evil-delete-back-to-indentation)
-
-  ;; oevrride evil ex mode (in ":" "/")
-  (general-define-key
-   :keymaps '(evil-ex-completion-map evil-ex-search-keymap)
-   "C-a" 'move-beginning-of-line
-   "C-f" 'forward-char
-   "C-b" 'backward-char
-   "C-d" 'delete-forward-char
-   "C-h" 'delete-backward-char
-   "C-u" 'evil-delete-back-to-indentation
-   "C-k" 'kill-line)
-
-  ;; don't leave visual mode after shifting
-  (general-define-key
-   :states 'visual
-   "<" #'+evil/shift-left
-   ">" #'+evil/shift-right)
-
-  ;; rime
-  (global-unset-key (kbd "C-@"))
-  (global-unset-key (kbd "C-SPC"))
   )
 
 ;; display cursor as bar instread of box in terminal
@@ -407,7 +395,7 @@
 
 (use-package evil-surround
   :commands evil-surround-region
-  :general (:states 'visual "S" #'evil-surround-region)
+  :init (evil-define-key 'visual 'global "S" #'evil-surround-region)
   :config
   ;; use non-spaced pairs when surrounding with an opening brace
   (setf (alist-get ?\( evil-surround-pairs-alist) '("(" . ")"))
@@ -444,7 +432,20 @@
   (which-key-min-display-lines 6)
   (which-key-side-window-slot -10)
   ;; (which-key-idle-delay 1.5)
-  )
+  :config
+  (which-key-add-key-based-replacements
+    "<SPC> b" "buffer"
+    "<SPC> c" "code"
+    "<SPC> e" "error"
+    "<SPC> f" "file"
+    "<SPC> g" "git"
+    "<SPC> h" "help"
+    "<SPC> n" "note"
+    "<SPC> p" "project"
+    "<SPC> s" "search"
+    "<SPC> t" "toggle"
+    "<SPC> w" "window"
+    ))
 
 ;; use tty-child-frames
 (use-package posframe)
@@ -697,17 +698,16 @@
   (magit-revision-insert-related-refs nil)
   (magit-display-buffer-function '+magit-display-buffer-fn)
   ;; (magit-auto-revert-mode nil) ;; too slow for tramp
-  :general
-  (:states 'normal :keymaps 'magit-mode-map
-           "zt" #'evil-scroll-line-to-top
-           "zz" #'evil-scroll-line-to-center
-           "zb" #'evil-scroll-line-to-bottom)
-  (:states 'normal :keymaps 'magit-status-mode-map
-           "gt" #'tab-bar-switch-to-next-tab)
-  (:states 'normal :keymaps 'magit-diff-mode-map
-           "w" #'evil-forward-word-begin
-           "b" #'evil-backward-word-begin)
   :config
+  (evil-define-key 'normal magit-mode-map
+    "zt" #'evil-scroll-line-to-top
+    "zz" #'evil-scroll-line-to-center
+    "zb" #'evil-scroll-line-to-bottom)
+  (evil-define-key 'normal magit-status-mode-map
+    "gt" #'tab-bar-switch-to-next-tab)
+  (evil-define-key 'normal magit-diff-mode-map
+    "w" #'evil-forward-word-begin
+    "b" #'evil-backward-word-begin)
   (define-key transient-map [escape] #'transient-quit-one)
   (add-hook 'git-commit-setup-hook #'evil-insert-state)
   )
@@ -763,8 +763,8 @@
   (neo-window-width 30)
   (neo-vc-integration '(face))
   (neo-theme 'nerd-icons)
-  :general
-  (:states 'motion :keymaps 'neotree-mode-map "w" #'+neotree/set-width)
+  :config
+  (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
   )
 
 (use-package org
@@ -789,13 +789,13 @@
   (org-agenda-window-setup 'current-window)
   (org-agenda-span 'day)
   (org-agenda-compact-blocks t)
-  :general
-  (:keymaps 'org-mode-map
-            "C-c s" #'org-insert-structure-template
-            "C-c a" #'org-agenda)
-  (:keymaps 'org-agenda-mode-map
-            "j" #'org-agenda-next-line
-            "k" #'org-agenda-previous-line)
+  :bind
+  (:map org-mode-map
+        ("C-c s" . #'org-insert-structure-template)
+        ("C-c a" . #'org-agenda)
+        :map org-agenda-mode-map
+        ("j" . #'org-agenda-next-line)
+        ("k" . #'org-agenda-previous-line))
   :config
   ;; open file links in current window, rather than split window
   (setf (alist-get 'file org-link-frame-setup) #'find-file)
