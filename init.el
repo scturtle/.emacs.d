@@ -292,15 +292,15 @@
     (kbd "<leader>tt") #'toggle-truncate-lines
     (kbd "<leader>tn") #'tab-bar-new-tab
     (kbd "<leader>tm") #'tab-bar-move-tab
-    (kbd "<leader>t1") #'(lambda() (interactive) (tab-bar-select-tab 1))
-    (kbd "<leader>t2") #'(lambda() (interactive) (tab-bar-select-tab 2))
-    (kbd "<leader>t3") #'(lambda() (interactive) (tab-bar-select-tab 3))
-    (kbd "<leader>t4") #'(lambda() (interactive) (tab-bar-select-tab 4))
-    (kbd "<leader>t5") #'(lambda() (interactive) (tab-bar-select-tab 5))
-    (kbd "<leader>t6") #'(lambda() (interactive) (tab-bar-select-tab 6))
-    (kbd "<leader>t7") #'(lambda() (interactive) (tab-bar-select-tab 7))
-    (kbd "<leader>t8") #'(lambda() (interactive) (tab-bar-select-tab 8))
-    (kbd "<leader>t9") #'(lambda() (interactive) (tab-bar-select-tab 9))
+    (kbd "<leader>1") #'(lambda() (interactive) (tab-bar-select-tab 1))
+    (kbd "<leader>2") #'(lambda() (interactive) (tab-bar-select-tab 2))
+    (kbd "<leader>3") #'(lambda() (interactive) (tab-bar-select-tab 3))
+    (kbd "<leader>4") #'(lambda() (interactive) (tab-bar-select-tab 4))
+    (kbd "<leader>5") #'(lambda() (interactive) (tab-bar-select-tab 5))
+    (kbd "<leader>6") #'(lambda() (interactive) (tab-bar-select-tab 6))
+    (kbd "<leader>7") #'(lambda() (interactive) (tab-bar-select-tab 7))
+    (kbd "<leader>8") #'(lambda() (interactive) (tab-bar-select-tab 8))
+    (kbd "<leader>9") #'(lambda() (interactive) (tab-bar-select-tab 9))
 
     ;; window
     (kbd "<leader>wd") #'evil-window-delete
