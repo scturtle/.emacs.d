@@ -355,7 +355,12 @@
 
   ;; magit
   (with-eval-after-load 'magit
-    (define-key magit-status-mode-map (kbd "SPC") nil))
+    (define-key magit-log-mode-map (kbd "SPC") nil)
+    (define-key magit-stash-mode-map (kbd "SPC") nil)
+    (define-key magit-status-mode-map (kbd "SPC") nil)
+    (define-key magit-revision-mode-map (kbd "SPC") nil)
+    (define-key magit-blame-read-only-mode-map (kbd "SPC") nil)
+    )
   )
 
 (use-package evil-collection
@@ -583,13 +588,14 @@
                              "-isystem/opt/homebrew/include"]
                             :resourceDir ,(string-trim (shell-command-to-string "clang -print-resource-dir")))))))
   (add-to-list 'eglot-server-programs
-               `((c-ts-mode c++-ts-mode) . ("ccls" "--log-file=/tmp/ccls.log"
+               `((c-ts-mode c++-ts-mode) . ("ccls" "--log-file=/tmp/ccls.log" "-v=1"
                                             :initializationOptions ,ccls-initialization-options)))
   ;; prefer directory with compile_commands.json for project root
   (advice-add 'eglot--current-project :around
               (lambda (orig &rest args)
                 (if (memq major-mode '(c-ts-mode c++-ts-mode))
-                    (if-let* ((json (locate-dominating-file default-directory "compile_commands.json")))
+                    (if-let* ((json (or (locate-dominating-file default-directory ".ccls")
+                                        (locate-dominating-file default-directory "compile_commands.json"))))
                         `(transient . ,(expand-file-name json)) (apply orig args))
                   (apply orig args))))
   ;; FIXME: hotfix pyright
