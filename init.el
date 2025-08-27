@@ -100,6 +100,7 @@
   (setq apropos-do-all t)
   (setq shell-file-name "/bin/bash") ;; override fish
   (setq xterm-extra-capabilities '(setSelection)) ;; OSC 52
+  (setq xterm-max-cut-length (* 512 1024 1024)) ;; clipboard_max_size in kitty
   (xterm-mouse-mode 1)
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
