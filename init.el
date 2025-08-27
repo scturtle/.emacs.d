@@ -72,9 +72,9 @@
 
 ;; load custom funcs and UIs
 (setq custom-theme-directory (emacs.d "lisp"))
-;; (load-theme 'aura t)
-;; (load-theme 'catppuccin-mocha t)
-(load-theme 'catppuccin-latte t)
+(if IS-MAC
+    (load-theme 'catppuccin-latte t)
+  (load-theme 'catppuccin-mocha t))
 (add-to-list 'load-path (emacs.d "lisp"))
 (require 'funcs)
 (require 'mudline)
@@ -100,7 +100,7 @@
   (setq apropos-do-all t)
   (setq shell-file-name "/bin/bash") ;; override fish
   (setq xterm-extra-capabilities '(setSelection)) ;; OSC 52
-  (add-hook 'tty-setup-hook #'xterm-mouse-mode) ;; mouse in terminal
+  (xterm-mouse-mode 1)
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
   ;; perf (from doom-start)
