@@ -163,6 +163,29 @@
          ("\\<\\(FIXME\\(?:(.*)\\)?:?\\)\\>" 1 '(:inherit error :weight bold) prepend)
          ("\\<\\(NOTE\\(?:(.*)\\)?:?\\)\\>"  1 '(:inherit success :weight bold) prepend))))
 
+;; from elsa--worker-debugger
+(defun +debugger (&rest args)
+  (setq num-nonmacro-input-events (1+ num-nonmacro-input-events))
+  (display-warning
+   :debug
+   (let ((frames nil)
+         (in-program-stack nil))
+     (dolist (frame (backtrace-frames))
+       (when in-program-stack (push frame frames))
+       (when (eq (elt frame 1) '+debugger) (setq in-program-stack t)))
+     (concat
+      (format "%s\n" args)
+      (mapconcat
+       (lambda (frame)
+         (if (car frame)
+             (format "  %S%s"
+                     (cadr frame)
+                     (if (nth 2 frame) (cl-prin1-to-string (nth 2 frame)) "()"))
+           (format "  (%S %s)"
+                   (cadr frame)
+                   (mapconcat (lambda (x) (format "%S" x)) (nth 2 frame) " "))))
+       (nreverse frames) "\n")))))
+
 (provide 'funcs)
 
 ;; Local Variables:
