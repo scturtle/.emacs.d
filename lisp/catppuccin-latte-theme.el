@@ -278,10 +278,9 @@
         (neo-vc-up-to-date-face :foreground ,text)
         (neo-vc-unregistered-face :foreground ,pink)
 
-        ;; lsp-mode
-        (lsp-face-highlight-textual :inherit highlight)
-        (lsp-face-highlight-read    :inherit lsp-face-highlight-textual)
-        (lsp-face-highlight-write   :inherit lsp-face-highlight-textual)
+        ;; eglot
+        (eglot-highlight-symbol-face :background ,current)
+
         ;; lsp-ui-peek
         (lsp-ui-peek-filename    :foreground ,teal)
         (lsp-ui-peek-header      :foreground ,blue :background ,crust)

@@ -164,9 +164,9 @@
         (evil-ex-substitute-replacement :foreground ,green)
 
         ;; flycheck
-        (flycheck-error   :foreground ,red :underline t)
-        (flycheck-warning :foreground ,yellow :underline t)
-        (flycheck-info    :foreground ,green :underline t)
+        (flycheck-error   :underline (:style wave :color ,red))
+        (flycheck-warning :underline (:style wave :color ,yellow))
+        (flycheck-info    :underline (:style wave :color ,green))
 
         ;; diff-hl
         (diff-hl-change :foreground ,peach :background ,peach)
@@ -229,6 +229,7 @@
         (magit-diffstat-removed :foreground ,red)
         (magit-diff-revision-summary :foreground ,blue :weight bold)
         (magit-diff-revision-summary-highlight :inherit magit-diff-revision-summary)
+        (git-commit-summary :inherit magit-diff-revision-summary)
         ;; magit bisect/blame/branch
         (magit-bisect-bad     :foreground ,red)
         (magit-bisect-good    :foreground ,green)
@@ -276,10 +277,9 @@
         (neo-vc-up-to-date-face :foreground ,text)
         (neo-vc-unregistered-face :foreground ,pink)
 
-        ;; lsp-mode
-        (lsp-face-highlight-textual :background ,(blend surface0 surface1 0.5))
-        (lsp-face-highlight-read    :inherit lsp-face-highlight-textual)
-        (lsp-face-highlight-write   :inherit lsp-face-highlight-textual)
+        ;; eglot
+        (eglot-highlight-symbol-face :background ,surface0)
+
         ;; lsp-ui-peek
         (lsp-ui-peek-filename    :foreground ,pink)
         (lsp-ui-peek-header      :background ,surface0)
@@ -292,6 +292,7 @@
         ;; corfu
         (corfu-default :background ,mantle)
         (corfu-current :background ,current)
+        (corfu-bar     :background ,surface0)
 
         ;; org mode
         (org-archived :inherit font-lock-comment-face)
@@ -314,7 +315,7 @@
         (org-link :inherit link)
         (org-priority :foreground ,yellow)
         (org-priority-value :inherit font-lock-comment-face)
-        (org-quote :inherit org-block :slant italic)
+        (org-quote :inherit org-block)
         (org-table :foreground ,pink)
         (org-tag :foreground ,mauve :weight bold)
         (org-verbatim :foreground ,green)
@@ -326,7 +327,12 @@
         (org-level-6 :weight normal :foreground ,lavender)
         (org-level-7 :weight normal :foreground ,mauve)
         (org-level-8 :weight normal :foreground ,maroon)
-
+        ;; org-agenda
+        (org-agenda-date :weight normal :foreground ,blue)
+        (org-agenda-date-today :weight bold :foreground ,blue :underline t)
+        (org-scheduled-previously :foreground ,rosewater)
+        (org-scheduled-today :foreground ,mauve)
+        (org-scheduled :foreground ,flamingo)
         )))
 
   (apply #'custom-theme-set-faces

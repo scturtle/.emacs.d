@@ -274,9 +274,7 @@
     (kbd "<leader>nd") #'deft
 
     ;; project
-    (kbd "<leader>pp") #'projectile-switch-project
     (kbd "<leader>pr") #'projectile-recentf
-    (kbd "<leader>pi") #'projectile-invalidate-cache
     (kbd "<leader>pf") #'projectile-find-file
     (kbd "<leader>pd") #'consult-fd
     (kbd "<leader>ga") #'projectile-find-other-file
@@ -404,6 +402,7 @@
   :init (evil-define-key 'visual 'global "S" #'evil-surround-region)
   :config
   ;; use non-spaced pairs when surrounding with an opening brace
+  (setf (alist-get ?\< evil-surround-pairs-alist) '("<" . ">"))
   (setf (alist-get ?\( evil-surround-pairs-alist) '("(" . ")"))
   (setf (alist-get ?\[ evil-surround-pairs-alist) '("[" . "]"))
   (setf (alist-get ?\{ evil-surround-pairs-alist) '("{" . "}")))
@@ -571,9 +570,6 @@
   (eglot-mode-line-format '(eglot-mode-line-session eglot-mode-line-progress))
   ;; (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
-  :custom-face
-  (eglot-highlight-symbol-face ((t :inherit highlight)))
-  (eglot-mode-line ((t :inherit font-lock-string-face :bold nil)))
   :config
   ;; ccls
   (setq ccls-initialization-options
@@ -599,7 +595,7 @@
                                         (locate-dominating-file default-directory "compile_commands.json"))))
                         `(transient . ,(expand-file-name json)) (apply orig args))
                   (apply orig args))))
-  ;; FIXME: hotfix pyright
+  ;; use basedpyright
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
   (advice-add 'file-notify-add-watch :override #'ignore)
   (advice-add 'file-notify-rm-watch :override #'ignore)
@@ -651,7 +647,6 @@
   (corfu-preview-current nil)
   (corfu-on-exact-match 'show)
   :config
-  ;; use tty-child-frames instead of corfu-terminal
   (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
   (defun corfu-move-to-minibuffer ()
     (interactive)
@@ -661,9 +656,6 @@
        (let ((completion-extra-properties extras)
              completion-cycle-threshold completion-cycling)
          (consult-completion-in-region beg end table pred)))))
-  ;; instead of using nerd-icons, why not just a simple space margin
-  ;; (defun +simple-margin-formatter (_) (lambda (_) ""))
-  ;; (add-to-list 'corfu-margin-formatters #'+simple-margin-formatter)
   :bind
   (:map corfu-map
         ("M-SPC" . 'corfu-insert-separator)
@@ -729,29 +721,13 @@
 
 (use-package projectile
   :config (projectile-mode)
-  ;; only load projectile when it is needed
   :autoload projectile-project-p projectile-project-root projectile-acquire-root
   :custom
-  (projectile-auto-discover nil)
-  (projectile-globally-ignored-files '(".DS_Store" "TAGS"))
-  (projectile-globally-ignored-file-suffixes '(".elc" ".pyc" ".o"))
-  (projectile-ignored-projects '("~/"))
   (projectile-enable-caching (not noninteractive))
-  (projectile-kill-buffers-filter 'kill-only-files)
-  (projectile-indexing-method 'alien)
-  :preface
-  ;; disable checking and cleaning especially for remote projects
-  (advice-add #'projectile--cleanup-known-projects :override #'ignore)
-  ;; disable serialize to `projectile-cache-file', may be large to load
-  (advice-add #'projectile-serialize-cache :override #'ignore)
   :config
-  (add-to-list 'projectile-globally-ignored-directories "^build$")
-  (add-to-list 'projectile-globally-ignored-directories "^\\.ccls-cache$")
   (setq projectile-project-root-files '())
   (setq projectile-project-root-files-bottom-up '(".git" ".projectile"))
   (setq projectile-project-root-files-top-down-recurring '( "Makefile" "compile_commands.json"))
-  (setq compilation-buffer-name-function #'projectile-compilation-buffer-name
-        compilation-save-buffers-predicate #'projectile-current-project-buffer-p)
   )
 
 (use-package deft
