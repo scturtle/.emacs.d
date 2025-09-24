@@ -278,6 +278,7 @@
         (neo-vc-unregistered-face :foreground ,pink)
 
         ;; eglot
+        (eglot-mode-line :foreground ,peach :weight unspecified)
         (eglot-highlight-symbol-face :background ,surface0)
 
         ;; lsp-ui-peek

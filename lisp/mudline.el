@@ -196,8 +196,7 @@
 
 (defun mudline-segment-misc-info ()
   "Segment to display `mode-line-misc-info'."
-  (let ((str (format-mode-line mode-line-misc-info 'shadow)))
-    (if (string-empty-p str) "" (concat str " "))))
+  mode-line-misc-info)
 
 ;;;###autoload
 (define-minor-mode mudline-mode
