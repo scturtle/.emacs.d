@@ -811,7 +811,7 @@
   :if +llvm-dir
   :straight nil
   :load-path +llvm-dir
-  :mode "\\.\\(mlir\\|ttir\\|linalg\\|linalgopt\\|mluir\\)\\'")
+  :mode "\\.\\(mlir\\|ttir\\|linalg\\|linalgopt\\|mluir\\|mluiropt\\)\\'")
 
 (use-package rainbow-mode
   :custom
