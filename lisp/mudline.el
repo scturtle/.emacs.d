@@ -67,7 +67,7 @@
 (defvar-local mudline--buffer-file-icon nil)
 (defun mudline-update-buffer-file-icon (&rest _)
   (setq mudline--buffer-file-icon
-        (let ((icon (nerd-icons-icon-for-buffer)))
+        (let ((icon (or (nerd-icons-icon-for-buffer) "")))
           (propertize icon 'help-echo (concat "Major-mode: " (format-mode-line mode-name))))))
 (add-hook 'find-file-hook               #'mudline-update-buffer-file-icon)
 (add-hook 'after-change-major-mode-hook #'mudline-update-buffer-file-icon)
