@@ -35,6 +35,7 @@
 ;; straight
 (setq straight-vc-git-default-clone-depth 1)
 (setq straight-check-for-modifications nil)
+(setq straight-repository-branch "develop")
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
