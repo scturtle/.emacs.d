@@ -339,6 +339,15 @@
   (apply #'custom-theme-set-faces
          'catppuccin-mocha
          (mapcar (lambda (face) `(,(car face) ((t ,(cdr face))))) faces))
+
+  (setq hi-lock-face-defaults
+        (mapcar (lambda (color)
+                  (let* ((face-name (concat "hi-" (substring color 1)))
+                         (face-symbol (intern face-name)))
+                    (make-face face-symbol)
+                    (set-face-attribute face-symbol nil :background color :foreground base)
+                    face-name))
+                `(,flamingo ,mauve ,red ,maroon ,peach ,yellow ,green ,sapphire ,blue)))
   )
 
 (when load-file-name
