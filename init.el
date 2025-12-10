@@ -71,16 +71,11 @@
 
 (use-package nerd-icons :demand)
 
-;; load custom funcs and UIs
-(setq custom-theme-directory (emacs.d "lisp"))
+;; load from user-lisp (prepare-user-lisp)
 (if IS-MAC
     (load-theme 'catppuccin-latte t)
   (load-theme 'catppuccin-mocha t))
-(add-to-list 'load-path (emacs.d "lisp"))
-(require 'funcs)
-(require 'mudline)
 (mudline-mode)
-(require 'linkding)
 
 ;; defaults
 (use-package emacs
@@ -184,7 +179,7 @@
   (setq diff-refine nil)  ;; no hunk refinement
 
   ;; highlight TODO/FIXME/NOTE
-  (add-hook 'prog-mode-hook 'highlight-codetags-watchwords)
+  (add-hook 'prog-mode-hook #'highlight-codetags-watchwords)
   )
 
 (use-package gcmh
@@ -696,7 +691,7 @@
   (transient-display-buffer-action '(display-buffer-below-selected))
   (magit-save-repository-buffers nil)
   (magit-revision-insert-related-refs nil)
-  (magit-display-buffer-function '+magit-display-buffer-fn)
+  (magit-display-buffer-function #'+magit-display-buffer-fn)
   ;; (magit-auto-revert-mode nil) ;; too slow for tramp
   :config
   (evil-define-key 'normal magit-mode-map

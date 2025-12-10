@@ -2,6 +2,7 @@
 
 ;; lots of functions are stolen and modified from doomemacs
 
+;;;###autoload
 (defun +symbol-highlight (beg end)
   "Highlight current symbol. Restrict by evil visual region."
   (interactive
@@ -14,6 +15,7 @@
     (iedit-start regexp beg end)
     (evil-multiedit-mode +1)))
 
+;;;###autoload
 (defun +goto-definition ()
   (interactive)
   (cond
@@ -21,6 +23,7 @@
    ((eq major-mode 'emacs-lisp-mode) (call-interactively #'elisp-def))
    (t (call-interactively #'evil-goto-definition))))
 
+;;;###autoload
 (defun +search-project-for-symbol-at-point ()
   (interactive)
   (let ((symbol (if (evil-visual-state-p)
@@ -30,18 +33,21 @@
         (dir (or (projectile-acquire-root) default-directory)))
     (consult-ripgrep dir symbol)))
 
+;;;###autoload
 (defun +evil/shift-right ()
   (interactive)
   (call-interactively #'evil-shift-right)
   (evil-normal-state)
   (evil-visual-restore))
 
+;;;###autoload
 (defun +evil/shift-left ()
   (interactive)
   (call-interactively #'evil-shift-left)
   (evil-normal-state)
   (evil-visual-restore))
 
+;;;###autoload
 (defun +magit-display-buffer-fn (buffer)
   (let ((buffer-mode (buffer-local-value 'major-mode buffer)))
     (display-buffer
@@ -67,22 +73,22 @@
               '(display-buffer-same-window))
              ('(+magit--display-buffer-in-direction))))))
 
+;;;###autoload
 (defun +magit--display-buffer-in-direction (buffer alist)
   (let ((direction (or (alist-get 'direction alist) 'right))
         (origin-window (selected-window)))
     (if-let* ((window (window-in-direction direction)))
         (select-window window)
-      (if-let* ((window (and (not (one-window-p)) (window-in-direction 'left))))
-          (select-window window)
-        (let ((window (split-window nil nil direction)))
-          (select-window window)
-          (display-buffer-record-window 'reuse window buffer)
-          (set-window-buffer window buffer)
-          (set-window-parameter window 'quit-restore (list 'window 'window origin-window buffer))
-          (set-window-prev-buffers window nil))))
+      (let ((window (split-window nil nil direction)))
+        (select-window window)
+        (display-buffer-record-window 'reuse window buffer)
+        (set-window-buffer window buffer)
+        (set-window-parameter window 'quit-restore (list 'window 'window origin-window buffer))
+        (set-window-prev-buffers window nil)))
     (switch-to-buffer buffer t t)
     (selected-window)))
 
+;;;###autoload
 (defun +neotree/find-this-file ()
   (interactive)
   (let ((path buffer-file-name)
@@ -91,6 +97,7 @@
     (neotree-find path project-root)
     (neotree-refresh)))
 
+;;;###autoload
 (defun +neotree/set-width ()
   (interactive)
   (let ((width (read-number "width: ")))
@@ -103,6 +110,7 @@
                               (0 (rainbow-colorize-by-assoc colors-alist)))))
   (font-lock-add-keywords nil font-lock-keywords t))
 
+;;;###autoload
 (defun +eglot-rust-hover-info (contents &optional _)
   (let* ((value (plist-get contents :value))
          (groups (--partition-by (s-blank? it) (s-lines (s-trim value))))
@@ -149,6 +157,7 @@
             skipped-ranges))))
 
 ;; https://www.jamescherti.com/emacs-symbol-highlighting-built-in-functions
+;;;###autoload
 (defun hi-lock-symbol-at-point ()
   (interactive)
   (require 'hi-lock)
@@ -157,6 +166,7 @@
         (hi-lock-unface-buffer regexp)
       (hi-lock-face-symbol-at-point))))
 
+;;;###autoload
 (defun highlight-codetags-watchwords ()
   (font-lock-add-keywords
    nil '(("\\<\\(TODO\\(?:(.*)\\)?:?\\)\\>"  1 '(:inherit warning :weight bold) prepend)

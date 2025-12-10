@@ -2,9 +2,8 @@
 /etc
 /var
 /custom.el
-/.lsp-session-v1
 flycheck_*.el
 *.elc
 /tree-sitter/
-/lisp/llvm-utils/
-/elpa/
+/user-lisp/llvm-utils/
+/user-lisp/.user-lisp-autoloads.el

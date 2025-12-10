@@ -5,6 +5,7 @@
 
 ;;; Code:
 (require 'json)
+(require 'plz)
 
 (defgroup linkding nil
   ""
@@ -26,6 +27,7 @@
   `(("Content-Type" . "application/json")
     ("Authorization" . ,(concat "Token " linkding-token))))
 
+;;;###autoload
 (defun linkding-get-note (id)
   "Get a Linkding bookmark by ID and display in org-mode."
   (interactive "sBookmark ID: ")
