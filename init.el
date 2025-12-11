@@ -1,32 +1,15 @@
 ;;; -*- lexical-binding: t; -*-
 
-;; disable UI components
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(setq mode-line-format nil)
-
-;; disable GC during startup
-(setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'after-init-hook
           (lambda () (setq gc-cons-threshold (* 64 1024 1024)))) ; 64 mb
+
+(add-hook 'after-init-hook
+          (lambda () (setq file-name-handler-alist default-file-name-handler-alist)))
 
 ;; show startup time
 (add-hook 'window-setup-hook
           (lambda () (message "startup in %.2f ms"
                               (* 1000.0 (float-time (time-since before-init-time))))))
-
-;; remove searching for .gz files (from geza-herman)
-(setq jka-compr-load-suffixes nil)
-(jka-compr-update)
-
-;; say no to `package.el'
-(setq package-enable-at-startup nil)
-
-;; disable `file-name-handler-alist' during startup
-(defvar file-name-handler-alist-bak file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(add-hook 'after-init-hook
-          (lambda () (setq file-name-handler-alist file-name-handler-alist-bak)))
 
 ;; handy definitions
 (defun emacs.d (path) (expand-file-name path user-emacs-directory))
@@ -83,13 +66,6 @@
   (setq user-full-name "scturtle"
         user-mail-address "hi@scturtle.me")
 
-  ;; startup
-  (setq inhibit-splash-screen t)
-  (setq initial-scratch-message nil)
-  (setq initial-major-mode 'fundamental-mode) ; for *scratch*
-  ;; remove "For information about GNU Emacs..."
-  (advice-add 'display-startup-echo-area-message :override #'ignore)
-
   ;; general
   (setq use-short-answers t)
   (delete-selection-mode +1)
@@ -112,13 +88,6 @@
   (setq custom-file (emacs.d "custom.el"))
   (when (file-exists-p custom-file)
     (load-file custom-file))
-
-  ;; encoding
-  (set-language-environment "UTF-8")
-  (setq default-input-method nil)
-  (setq bidi-inhibit-bpa t)
-  (setq-default bidi-display-reordering  'left-to-right
-                bidi-paragraph-direction 'left-to-right)
 
   ;; from doom-ui
   (setq hscroll-margin 2
@@ -787,7 +756,7 @@
 (use-package htmlize)
 
 ;; setup llvm
-(defvar +llvm-dir (emacs.d "lisp/llvm-utils"))
+(defvar +llvm-dir (emacs.d "user-lisp/llvm-utils"))
 (unless (file-directory-p +llvm-dir)
   (setq +llvm-dir nil))
 
