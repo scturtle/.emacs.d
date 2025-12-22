@@ -635,23 +635,16 @@
 (use-package c-ts-mode
   :config
   (defun +my-indent-style()
-    (if (version< emacs-version "31")
-        `(;; ((parent-is "declaration_list") parent-bol 0) ;; namespace
-          ((match nil "argument_list" nil 0 1) parent-bol c-ts-mode-indent-offset)
-          ((parent-is "argument_list") c-ts-mode--first-sibling 0)
-          ((match nil "parameter_list" nil 0 1) parent-bol c-ts-mode-indent-offset)
-          ((parent-is "parameter_list") c-ts-mode--first-sibling 0)
-          ,@(alist-get 'k&r (c-ts-mode--indent-styles 'cpp)))
-      `((cpp
-         ;; rules copied from 42yeah
-         ((n-p-gp nil nil "namespace_definition") grand-parent 0)
-         ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-         ((parent-is "argument_list") (nth-sibling 1) 0)
-         ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-         ((parent-is "parameter_list") (nth-sibling 1) 0)
-         ,@(alist-get 'cpp (c-ts-mode--simple-indent-rules 'cpp 'k&r))))
-      ))
-  (setq c-ts-mode-indent-style #'+my-indent-style)
+    (let ((rules
+           `(;; rules copied from 42yeah
+             ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+             ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+             ((parent-is "argument_list") (nth-sibling 1) 0)
+             ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
+             ((parent-is "parameter_list") (nth-sibling 1) 0)
+             ,@(alist-get 'cpp (c-ts-mode--simple-indent-rules 'cpp 'k&r)))))
+      `((c ,@rules) (cpp ,@rules))))
+  (c-ts-mode-set-global-style #'+my-indent-style)
   )
 
 (use-package magit
