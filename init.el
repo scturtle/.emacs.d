@@ -200,7 +200,7 @@
     (kbd "<leader>bi") #'ibuffer
     (kbd "<leader>bm") #'(lambda () (interactive) (switch-to-buffer "*Messages*"))
     (kbd "<leader>bk") #'kill-current-buffer
-    (kbd "<leader>bf") #'eglot-format-buffer
+    (kbd "<leader>bf") #'eglot-format
 
     ;; code
     (kbd "<leader>ca") #'eglot-code-actions
