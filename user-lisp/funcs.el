@@ -196,6 +196,18 @@
                    (mapconcat (lambda (x) (format "%S" x)) (nth 2 frame) " "))))
        (nreverse frames) "\n")))))
 
+;;;###autoload
+(defun +copy-relative-file-path ()
+  (interactive)
+  (if-let* ((file-name (buffer-file-name)))
+      (let* ((project (project-current))
+             (path (if project
+                       (file-relative-name file-name (project-root project))
+                     (abbreviate-file-name file-name))))
+        (kill-new path)
+        (message "copied: %s" path))
+    (user-error "no file is associated to current buffer")))
+
 (provide 'funcs)
 
 ;; Local Variables:

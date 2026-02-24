@@ -201,6 +201,7 @@
     (kbd "<leader>bm") #'(lambda () (interactive) (switch-to-buffer "*Messages*"))
     (kbd "<leader>bk") #'kill-current-buffer
     (kbd "<leader>bf") #'eglot-format
+    (kbd "<leader>bp") #'+copy-relative-file-path
 
     ;; code
     (kbd "<leader>ca") #'eglot-code-actions
@@ -560,8 +561,9 @@
                                         (locate-dominating-file default-directory "compile_commands.json"))))
                         `(transient . ,(expand-file-name json)) (apply orig args))
                   (apply orig args))))
-  ;; use basedpyright
+  ;; python
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
+  ;; disable file watcher
   (advice-add 'file-notify-add-watch :override #'ignore)
   (advice-add 'file-notify-rm-watch :override #'ignore)
   ;; fix progress report

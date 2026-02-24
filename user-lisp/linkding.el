@@ -5,7 +5,7 @@
 
 ;;; Code:
 (require 'json)
-(require 'plz)
+;; (require 'plz)
 
 (defgroup linkding nil
   ""
