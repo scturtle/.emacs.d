@@ -54,7 +54,7 @@
 
 (use-package nerd-icons :demand)
 
-;; load from user-lisp (prepare-user-lisp)
+;; load from user lisp
 (if IS-MAC
     (load-theme 'catppuccin-latte t)
   (load-theme 'catppuccin-mocha t))

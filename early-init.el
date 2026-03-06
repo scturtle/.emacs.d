@@ -33,4 +33,4 @@
 (setq package-enable-at-startup nil)
 
 ;; do not byte compile at startup (prepare-user-lisp manually)
-(setq user-lisp-auto-scrape nil)
+;; (setq user-lisp-auto-scrape nil)
