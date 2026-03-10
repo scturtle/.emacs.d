@@ -113,7 +113,7 @@
 ;;;###autoload
 (defun +eglot-rust-hover-info (contents &optional _)
   (let* ((value (plist-get contents :value))
-         (groups (--partition-by (s-blank? it) (s-lines (s-trim value))))
+         (groups (-partition-by #'s-blank? (s-lines (s-trim value))))
          (mod-group (cond ((s-equals? "```rust" (car (-fifth-item groups))) (-third-item groups))
                           ((s-equals? "```rust" (car (-third-item groups))) (-first-item groups))
                           (t nil)))
@@ -121,13 +121,13 @@
          (sig-group (cond ((s-equals? "```rust" (car (-fifth-item groups))) (-fifth-item groups))
                           ((s-equals? "```rust" (car (-third-item groups))) (-third-item groups))
                           (t (-first-item groups))))
-         (sig (->> sig-group
-                   (--drop-while (s-starts-with? "```" it))
-                   (--take-while (not (s-equals? "```" it)))
-                   (--map (s-replace-regexp "//.*" "" it))
-                   (--map (s-trim it))
-                   (s-join " "))))
-    (eglot--format-markup (concat "```rust\n" sig cmt "\n```"))))
+         (sig (thread-last sig-group
+                           (-drop-while (lambda (s) (s-starts-with? "```" s)))
+                           (-take-while (lambda (s) (not (s-equals? "```" s))))
+                           (-map (lambda (s) (s-replace-regexp "//.*" "" s)))
+                           (-map #'s-trim)
+                           (s-join " "))))
+    (eglot--format-markup (concat "```c\n" sig cmt "\n```"))))
 
 ;; ccls skipped ranges https://github.com/nemethf/eglot-x/pull/7
 (cl-defmethod eglot-client-capabilities :around (_)

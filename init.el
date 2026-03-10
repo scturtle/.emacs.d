@@ -522,7 +522,9 @@
   (eldoc-echo-area-prefer-doc-buffer t)
   )
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :custom
+  (markdown-fontify-code-blocks-natively t))
 
 (use-package elisp-def)
 
@@ -576,8 +578,8 @@
   (add-hook 'orderless-style-dispatchers #'+orderless-flex-first nil 'local)
   ;; extract and show short signature for rust-analyzer
   (with-eval-after-load 'rust-ts-mode
-    (require 's)
     (require 'dash)
+    (require 's)
     (advice-add #'eglot--hover-info :override #'+eglot-rust-hover-info))
   )
 
