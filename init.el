@@ -166,7 +166,7 @@
   :custom
   (evil-want-keybinding nil) ; for evil-collection
   (evil-want-C-g-bindings t)
-  (evil-want-C-i-jump nil) ;; unbind tab for neotree/org-mode
+  (evil-want-C-i-jump nil) ;; unbind tab for sidetree/org-mode
   (evil-want-C-u-scroll t)
   (evil-want-C-u-delete t)
   (evil-want-abbrev-expand-on-insert-exit nil)
@@ -244,8 +244,8 @@
     (kbd "<leader>pf") #'projectile-find-file
     (kbd "<leader>pd") #'consult-fd
     (kbd "<leader>ga") #'projectile-find-other-file
-    (kbd "<leader>op") #'neotree-toggle
-    (kbd "<leader>oP") #'+neotree/find-this-file
+    (kbd "<leader>op") #'dirvish-side
+    (kbd "<leader>oP") #'+dirvish/find-this-file
 
     ;; search
     (kbd "<leader>sh") #'+symbol-highlight
@@ -338,9 +338,6 @@
   :config
   (delete 'eglot evil-collection-mode-list)
   (evil-collection-init)
-  ;; disable bindings that I don't want
-  (advice-add #'evil-collection-neotree-setup :after
-              (lambda (&rest _) (evil-collection-define-key 'normal 'neotree-mode-map "z" nil)))
   (advice-add #'evil-collection-view-setup :after
               (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
   )
@@ -701,15 +698,26 @@
   (advice-add #'deft-mode :after #'hl-line-mode)
   )
 
-(use-package neotree
-  :hook (neotree-mode . hl-line-mode)
+(use-package dirvish
   :custom
-  (neo-show-hidden-files t)
-  (neo-window-width 30)
-  (neo-vc-integration '(face))
-  (neo-theme 'nerd-icons)
-  :config
-  (evil-define-key 'motion neotree-mode-map "w" #'+neotree/set-width)
+  (dired-listing-switches "-Alh --group-directories-first")
+  (dirvish-hide-details '(dirvish-side))
+  (dirvish-side-window-parameters nil)
+  (dirvish-side-attributes '(vc-state nerd-icons))
+  :init
+  (dirvish-override-dired-mode)
+  (evil-define-key 'normal dired-mode-map
+    " " nil
+    "c" nil
+    "cf" #'dired-create-empty-file
+    "cd" #'dired-create-directory
+    "d" #'dired-do-delete
+    "U" #'dired-up-directory
+    "w" #'dirvish-side-increase-width
+    )
+  :bind
+  (:map dired-mode-map
+        ("TAB" . #'dirvish-subtree-toggle))
   )
 
 (use-package org

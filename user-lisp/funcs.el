@@ -89,13 +89,12 @@
     (selected-window)))
 
 ;;;###autoload
-(defun +neotree/find-this-file ()
+(defun +dirvish/find-this-file ()
   (interactive)
-  (let ((path buffer-file-name)
-        (project-root (or (projectile-acquire-root) default-directory)))
-    (neotree-dir project-root)
-    (neotree-find path project-root)
-    (neotree-refresh)))
+  (when-let* ((path buffer-file-name)
+              (side-window (dirvish-side--session-visible-p)))
+    (select-window side-window)
+    (dirvish-subtree-expand-to path)))
 
 ;;;###autoload
 (defun +neotree/set-width ()
