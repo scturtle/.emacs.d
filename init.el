@@ -656,6 +656,11 @@
   (magit-revision-insert-related-refs nil)
   (magit-display-buffer-function #'+magit-display-buffer-fn)
   ;; (magit-auto-revert-mode nil) ;; too slow for tramp
+  :bind
+  (:map magit-file-section-map
+        ("M-RET" . #'magit-diff-visit-worktree-file)
+        :map magit-hunk-section-map
+        ("M-RET" . #'magit-diff-visit-worktree-file))
   :config
   (evil-define-key 'normal magit-mode-map
     "zt" #'evil-scroll-line-to-top
