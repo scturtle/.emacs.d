@@ -6,5 +6,5 @@
 flycheck_*.el
 *.elc
 /tree-sitter/
-/user-lisp/llvm-utils/
+/user-lisp/llvm-utils/mlir-mode.el
 /user-lisp/.user-lisp-autoloads.el

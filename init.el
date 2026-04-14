@@ -709,6 +709,8 @@
   (dirvish-hide-details '(dirvish-side))
   (dirvish-side-window-parameters nil)
   (dirvish-side-attributes '(vc-state nerd-icons))
+  (dirvish-path-separators '("~" "/" "/"))
+  (dirvish-side-header-line-format '(:left (path)))
   :init
   (dirvish-override-dired-mode)
   (evil-define-key 'normal dired-mode-map
@@ -775,12 +777,7 @@
   :straight nil
   :load-path +llvm-dir
   :mode "\\.td\\'"
-  :hook (tablegen-mode . eglot-ensure)
-  :hook (tablegen-mode . prog-mode)
-  :config
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 `(tablegen-mode . ("tblgen-lsp-server" "--tablegen-compilation-database=tablegen_compile_commands.yml")))))
+  )
 
 (use-package mlir-mode
   :if +llvm-dir
