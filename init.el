@@ -149,6 +149,9 @@
 
   ;; highlight TODO/FIXME/NOTE
   (add-hook 'prog-mode-hook #'highlight-codetags-watchwords)
+
+  ;; better line truncation/warp sumbol
+  (prettify-special-glyphs-mode 1)
   )
 
 (use-package gcmh
@@ -561,7 +564,7 @@
                         `(transient . ,(expand-file-name json)) (apply orig args))
                   (apply orig args))))
   ;; python
-  (add-to-list 'eglot-server-programs '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs '(python-ts-mode . ("zuban" "server")))
   ;; disable file watcher
   (advice-add 'file-notify-add-watch :override #'ignore)
   (advice-add 'file-notify-rm-watch :override #'ignore)
@@ -635,17 +638,17 @@
 
 (use-package c-ts-mode
   :config
-  (defun +my-indent-style()
+  (defun +my-setup-indent-override ()
     (let ((rules
-           `(;; rules copied from 42yeah
-             ((n-p-gp nil nil "namespace_definition") grand-parent 0)
+           '(((n-p-gp nil nil "namespace_definition") grand-parent 0)
              ((match nil "argument_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
              ((parent-is "argument_list") (nth-sibling 1) 0)
              ((match nil "parameter_list" nil 1 1) parent-bol c-ts-mode-indent-offset)
-             ((parent-is "parameter_list") (nth-sibling 1) 0)
-             ,@(alist-get 'cpp (c-ts-mode--simple-indent-rules 'cpp 'k&r)))))
-      `((c ,@rules) (cpp ,@rules))))
-  (c-ts-mode-set-global-style #'+my-indent-style)
+             ((parent-is "parameter_list") (nth-sibling 1) 0))))
+      (setq-local treesit-simple-indent-override-rules `((c ,@rules) (cpp ,@rules)))))
+
+  (setq-default c-ts-mode-indent-style 'k&r)
+  (add-hook 'c-ts-base-mode-hook #'+my-setup-indent-override)
   )
 
 (use-package magit
