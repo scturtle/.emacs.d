@@ -217,6 +217,8 @@
         (magit-diff-base-highlight    :background ,base :foreground ,peach :extend t)
         (magit-diff-context           :foreground ,overlay2 :extend t)
         (magit-diff-context-highlight :background ,base :foreground ,text :extend t)
+        (magit-diff-our-heading       :background ,(blend red bg 0.2) :foreground ,red :extend t)
+        (magit-diff-their-heading     :background ,(blend green bg 0.2) :foreground ,green :extend t)
         (magit-diff-hunk-heading           :background ,surface0)
         (magit-diff-hunk-heading-highlight :background ,surface1)
         (magit-diff-hunk-heading-selection :foreground ,peach)
