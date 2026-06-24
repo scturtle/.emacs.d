@@ -37,7 +37,7 @@
 (setq straight-built-in-pseudo-packages
       (append straight-built-in-pseudo-packages
               '(compat dabbrev eglot eldoc flymake jsonrpc org org-agenda project seq tramp
-                       treesit use-package which-key xref c-ts-mode)))
+                       treesit use-package which-key xref c-ts-mode markdown-ts-mode)))
 
 ;; relationship with `use-package'
 (straight-use-package 'use-package)
@@ -74,6 +74,7 @@
   (setq xterm-extra-capabilities '(setSelection)) ;; OSC 52
   (setq xterm-max-cut-length (* 512 1024 1024)) ;; clipboard_max_size in kitty
   (xterm-mouse-mode 1)
+  (tty-tip-mode 1)
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
   ;; perf (from doom-start)
@@ -495,18 +496,15 @@
 (use-package treesit
   :demand t
   :custom
-  (treesit-font-lock-level 4))
-
-(use-package treesit-auto
-  :hook (after-init . global-treesit-auto-mode)
-  :custom
-  (treesit-auto-langs '(c cpp python rust cmake yaml))
+  (treesit-font-lock-level 4)
+  (treesit-enabled-modes t)
   :config
-  (treesit-auto-add-to-auto-mode-alist treesit-auto-langs)
-  ;; not listed in `treesit-auto-recipe-list'
-  (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(cu\\|metal\\)\\'" . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(md\\|markdown\\)\\'" . markdown-ts-mode-maybe)) ;; TODO
   )
+
+(use-package markdown-ts-mode
+  :commands markdown-ts-mode-maybe markdown-ts-mode markdown-ts-view-mode)
 
 (use-package treesit-fold
   :straight (:host github :repo "emacs-tree-sitter/treesit-fold")
@@ -520,11 +518,8 @@
   (eldoc-idle-delay 0.0)
   ;; when `eldoc-doc-buffer' is opened, do not show in echo area
   (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-help-at-pt t)
   )
-
-(use-package markdown-mode
-  :custom
-  (markdown-fontify-code-blocks-natively t))
 
 (use-package elisp-def)
 
@@ -538,6 +533,8 @@
   (eglot-mode-line-format '(eglot-mode-line-session eglot-mode-line-progress))
   ;; (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
+  (eglot-documentation-renderer 'markdown-ts-view-mode) ;; replace markdown-mode
+  (eglot-code-action-indications nil) ;; noisy in rust
   :config
   ;; ccls
   (setq ccls-initialization-options
