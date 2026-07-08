@@ -769,18 +769,14 @@
 
 ;; setup llvm
 (defvar +llvm-dir (emacs.d "user-lisp/llvm-utils"))
-(unless (file-directory-p +llvm-dir)
-  (setq +llvm-dir nil))
 
 (use-package tablegen-mode
-  :if +llvm-dir
   :straight nil
   :load-path +llvm-dir
   :mode "\\.td\\'"
   )
 
 (use-package mlir-mode
-  :if +llvm-dir
   :straight nil
   :load-path +llvm-dir
   :mode "\\.\\(mlir\\|ttir\\|linalg\\|linalgopt\\|mluir\\|mluiropt\\)\\'")
