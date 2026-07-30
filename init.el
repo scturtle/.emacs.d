@@ -591,6 +591,8 @@
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)
+  :hook (flycheck-mode . flycheck-annotate-mode)
+  :hook (eglot-managed-mode . flycheck-eglot-mode)
   :custom
   (flycheck-indication-mode 'left-margin)
   ;; (flycheck-check-syntax-automatically '(mode-enabled save))
@@ -598,10 +600,10 @@
   (flycheck-display-errors-delay '0.2)
   ;; less warnings (for editing config like this init.el)
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (flycheck-annotate-current-line-style 'below)
+  (flycheck-annotate-other-lines-style nil)
+  (flycheck-annotate-background t)
   )
-
-(use-package flycheck-eglot
-  :hook (eglot-managed-mode . flycheck-eglot-mode))
 
 (use-package corfu
   :straight (:files (:defaults "extensions/*.el"))
