@@ -36,7 +36,7 @@
 ;; declare built-in packages
 (setq straight-built-in-pseudo-packages
       (append straight-built-in-pseudo-packages
-              '(compat dabbrev eglot eldoc flymake jsonrpc org org-agenda project seq tramp
+              '(compat dabbrev eglot eldoc flymake hideshow jsonrpc org org-agenda project seq tramp
                        treesit use-package which-key xref c-ts-mode markdown-ts-mode)))
 
 ;; relationship with `use-package'
@@ -506,9 +506,8 @@
 (use-package markdown-ts-mode
   :commands markdown-ts-mode-maybe markdown-ts-mode markdown-ts-view-mode)
 
-(use-package treesit-fold
-  :straight (:host github :repo "emacs-tree-sitter/treesit-fold")
-  :hook ((c-ts-mode c++-ts-mode python-ts-mode rust-ts-mode) . treesit-fold-mode))
+(use-package hideshow
+  :hook (prog-mode . hs-minor-mode))
 
 (use-package yasnippet
   :hook (eglot-managed-mode . yas-minor-mode))
