@@ -479,9 +479,10 @@
   (consult-narrow-key "<") ;; restrict results to certain groups
   (consult-line-numbers-widen t)
   (consult-async-min-input 2)
-  (consult-async-refresh-delay  0.15)
-  (consult-async-input-throttle 0.2)
-  (consult-async-input-debounce 0.1)
+  ;; https://www.jamescherti.com/emacs-consult-speed-async-searche-grep-ripgrep-fd-find/
+  (consult-async-input-debounce 0.05)
+  (consult-async-input-throttle 0.1)
+  (consult-async-refresh-delay  0.05)
   (completion-in-region-function #'consult-completion-in-region) ;; in `Eval:'
   (xref-show-xrefs-function #'consult-xref) ;; for xref-find-references
   )
