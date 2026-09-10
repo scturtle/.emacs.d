@@ -77,6 +77,10 @@
   (tty-tip-mode 1)
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
+  (setq save-interprogram-paste-before-kill t) ; don't clobber OS clipboard on first kill
+  (setq kill-do-not-save-duplicates t)
+  (setq ffap-machine-p-known 'reject) ; don't ping hosts in find-file
+
   ;; perf (from doom-start)
   (setq auto-mode-case-fold nil)
   (setq redisplay-skip-fontification-on-input t)
@@ -113,12 +117,18 @@
   (setq-default require-final-newline nil)
 
   ;; history
-  (setq recentf-auto-cleanup nil
+  (setq recentf-auto-cleanup 'never
         recentf-max-saved-items 200)
   (add-hook 'kill-emacs-hook #'recentf-cleanup)
   (recentf-mode)
   (savehist-mode)
   (save-place-mode)
+
+  ;; auto-revert via file notifications (no polling)
+  (setq auto-revert-avoid-polling t)
+  (setq auto-revert-interval 5)
+  (setq auto-revert-check-vc-info t)
+  (global-auto-revert-mode)
 
   ;; paren
   (setq blink-paren-function nil)
@@ -499,6 +509,7 @@
   :custom
   (treesit-font-lock-level 4)
   (treesit-enabled-modes t)
+  (treesit-auto-install-grammar 'ask)
   :config
   (add-to-list 'auto-mode-alist '("\\.\\(cu\\|metal\\)\\'" . c++-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(md\\|markdown\\)\\'" . markdown-ts-mode-maybe)) ;; TODO
@@ -529,13 +540,15 @@
   (eglot-sync-connect nil) ;; blocking
   (eglot-autoshutdown t)
   (eglot-autoreconnect nil)
-  (eglot-events-buffer-config (list :size 0 :format 'full)) ;; set size to nil for debug
   (eglot-mode-line-format '(eglot-mode-line-session eglot-mode-line-progress))
   ;; (eglot-send-changes-idle-time 0.0)
   (eglot-ignored-server-capabilities '(:inlayHintProvider :signatureHelpProvider))
   (eglot-documentation-renderer 'markdown-ts-view-mode) ;; replace markdown-mode
   (eglot-code-action-indications nil) ;; noisy in rust
+  (eglot-extend-to-xref t) ;; activate eglot in referenced non-project files
+  ;; (eglot-events-buffer-config (list :size nil :format 'full)) ;; for debug
   :config
+  (fset #'jsonrpc--log-event #'ignore) ;; silence jsonrpc event logging entirely
   ;; ccls
   (setq ccls-initialization-options
         `(:index (:trackDependency 1 :threads ,(min 32 (num-processors)) :comments 0)
@@ -616,6 +629,8 @@
   (corfu-on-exact-match 'show)
   :config
   (setf (alist-get 'internal-border-width corfu--frame-parameters) 0)
+  (require 'corfu-popupinfo) ;; popup candidate documentation
+  (corfu-popupinfo-mode 1)
   (defun corfu-move-to-minibuffer ()
     (interactive)
     (corfu--popup-hide) ;; NOTE: hide the terminal popup
