@@ -77,6 +77,10 @@
   (tty-tip-mode 1)
   (when IS-MAC (setq process-adaptive-read-buffering nil)) ;; eshell
 
+  (setq xterm-update-cursor 'type)
+  (setq evil-insert-state-cursor 'bar)
+  (setq evil-visual-state-cursor 'hbar)
+
   (setq save-interprogram-paste-before-kill t) ; don't clobber OS clipboard on first kill
   (setq kill-do-not-save-duplicates t)
   (setq ffap-machine-p-known 'reject) ; don't ping hosts in find-file
@@ -356,14 +360,6 @@
               (lambda (&rest _) (evil-collection-define-key 'normal 'view-mode-map "0" nil)))
   )
 
-;; display cursor as bar instread of box in terminal
-(use-package evil-terminal-cursor-changer
-  :demand
-  :config (evil-terminal-cursor-changer-activate)
-  :custom
-  (evil-insert-state-cursor 'bar)
-  (evil-visual-state-cursor 'hollow))
-
 (use-package golden-ratio
   :commands golden-ratio-mode
   :custom
@@ -519,7 +515,9 @@
   :commands markdown-ts-mode-maybe markdown-ts-mode markdown-ts-view-mode)
 
 (use-package hideshow
-  :hook (prog-mode . hs-minor-mode))
+  :hook (prog-mode . hs-minor-mode)
+  :custom (hs-display-lines-hidden t)
+  )
 
 (use-package yasnippet
   :hook (eglot-managed-mode . yas-minor-mode))
