@@ -811,6 +811,10 @@
 
 (use-package plz)
 
+(use-package olivetti
+  :commands (olivetti-mode)
+  :custom (olivetti-body-width 0.5))
+
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars unresolved)
 ;; End:
